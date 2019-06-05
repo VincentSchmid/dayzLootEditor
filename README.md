@@ -16,7 +16,7 @@ pyodbc
 search for items that contain the input in the name tag
 
 ### view linked items
-select an item and click view linkes items:
+select an item and click "view linked items":
 it will show all items that can be attached to the item or are assossiated with it like ammo types, mags... this works for all supported item types
 
 #### items that are linked to the FAL
