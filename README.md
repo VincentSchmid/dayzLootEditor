@@ -36,3 +36,13 @@ this shows overall nominal added up for all gun, mags... as well as the change s
 All items of the game are loaded and found if searched but the sorting only works for these types of items
 
 ![weapons, gun, ammo, mag, attachment, optic](images/2019-06-05_14-24-52.png)
+
+
+## To do:
+
+- Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
+- doing item assossiation inside of the app (most is automatic)
+- guns can be assinged an ammo type which creates automatic assossiations
+- support for all item types
+- drop percentages (not in types.xml)
+- loot overall droprate in percent adjusts nominal, min and restock
