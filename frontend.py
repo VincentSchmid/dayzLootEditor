@@ -24,11 +24,11 @@ class Window(object):
         l3 = Label(entryFrame, text="min")
         l3.grid(row=0, column=4)
 
-        l4 = Label(entryFrame, text="lifetime")
-        l4.grid(row=0, column=8)
-
         l5 = Label(entryFrame, text="restock")
         l5.grid(row=0, column=6)
+
+        l4 = Label(entryFrame, text="lifetime")
+        l4.grid(row=0, column=8)
 
         self.name_text = StringVar()
         self.nameEntry = Entry(entryFrame, textvariable=self.name_text)
@@ -42,13 +42,13 @@ class Window(object):
         self.minEntry = Entry(entryFrame, textvariable=self.min_text)
         self.minEntry.grid(row=0, column=5)
 
-        self.lifetime_text = StringVar()
-        self.lifetimeEntry = Entry(entryFrame, textvariable=self.lifetime_text)
-        self.lifetimeEntry.grid(row=0, column=9)
-
         self.restock_text = StringVar()
         self.restockEntry = Entry(entryFrame, textvariable=self.restock_text)
         self.restockEntry.grid(row=0, column=7)
+
+        self.lifetime_text = StringVar()
+        self.lifetimeEntry = Entry(entryFrame, textvariable=self.lifetime_text)
+        self.lifetimeEntry.grid(row=0, column=9)
 
         # Set the treeview
         self.tree = ttk.Treeview(self.window,
@@ -65,6 +65,7 @@ class Window(object):
         self.tree.grid(row=4, rowspan=4, columnspan=10, sticky='nsew')
         self.treeview = self.tree
         self.tree.bind('<ButtonRelease-1>', self.fillEntryBoxes)
+        
         self.window.grid_rowconfigure(4, weight=1)
         self.window.grid_columnconfigure(0, weight=1)
 

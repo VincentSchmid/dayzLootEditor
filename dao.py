@@ -127,6 +127,15 @@ def getNominalByType(type):
     )
     return cursor.fetchval()
 
+def getNominalByUsage(usage):
+    cursor = connection().cursor()
+    cursor.execute(
+        "select SUM(nominal) \
+        from items \
+        where ? = 1", usage.lower()
+    )
+    return cursor.fetchval()
+
 
 def getMinByType(type):
     cursor = connection().cursor()
