@@ -244,7 +244,8 @@ class Window(object):
 
     def backupDatabase(self, user, password, db, loc):
         path = dao.getPath() + "bin\\"
-        subprocess.Popen(r"mysqldump -u " + user + " -p" + password + " " + db + " > " + loc, shell = True, env={'PATH': path})
+        subprocess.Popen(r"mysqldump -u " + user + " -p" + password + " " + db + " > " + loc, shell=True,
+                         env={'PATH': path})
 
     def on_close(self):
         self.backupDatabase("root", "rootroot", "dayzitems",
