@@ -46,3 +46,5 @@ All items of the game are loaded and found if searched but the sorting only work
 - support for all item types
 - drop percentages (not in types.xml)
 - loot overall droprate in percent adjusts nominal, min and restock
+- move search by name button below name tag.
+- enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
