@@ -46,6 +46,7 @@ def viewType(type):
 
 
 def viewCategory(category):
+    global lastQuery
     lastQuery = "select name, nominal, min, restock, lifetime, type \
                 from items \
                 where category = '" + category + "';"
@@ -56,6 +57,7 @@ def viewCategory(category):
 
 
 def getWeaponAndCorresponding(name):
+    global lastQuery
     lastQuery = "select name, nominal, min, restock, lifetime, type \
                 from items \
                 join \
@@ -73,6 +75,7 @@ def getWeaponAndCorresponding(name):
 
 
 def getWeaponsFromAccessoire(name):
+    global lastQuery
     lastQuery = "select name, nominal, min, lifetime, restock, type \
                 from (select item1, item2, items.* \
                       from itemcombos \
@@ -87,6 +90,7 @@ def getWeaponsFromAccessoire(name):
 
 
 def searchByName(name):
+    global lastQuery
     lastQuery = "select name, nominal, min, restock, lifetime, type \
                 from items \
                 WHERE name LIKE '%" + name + "%';"
@@ -97,6 +101,7 @@ def searchByName(name):
 
 
 def searchByNameAndType(name, type):
+    global lastQuery
     lastQuery = "select name, nominal, min, restock, lifetime, type \
                 from items \
                 where type = '" + type + "' \
@@ -108,6 +113,7 @@ def searchByNameAndType(name, type):
 
 
 def searchByNameAndCat(name, cat):
+    global lastQuery
     lastQuery = "select name, nominal, min, restock, lifetime, type \
                 from items \
                 where category = '" + cat + "' \
@@ -151,7 +157,7 @@ def update(values):
     conn = connection()
     cursor = conn.cursor()
     cursor.execute("UPDATE items SET nominal = " + values["nominal"] + ", min= " + values["min"] + ", \
-        restock= " + values["restock"] + ", lifetime= " + values["restock"] + " WHERE name = '" + values["name"] + "';")
+        restock= " + values["restock"] + ", lifetime= " + values["lifetime"] + " WHERE name = '" + values["name"] + "';")
     conn.commit()
 
     return reExecuteLastQuery()
@@ -164,6 +170,7 @@ def getAllItems():
 
 
 def reExecuteLastQuery():
+    global lastQuery
     cursor = connection().cursor()
     cursor.execute(lastQuery)
     return cursor.fetchall()
