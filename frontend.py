@@ -1,7 +1,9 @@
+import os
 from tkinter import *
 from tkinter import ttk
-import dao
+
 import XMLtypes
+import dao
 import xmlParsing4
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
@@ -11,6 +13,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.window.wm_title("Loot Editor v0.1")
+        self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=0, column=0, sticky="n,w,e")
@@ -64,10 +67,12 @@ class Window(object):
         self.tree.column('#3', stretch=YES)
         self.tree.grid(row=4, rowspan=4, columnspan=10, sticky='nsew')
         self.treeview = self.tree
-        self.tree.bind('<ButtonRelease-1>', self.fillEntryBoxes)
 
+        # Keybindings
+        self.tree.bind('<ButtonRelease-1>', self.fillEntryBoxes)
         self.window.bind('<Return>', self.enterPress)
 
+        # make windows extendable
         self.window.grid_rowconfigure(4, weight=1)
         self.window.grid_columnconfigure(0, weight=1)
 
@@ -171,11 +176,11 @@ class Window(object):
             pass
 
     def enterPress(self, event):
-            if type(self.nameEntry.focus_get()) is type(self.nameEntry):
-                if self.nameEntry.focus_get() is self.nameEntry:
-                    self.searchByName()
-                else:
-                    self.updateSel()
+        if type(self.nameEntry.focus_get()) is type(self.nameEntry):
+            if self.nameEntry.focus_get() is self.nameEntry:
+                self.searchByName()
+            else:
+                self.updateSel()
 
     def searchByName(self):
         rows = dao.searchByName(self.name_text.get())
@@ -235,6 +240,14 @@ class Window(object):
         self.clearTree()
         for row in rows:
             self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5]))
+
+    def backupDatabase(self, user, password, db, loc):
+        os.popen(r"mysqldump -u " + user + " -p" + password + " " + db + " > " + loc)
+
+    def on_close(self):
+        self.backupDatabase("root", "rootroot", "dayzitems",
+                            r"C:\Users\puter\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src\dayzitems.sql")
+        self.window.destroy()
 
 
 window = Tk()
