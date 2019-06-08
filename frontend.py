@@ -1,6 +1,7 @@
 import os
 from tkinter import *
 from tkinter import ttk
+import subprocess
 
 import XMLtypes
 import dao
@@ -242,7 +243,8 @@ class Window(object):
             self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5]))
 
     def backupDatabase(self, user, password, db, loc):
-        os.popen(r"mysqldump -u " + user + " -p" + password + " " + db + " > " + loc)
+        path = dao.getPath() + "bin\\"
+        subprocess.Popen(r"mysqldump -u " + user + " -p" + password + " " + db + " > " + loc, shell = True, env={'PATH': path})
 
     def on_close(self):
         self.backupDatabase("root", "rootroot", "dayzitems",

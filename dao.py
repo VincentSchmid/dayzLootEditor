@@ -168,6 +168,11 @@ def getAllItems():
     cursor.execute("select * from items")
     return cursor.fetchall()
 
+def getPath():
+    cursor = connection().cursor()
+    cursor.execute("select @@basedir")
+    return cursor.fetchval()
+
 
 def reExecuteLastQuery():
     global lastQuery
