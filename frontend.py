@@ -81,7 +81,7 @@ class Window(object):
         choices = {'gun', 'mag', 'optic', 'attachment', "ammo", 'weapons'}
         self.tkvar.set('gun')  # set the default option
 
-        b5 = Button(self.entryFrame, text="update sel", width=12, command=self.updateSel)
+        b5 = Button(self.entryFrame, text="update selection", width=12, command=self.updateSel)
         b5.grid(row=0, column=12)
 
         buttons = Frame(self.window, width=200, height=150)
