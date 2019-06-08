@@ -12,42 +12,42 @@ class Window(object):
         self.window = window
         self.window.wm_title("Loot Editor v0.1")
 
-        entryFrame = Frame(self.window)
-        entryFrame.grid(row=0, column=0, sticky="n,w,e")
+        self.entryFrame = Frame(self.window)
+        self.entryFrame.grid(row=0, column=0, sticky="n,w,e")
 
-        l1 = Label(entryFrame, text="name")
+        l1 = Label(self.entryFrame, text="name")
         l1.grid(row=0, column=0)
 
-        l2 = Label(entryFrame, text="nominal")
+        l2 = Label(self.entryFrame, text="nominal")
         l2.grid(row=0, column=2)
 
-        l3 = Label(entryFrame, text="min")
+        l3 = Label(self.entryFrame, text="min")
         l3.grid(row=0, column=4)
 
-        l5 = Label(entryFrame, text="restock")
+        l5 = Label(self.entryFrame, text="restock")
         l5.grid(row=0, column=6)
 
-        l4 = Label(entryFrame, text="lifetime")
+        l4 = Label(self.entryFrame, text="lifetime")
         l4.grid(row=0, column=8)
 
         self.name_text = StringVar()
-        self.nameEntry = Entry(entryFrame, textvariable=self.name_text)
+        self.nameEntry = Entry(self.entryFrame, textvariable=self.name_text)
         self.nameEntry.grid(row=0, column=1)
 
         self.nominal_text = StringVar()
-        self.nominalEntry = Entry(entryFrame, textvariable=self.nominal_text)
+        self.nominalEntry = Entry(self.entryFrame, textvariable=self.nominal_text)
         self.nominalEntry.grid(row=0, column=3)
 
         self.min_text = StringVar()
-        self.minEntry = Entry(entryFrame, textvariable=self.min_text)
+        self.minEntry = Entry(self.entryFrame, textvariable=self.min_text)
         self.minEntry.grid(row=0, column=5)
 
         self.restock_text = StringVar()
-        self.restockEntry = Entry(entryFrame, textvariable=self.restock_text)
+        self.restockEntry = Entry(self.entryFrame, textvariable=self.restock_text)
         self.restockEntry.grid(row=0, column=7)
 
         self.lifetime_text = StringVar()
-        self.lifetimeEntry = Entry(entryFrame, textvariable=self.lifetime_text)
+        self.lifetimeEntry = Entry(self.entryFrame, textvariable=self.lifetime_text)
         self.lifetimeEntry.grid(row=0, column=9)
 
         # Set the treeview
@@ -65,7 +65,9 @@ class Window(object):
         self.tree.grid(row=4, rowspan=4, columnspan=10, sticky='nsew')
         self.treeview = self.tree
         self.tree.bind('<ButtonRelease-1>', self.fillEntryBoxes)
-        
+
+        self.window.bind('<Return>', self.enterPress)
+
         self.window.grid_rowconfigure(4, weight=1)
         self.window.grid_columnconfigure(0, weight=1)
 
@@ -79,7 +81,7 @@ class Window(object):
         choices = {'gun', 'mag', 'optic', 'attachment', "ammo", 'weapons'}
         self.tkvar.set('gun')  # set the default option
 
-        b5 = Button(entryFrame, text="update sel", width=12, command=self.updateSel)
+        b5 = Button(self.entryFrame, text="update sel", width=12, command=self.updateSel)
         b5.grid(row=0, column=12)
 
         buttons = Frame(self.window, width=200, height=150)
@@ -167,6 +169,13 @@ class Window(object):
             self.updateDisplay(rows)
         except IndexError:
             pass
+
+    def enterPress(self, event):
+            if type(self.nameEntry.focus_get()) is type(self.nameEntry):
+                if self.nameEntry.focus_get() is self.nameEntry:
+                    self.searchByName()
+                else:
+                    self.updateSel()
 
     def searchByName(self):
         rows = dao.searchByName(self.name_text.get())
