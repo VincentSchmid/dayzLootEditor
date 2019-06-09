@@ -1,10 +1,10 @@
 import os
+from subprocess import Popen, PIPE
 from tkinter import *
 from tkinter import ttk
-from subprocess import Popen, PIPE
 
-import writeItemToXML
 import dao
+import writeItemToXML
 import xmlParsing4
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
@@ -17,6 +17,24 @@ class Window(object):
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
         self.changed = False
 
+        self.createEntryBar()
+        self.createTreeview()
+        self.createSideBar()
+
+        # Keybindings
+        self.tree.bind('<ButtonRelease-1>', self.fillEntryBoxes)
+        self.window.bind('<Return>', self.enterPress)
+
+        # make windows extendable
+        self.window.grid_rowconfigure(4, weight=1)
+        self.window.grid_columnconfigure(0, weight=1)
+
+        self.nomVars = []
+        self.deltaNom = []
+        self.startNominals = []
+        self.createNominalInfo()
+
+    def createEntryBar(self):
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=0, column=0, sticky="n,w,e")
 
@@ -55,7 +73,10 @@ class Window(object):
         self.lifetimeEntry = Entry(self.entryFrame, textvariable=self.lifetime_text)
         self.lifetimeEntry.grid(row=0, column=9)
 
-        # Set the treeview
+        b5 = Button(self.entryFrame, text="update selection", width=12, command=self.updateSel)
+        b5.grid(row=0, column=12)
+
+    def createTreeview(self):
         self.tree = ttk.Treeview(self.window,
                                  columns=('name', 'nominal', 'min', 'restock', 'lifetime'))
         self.tree.heading('#0', text='name')
@@ -70,26 +91,16 @@ class Window(object):
         self.tree.grid(row=4, rowspan=4, columnspan=10, sticky='nsew')
         self.treeview = self.tree
 
-        # Keybindings
-        self.tree.bind('<ButtonRelease-1>', self.fillEntryBoxes)
-        self.window.bind('<Return>', self.enterPress)
-
-        # make windows extendable
-        self.window.grid_rowconfigure(4, weight=1)
-        self.window.grid_columnconfigure(0, weight=1)
-
         sb1 = Scrollbar(window)
         sb1.grid(row=3, rowspan=4, column=11, sticky="n,s")
         self.tree.config(yscrollcommand=sb1.set)
         sb1.config(command=self.tree.yview)
 
+    def createSideBar(self):
         self.tkvar = StringVar(window)
         # todo get from backend
         choices = {'gun', 'mag', 'optic', 'attachment', "ammo", 'weapons'}
         self.tkvar.set('gun')  # set the default option
-
-        b5 = Button(self.entryFrame, text="update selection", width=12, command=self.updateSel)
-        b5.grid(row=0, column=12)
 
         buttons = Frame(self.window, width=200, height=150)
         buttons.grid(row=4, column=12, sticky="n")
@@ -115,12 +126,7 @@ class Window(object):
         self.infoFrame = Frame(self.window)
         self.infoFrame.grid(row=10, column=0, sticky="s,w,e")
 
-        self.nomVars = []
-        self.deltaNom = []
-        self.startNominals = []
-        self.createNominalVar()
-
-    def createNominalVar(self):
+    def createNominalInfo(self):
         i = 1
 
         label = Label(self.infoFrame, text="overall nominal / delta:")
@@ -244,21 +250,20 @@ class Window(object):
         for row in rows:
             self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5]))
 
+    def on_close(self):
+        if self.changed:
+            self.backupDatabase("root", "rootroot", "dayzitems", os.getcwd() + "\dayzitems.sql")
+        self.window.destroy()
+
     def backupDatabase(self, user, password, db, loc):
         path = dao.getPath() + "bin\\"
-        cmdL1 = [path + "mysqldump", "--port=3306",  "--force", "-u" + user, "-p" + password, db]
+        cmdL1 = [path + "mysqldump", "--port=3306", "--force", "-u" + user, "-p" + password, db]
         p1 = Popen(cmdL1, shell=True, stdout=PIPE)
         self.writeFile(p1.communicate()[0], loc)
         p1.kill()
 
-    def on_close(self):
-        if self.changed:
-            self.backupDatabase("root", "rootroot", "dayzitems",
-                                os.getcwd() + "\dayzitems.sql")
-        self.window.destroy()
-
     def writeFile(self, output, location):
-        f= open(location, "wb+")
+        f = open(location, "wb+")
         f.write(output)
         f.close()
 
