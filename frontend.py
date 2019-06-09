@@ -15,6 +15,7 @@ class Window(object):
         self.window = window
         self.window.wm_title("Loot Editor v0.1")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.changed = False
 
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=0, column=0, sticky="n,w,e")
@@ -191,6 +192,7 @@ class Window(object):
         rows = dao.update(self.getEditedValues())
         self.updateDisplay(rows)
         self.updateNomVars()
+        self.changed = True
 
     def updateXML(self):
         XMLtypes.update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
@@ -250,8 +252,9 @@ class Window(object):
         p1.kill()
 
     def on_close(self):
-        self.backupDatabase("root", "rootroot", "dayzitems",
-                            os.getcwd() + "\dayzitems.sql")
+        if self.changed:
+            self.backupDatabase("root", "rootroot", "dayzitems",
+                                os.getcwd() + "\dayzitems.sql")
         self.window.destroy()
 
     def writeFile(self, output, location):
