@@ -48,3 +48,5 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] loot overall droprate in percent adjusts nominal, min and restock
 - [x] enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
 - [ ] loading types.xml and then generating all database from that (including finding ammo for typical guns)
+- [ ] loading database with all links allready included
+- [ ] creating online database for all mods where people can add their itemsmods types.xml entries and a checkbox in app for a specific mod to add to types xml.
