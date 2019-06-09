@@ -1,14 +1,11 @@
-import os
-import xml.etree.ElementTree as ET
-import xmlParsing4
-import dao
+from application import xmlParsing4, dao
 
 
 def update(types, tree, dir):
     items = []
     for val in dao.getAllItems():
         val = val[:-1]
-        item =xmlParsing4.Item()
+        item = xmlParsing4.Item()
         item.fillFromVal(val)
         items.append(item)
 

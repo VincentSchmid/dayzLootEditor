@@ -1,11 +1,9 @@
-import os
+from os import getcwd, path
 from subprocess import Popen, PIPE
 from tkinter import *
 from tkinter import ttk
 
-import dao
-import writeItemToXML
-import xmlParsing4
+from application import xmlParsing4, writeItemToXML, dao
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -252,7 +250,7 @@ class Window(object):
 
     def on_close(self):
         if self.changed:
-            self.backupDatabase("root", "rootroot", "dayzitems", os.getcwd() + "\dayzitems.sql")
+            self.backupDatabase("root", "rootroot", "dayzitems", path.abspath(path.join(getcwd(), "..", "data", "dayzitems.sql")))
         self.window.destroy()
 
     def backupDatabase(self, user, password, db, loc):
