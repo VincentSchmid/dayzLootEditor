@@ -244,12 +244,12 @@ class Window(object):
 
     def backupDatabase(self, user, password, db, loc):
         path = dao.getPath() + "bin\\"
-        subprocess.Popen(r"mysqldump -u " + user + " -p" + password + " " + db + " > " + loc, shell=True,
-                         env={'PATH': path})
+        cmdL1 = ["mysqldump", "--port=3306", "-u " + user, "-p" + password, db, "> " + loc]
+        subprocess.Popen(cmdL1, shell=True, env={'PATH': path})
 
     def on_close(self):
         self.backupDatabase("root", "rootroot", "dayzitems",
-                            r"C:\Users\puter\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src\dayzitems.sql")
+                            os.getcwd() + "\dayzitems.sql")
         self.window.destroy()
 
 
