@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import ttk
 from subprocess import Popen, PIPE
 
-import XMLtypes
+import writeItemToXML
 import dao
 import xmlParsing4
 
@@ -195,7 +195,7 @@ class Window(object):
         self.changed = True
 
     def updateXML(self):
-        XMLtypes.update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
+        writeItemToXML.update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
 
     def clearTree(self):
         if self.tree.get_children() != ():
