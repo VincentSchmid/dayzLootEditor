@@ -8,7 +8,7 @@ packages to install:
 pyodbc
 
 ## Features
-
+Press Enter to search by name or update entries to database!
 ![screenshot of application](images/2019-06-05_14-23-51.png)
 
 ### item searching
