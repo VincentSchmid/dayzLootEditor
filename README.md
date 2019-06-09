@@ -31,12 +31,10 @@ it will show all items that can be attached to the item or are assossiated with 
 
 this shows overall nominal added up for all gun, mags... as well as the change since you started the programm. So you can check if you overall increased or decreased the loot count
 
-
 ### supported categories:
 All items of the game are loaded and found if searched but the sorting only works for these types of items
 
 ![weapons, gun, ammo, mag, attachment, optic](images/2019-06-05_14-24-52.png)
-
 
 ## To do:
 
@@ -49,4 +47,8 @@ All items of the game are loaded and found if searched but the sorting only work
 - [x] enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
 - [ ] loading types.xml and then generating all database from that (including finding ammo for typical guns)
 - [ ] loading database with all links allready included
+
+## crazy ideas:
+
 - [ ] creating online database for all mods where people can add their itemsmods types.xml entries and a checkbox in app for a specific mod to add to types xml.
+- [ ] simulation of loot in game over time without having to run the game. graph for all items
