@@ -21,17 +21,19 @@ def connection():
 
 
 def insertItems(parameters, items):
-        cursor = connection().cursor()
+    cursor = connection().cursor()
 
-        cursor.fast_executemany = True
-        cursor.executemany("insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", items)
+    cursor.fast_executemany = True
+    cursor.executemany(
+        "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        items)
 
 
 def createCombos(items):
-        cursor = connection().cursor()
+    cursor = connection().cursor()
 
-        cursor.fast_executemany = True
-        cursor.executemany("insert into itemcombos(item1, item2) values (?, ?)", items)
+    cursor.fast_executemany = True
+    cursor.executemany("insert into itemcombos(item1, item2) values (?, ?)", items)
 
 
 def viewType(type):
@@ -133,6 +135,7 @@ def getNominalByType(type):
     )
     return cursor.fetchval()
 
+
 def getNominalByUsage(usage):
     cursor = connection().cursor()
     cursor.execute(
@@ -157,7 +160,8 @@ def update(values):
     conn = connection()
     cursor = conn.cursor()
     cursor.execute("UPDATE items SET nominal = " + values["nominal"] + ", min= " + values["min"] + ", \
-        restock= " + values["restock"] + ", lifetime= " + values["lifetime"] + " WHERE name = '" + values["name"] + "';")
+        restock= " + values["restock"] + ", lifetime= " + values["lifetime"] + " WHERE name = '" + values[
+        "name"] + "';")
     conn.commit()
 
     return reExecuteLastQuery()
@@ -167,6 +171,7 @@ def getAllItems():
     cursor = connection().cursor()
     cursor.execute("select * from items")
     return cursor.fetchall()
+
 
 def getPath():
     cursor = connection().cursor()
