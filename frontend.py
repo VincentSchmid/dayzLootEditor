@@ -1,7 +1,7 @@
 import os
 from tkinter import *
 from tkinter import ttk
-import subprocess
+from subprocess import Popen, PIPE
 
 import XMLtypes
 import dao
@@ -244,13 +244,20 @@ class Window(object):
 
     def backupDatabase(self, user, password, db, loc):
         path = dao.getPath() + "bin\\"
-        cmdL1 = ["mysqldump", "--port=3306", "-u " + user, "-p" + password, db, "> " + loc]
-        subprocess.Popen(cmdL1, shell=True, env={'PATH': path})
+        cmdL1 = [path + "mysqldump", "--port=3306",  "--force", "-u" + user, "-p" + password, db]
+        p1 = Popen(cmdL1, shell=True, stdout=PIPE)
+        self.writeFile(p1.communicate()[0], loc)
+        p1.kill()
 
     def on_close(self):
         self.backupDatabase("root", "rootroot", "dayzitems",
                             os.getcwd() + "\dayzitems.sql")
         self.window.destroy()
+
+    def writeFile(self, output, location):
+        f= open(location, "wb+")
+        f.write(output)
+        f.close()
 
 
 window = Tk()
