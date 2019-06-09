@@ -8,7 +8,7 @@ packages to install:
 pyodbc
 
 ## Features
-
+Press Enter to search by name or update entries to database!
 ![screenshot of application](images/2019-06-05_14-23-51.png)
 
 ### item searching
@@ -40,11 +40,11 @@ All items of the game are loaded and found if searched but the sorting only work
 
 ## To do:
 
-- Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
-- doing item assossiation inside of the app (most is automatic)
-- guns can be assinged an ammo type which creates automatic assossiations
-- support for all item types
-- drop percentages (not in types.xml)
-- loot overall droprate in percent adjusts nominal, min and restock
-- move search by name button below name tag.
-- enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
+- [ ] Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
+- [ ] doing item assossiation inside of the app (most is automatic)
+- [ ] guns can be assinged an ammo type which creates automatic assossiations
+- [ ] support for all item types
+- [ ] drop percentages (not in types.xml)
+- [ ] loot overall droprate in percent adjusts nominal, min and restock
+- [x] enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
+- [ ] loading types.xml and then generating all database from that (including finding ammo for typical guns)
