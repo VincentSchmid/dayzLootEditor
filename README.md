@@ -40,11 +40,11 @@ All items of the game are loaded and found if searched but the sorting only work
 
 ## To do:
 
-- [] Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
-- [] doing item assossiation inside of the app (most is automatic)
-- [] guns can be assinged an ammo type which creates automatic assossiations
-- [] support for all item types
-- [] drop percentages (not in types.xml)
-- [] loot overall droprate in percent adjusts nominal, min and restock
+- [ ] Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
+- [ ] doing item assossiation inside of the app (most is automatic)
+- [ ] guns can be assinged an ammo type which creates automatic assossiations
+- [ ] support for all item types
+- [ ] drop percentages (not in types.xml)
+- [ ] loot overall droprate in percent adjusts nominal, min and restock
 - [x] enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
-- [] loading types.xml and then generating all database from that (including finding ammo for typical guns)
+- [ ] loading types.xml and then generating all database from that (including finding ammo for typical guns)
