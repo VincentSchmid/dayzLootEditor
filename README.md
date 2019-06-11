@@ -48,6 +48,7 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] loading types.xml and then generating all database from that (including finding ammo for typical guns)
 - [ ] loading database with all links allready included
 - [ ] 60round stanag is not implemented
+- [ ] Crate Rarity in database include dropdown in item, base rarity on allready existing items - then distribute across nominal
 
 ## crazy ideas:
 
