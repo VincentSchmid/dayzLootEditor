@@ -126,7 +126,7 @@ class Window(object):
         buttons.grid(row=4, column=12, sticky="n")
 
         self.typeSel = StringVar(window)
-        self.typeSel.set('gun')  # set the default option
+        self.typeSel.set('gun')
 
         typeDrop = OptionMenu(buttons, self.typeSel, *choices)
         typeDrop.grid(row=0, column=0)
@@ -179,7 +179,7 @@ class Window(object):
 
             i += 4
 
-    def updateNomVars(self):
+    def updateNominalInfo(self):
         for i in range(len(self.nomVars)):
             nominal = dao.getNominalByType(itemTypes[i])
             self.nomVars[i].set(nominal)
@@ -220,7 +220,7 @@ class Window(object):
     def updateSel(self):
         rows = dao.update(self.getEditedValues())
         self.updateDisplay(rows)
-        self.updateNomVars()
+        self.updateNominalInfo()
         self.changed = True
 
     def updateXML(self):
