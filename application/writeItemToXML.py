@@ -1,4 +1,8 @@
-from application import xmlParsing4, dao
+try:
+    from application import xmlParsing4, dao
+except ModuleNotFoundError:
+    import xmlParsing4
+    import dao
 
 
 def update(types, tree, dir):

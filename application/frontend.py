@@ -3,7 +3,12 @@ from subprocess import Popen, PIPE
 from tkinter import *
 from tkinter import ttk
 
-from application import xmlParsing4, writeItemToXML, dao
+try:
+    from application import xmlParsing4, writeItemToXML, dao
+except ModuleNotFoundError:
+    import xmlParsing4
+    import writeItemToXML
+    import dao
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
