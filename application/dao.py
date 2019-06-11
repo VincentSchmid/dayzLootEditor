@@ -2,6 +2,7 @@ import pyodbc
 import textwrap
 
 lastQuery = ""
+returnValues = "name, nominal, min, restock, lifetime, type, rarity"
 
 
 def connection():
@@ -38,7 +39,7 @@ def createCombos(items):
 
 def viewType(type):
     global lastQuery
-    lastQuery = "select name, nominal, min, restock, lifetime, type \
+    lastQuery = "select " + returnValues + " \
         from items \
         where type = '" + type + "';"
 
@@ -49,7 +50,7 @@ def viewType(type):
 
 def viewCategory(category):
     global lastQuery
-    lastQuery = "select name, nominal, min, restock, lifetime, type \
+    lastQuery = "select " + returnValues + " \
                 from items \
                 where category = '" + category + "';"
 
@@ -60,7 +61,7 @@ def viewCategory(category):
 
 def getWeaponAndCorresponding(name):
     global lastQuery
-    lastQuery = "select name, nominal, min, restock, lifetime, type \
+    lastQuery = "select " + returnValues + " \
                 from items \
                 join \
                     (select item2 \
@@ -78,7 +79,7 @@ def getWeaponAndCorresponding(name):
 
 def getWeaponsFromAccessoire(name):
     global lastQuery
-    lastQuery = "select name, nominal, min, lifetime, restock, type \
+    lastQuery = "select " + returnValues + " \
                 from (select item1, item2, items.* \
                       from itemcombos \
                       join items on name = item1 \
@@ -93,7 +94,7 @@ def getWeaponsFromAccessoire(name):
 
 def searchByName(name):
     global lastQuery
-    lastQuery = "select name, nominal, min, restock, lifetime, type \
+    lastQuery = "select " + returnValues + " \
                 from items \
                 WHERE name LIKE '%" + name + "%';"
 
@@ -104,7 +105,7 @@ def searchByName(name):
 
 def searchByNameAndType(name, type):
     global lastQuery
-    lastQuery = "select name, nominal, min, restock, lifetime, type \
+    lastQuery = "select " + returnValues + " \
                 from items \
                 where type = '" + type + "' \
                 and name LIKE '%" + name + "%';"
@@ -116,7 +117,7 @@ def searchByNameAndType(name, type):
 
 def searchByNameAndCat(name, cat):
     global lastQuery
-    lastQuery = "select name, nominal, min, restock, lifetime, type \
+    lastQuery = "select " + returnValues + " \
                 from items \
                 where category = '" + cat + "' \
                 and name LIKE '%" + name + "%';"
@@ -160,8 +161,9 @@ def update(values):
     conn = connection()
     cursor = conn.cursor()
     cursor.execute("UPDATE items SET nominal = " + values["nominal"] + ", min= " + values["min"] + ", \
-        restock= " + values["restock"] + ", lifetime= " + values["lifetime"] + " WHERE name = '" + values[
-        "name"] + "';")
+        restock= " + values["restock"] + ", lifetime= " + values["lifetime"] + ", rarity=" + values[
+        "rarity"] + " WHERE name = '" + values[
+                       "name"] + "';")
     conn.commit()
 
     return reExecuteLastQuery()

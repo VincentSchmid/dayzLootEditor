@@ -12,6 +12,11 @@ except ModuleNotFoundError:
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
+rarities9 = {0: "undefined", 50: "Legendary", 45: "Extremely Rare", 40: "Very Rare", 30: "Rare",
+             25: "Somewhat Rare", 20: "Uncommon", 15: "Not so Common", 10: "Common", 5: "All Over The Place"}
+
+rarities5 = {10: "Common", 20: "Uncommon", 30: "Rare", 40: "Very Rare", 50: "Legendary", 0: "undefined"}
+
 
 class Window(object):
     def __init__(self, window):
@@ -50,11 +55,14 @@ class Window(object):
         l3 = Label(self.entryFrame, text="min")
         l3.grid(row=0, column=4)
 
-        l5 = Label(self.entryFrame, text="restock")
-        l5.grid(row=0, column=6)
+        l4 = Label(self.entryFrame, text="restock")
+        l4.grid(row=0, column=6)
 
-        l4 = Label(self.entryFrame, text="lifetime")
-        l4.grid(row=0, column=8)
+        l5 = Label(self.entryFrame, text="lifetime")
+        l5.grid(row=0, column=8)
+
+        l6 = Label(self.entryFrame, text="rarity")
+        l6.grid(row=0, column=10)
 
         self.name_text = StringVar()
         self.nameEntry = Entry(self.entryFrame, textvariable=self.name_text)
@@ -76,22 +84,30 @@ class Window(object):
         self.lifetimeEntry = Entry(self.entryFrame, textvariable=self.lifetime_text)
         self.lifetimeEntry.grid(row=0, column=9)
 
+        self.raritySel = StringVar()
+        self.raritySel.set('undefined')
+
+        typeDrop = OptionMenu(self.entryFrame, self.raritySel, *rarities5.values())
+        typeDrop.grid(row=0, column=11)
+
         b5 = Button(self.entryFrame, text="update selection", width=12, command=self.updateSel)
-        b5.grid(row=0, column=12)
+        b5.grid(row=0, column=12, sticky="e")
 
     def createTreeview(self):
         self.tree = ttk.Treeview(self.window,
-                                 columns=('name', 'nominal', 'min', 'restock', 'lifetime'))
-        self.tree.heading('#0', text='name')
-        self.tree.heading('#1', text='nominal')
-        self.tree.heading('#2', text='min')
-        self.tree.heading('#3', text='restock')
-        self.tree.heading('#4', text='lifetime')
+                                 columns=('name', 'nominal', 'min', 'restock', 'lifetime', 'rarity'))
+        self.tree.heading('#0', text='Name')
+        self.tree.heading('#1', text='Nominal')
+        self.tree.heading('#2', text='Min')
+        self.tree.heading('#3', text='Restock')
+        self.tree.heading('#4', text='Lifetime')
+        self.tree.heading('#5', text='Type')
+        self.tree.heading('#6', text='Rarity')
         self.tree.column('#1', stretch=YES)
         self.tree.column('#2', stretch=YES)
         self.tree.column('#0', stretch=YES)
         self.tree.column('#3', stretch=YES)
-        self.tree.grid(row=4, rowspan=4, columnspan=10, sticky='nsew')
+        self.tree.grid(row=4, rowspan=4, columnspan=12, sticky='nsew')
         self.treeview = self.tree
 
         sb1 = Scrollbar(window)
@@ -100,21 +116,25 @@ class Window(object):
         sb1.config(command=self.tree.yview)
 
     def createSideBar(self):
-        self.tkvar = StringVar(window)
+        buttons = Frame(self.window, width=200, height=150)
+        buttons.grid(row=4, column=12, sticky="n")
+
         # todo get from backend
         choices = {'gun', 'mag', 'optic', 'attachment', "ammo", 'weapons'}
-        self.tkvar.set('gun')  # set the default option
 
         buttons = Frame(self.window, width=200, height=150)
         buttons.grid(row=4, column=12, sticky="n")
 
-        popupMenu = OptionMenu(buttons, self.tkvar, *choices)
-        popupMenu.grid(row=0, column=0)
+        self.typeSel = StringVar(window)
+        self.typeSel.set('gun')  # set the default option
+
+        typeDrop = OptionMenu(buttons, self.typeSel, *choices)
+        typeDrop.grid(row=0, column=0)
 
         b2 = Button(buttons, text="view type", width=12, command=self.viewType)
         b2.grid(row=1, column=0)
 
-        b3 = Button(buttons, text="view linked items", width=12, command=self.viewCorresp)
+        b3 = Button(buttons, text="view linked items", width=12, command=self.viewLinked)
         b3.grid(row=3, column=0)
 
         b4 = Button(buttons, text="search by name", width=12, command=self.searchByName)
@@ -166,7 +186,7 @@ class Window(object):
             self.deltaNom[i].set(nominal - self.startNominals[i])
 
     def viewType(self):
-        cat = self.tkvar.get()
+        cat = self.typeSel.get()
         if cat in itemTypes:
             rows = dao.viewType(cat)
         else:
@@ -174,7 +194,7 @@ class Window(object):
 
         self.updateDisplay(rows)
 
-    def viewCorresp(self):
+    def viewLinked(self):
         try:
             dict = self.getSelectedValues()
             if dict["type"] == 'gun':
@@ -228,6 +248,8 @@ class Window(object):
             self.lifetimeEntry.delete(0, END)
             self.lifetimeEntry.insert(END, dict["lifetime"])
 
+            self.raritySel.set(dict["rarity"])
+
         except IndexError:
             pass
 
@@ -240,22 +262,29 @@ class Window(object):
         val["restock"] = dict["values"][2]
         val["lifetime"] = dict["values"][3]
         val["type"] = dict["values"][4]
+        val["rarity"] = dict["values"][5]
 
         return val
 
     def getEditedValues(self):
         val = {"name": self.name_text.get(), "nominal": self.nominal_text.get(), "min": self.min_text.get(),
-               "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get()}
+               "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "rarity": self.getRaritySel()}
         return val
+
+    def getRaritySel(self):
+        for k, v in rarities9.items():
+            if self.raritySel.get() == v:
+                return str(k)
 
     def updateDisplay(self, rows):
         self.clearTree()
         for row in rows:
-            self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5]))
+            self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5], rarities9[row[6]]))
 
     def on_close(self):
         if self.changed:
-            self.backupDatabase("root", "rootroot", "dayzitems", path.abspath(path.join(getcwd(), "..", "data", "dayzitems.sql")))
+            self.backupDatabase("root", "rootroot", "dayzitems",
+                                path.abspath(path.join(getcwd(), "..", "data", "dayzitems.sql")))
         self.window.destroy()
 
     def backupDatabase(self, user, password, db, loc):
