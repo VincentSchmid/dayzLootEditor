@@ -30,7 +30,7 @@ rarities5 = {15: "Common", 20: "Uncommon", 30: "Rare", 40: "Very Rare", 50: "Leg
 class Window(object):
     def __init__(self, window):
         self.window = window
-        self.window.wm_title("Loot Editor v0.1")
+        self.window.wm_title("Loot Editor v0.2")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
         self.changed = False
 
@@ -151,6 +151,7 @@ class Window(object):
 
         Label(self.distribution, text="Target Nominal").grid(row=0, column=0, sticky=W)
         self.targetNominal = StringVar()
+        self.targetNominal.set(str(dao.getNominalByType("gun")))
         self.desiredNomEntry = Entry(self.distribution, textvariable=self.targetNominal, width=14).grid(row=1, sticky=W)
 
         self.inclAmmo = IntVar()
@@ -238,14 +239,18 @@ class Window(object):
         self.updateDisplay(rows)
 
     def updateSel(self):
-        rows = dao.update(self.getEditedValues())
+        dao.update(self.getEditedValues())
+        rows = dao.reExecuteLastQuery()
         self.updateDisplay(rows)
-        self.updateNominalInfo()
         self.changed = True
 
     def distribute(self):
+        self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get(), self.inclOptics.get(), self.inclAttachm.get()]
-        distibutor.distribute("gun", self.targetNominal, flags)
+        distibutor.distribute("gun", int(self.targetNominal.get()), flags)
+        self.changed = True
+        self.updateDisplay(dao.viewType("gun"))
+
 
     def updateXML(self):
         writeItemToXML.update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
@@ -304,12 +309,17 @@ class Window(object):
         self.clearTree()
         for row in rows:
             self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5], rarities9[row[6]]))
+        self.updateNominalInfo()
+        self.targetNominal.set(str(dao.getNominalByType("gun")))
 
     def on_close(self):
         if self.changed:
-            self.backupDatabase("root", "rootroot", "dayzitems",
-                                path.abspath(path.join(getcwd(), "..", "data", "dayzitems.sql")))
+            self.backupDB("dayzitems.sql")
         self.window.destroy()
+
+    def backupDB(self, filename):
+        self.backupDatabase("root", "rootroot", "dayzitems",
+                            path.abspath(path.join(getcwd(), "..", "data", filename)))
 
     def backupDatabase(self, user, password, db, loc):
         path = dao.getPath() + "bin\\"

@@ -50,12 +50,10 @@ def setValues(nominalPerElement, itemsToDistribute):
         item["nominal"] = int(round(rarityMultiplier[item["rarity"]] * nominalPerElement, 0))
         overallNominal += item["nominal"]
         item["min"] = int(item["nominal"] / 2)
-        print(item["name"], item["nominal"], item["min"])
-    print("overallNominal", overallNominal)
 
 
 def updateDB(item):
-    for k, v in item.item():
+    for k, v in item.items():
         item[k] = str(v)
     dao.update(item)
 
@@ -70,6 +68,3 @@ def createListOfDictFromRows(itemsToDistribute):
         itemsListOfDicts.append(dict)
 
     return itemsListOfDicts
-
-
-distribute("gun", 294, 0)

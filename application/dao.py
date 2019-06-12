@@ -165,8 +165,6 @@ def update(values):
         "rarity"] + " WHERE name = '" + values["name"] + "';")
     conn.commit()
 
-    return reExecuteLastQuery()
-
 
 def getItemsToDistibute(type):
     cursor = connection().cursor()
