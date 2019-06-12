@@ -1,8 +1,8 @@
 import pyodbc
 import textwrap
 
-lastQuery = ""
 returnValues = "name, nominal, min, restock, lifetime, type, rarity"
+lastQuery = "select " + returnValues + " from items"
 
 
 def connection():

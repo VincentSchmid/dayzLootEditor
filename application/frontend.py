@@ -1,7 +1,11 @@
-from os import getcwd, path
+from os import getcwd
+from os import path
+from os.path import abspath
+from os.path import join
 from subprocess import Popen, PIPE
 from tkinter import *
 from tkinter import ttk
+from tkinter.filedialog import askopenfilename
 
 try:
     from application import xmlParsing4, writeItemToXML, dao, distibutor
@@ -129,11 +133,12 @@ class Window(object):
 
         OptionMenu(self.buttons, self.typeSel, *self.choices).grid(row=1, column=0)
 
-        Button(self.buttons, text="view type", width=12, command=self.viewType).grid(row=2, column=0)
-        Button(self.buttons, text="view linked items", width=12, command=self.viewLinked).grid(row=3, column=0)
-        Button(self.buttons, text="search by name", width=12, command=self.searchByName).grid(row=4, column=0)
-        Button(self.buttons, text="update XML", width=12, command=self.updateXML).grid(row=5, column=0)
-        Button(self.buttons, text="close", width=12, command=window.destroy).grid(row=6, column=0)
+        Button(self.buttons, text="view type", width=12, command=self.viewType).grid(row=2)
+        Button(self.buttons, text="view linked items", width=12, command=self.viewLinked).grid(row=3)
+        Button(self.buttons, text="search by name", width=12, command=self.searchByName).grid(row=4)
+        Button(self.buttons, text="Load Database", width=12, command=self.loadDB).grid(row=5)
+        Button(self.buttons, text="update XML", width=12, command=self.updateXML).grid(row=6)
+        Button(self.buttons, text="close", width=12, command=window.destroy).grid(row=7)
 
     def createDistibutionBlock(self):
         self.distribution = LabelFrame(self.buttons, text="Rarity Distribution")
@@ -311,7 +316,8 @@ class Window(object):
         if self.changed:
             self.backupDB("dayzitems.sql")
         self.window.destroy()
-
+        
+    #todo move this functionality to dao
     def backupDB(self, filename):
         self.backupDatabase("root", "rootroot", "dayzitems",
                             path.abspath(path.join(getcwd(), "..", "data", filename)))
@@ -322,6 +328,15 @@ class Window(object):
         p1 = Popen(cmdL1, shell=True, stdout=PIPE)
         self.writeFile(p1.communicate()[0], loc)
         p1.kill()
+
+    def loadDB(self):
+        path = dao.getPath() + "bin\\"
+        fname = askopenfilename(filetypes=[("SQL File", '*.sql')])
+        cmdL1 = [path + "mysql", "-uroot", "-prootroot", "dayzitems"]
+        process = Popen("mysql -u root -prootroot -h 127.0.0.1 --default-character-set=utf8 dayzitems", shell=True, stdin=PIPE)
+        process.stdin.write(open(fname, "rb").read())
+        process.stdin.close()
+        process.kill()
 
     def writeFile(self, output, location):
         f = open(location, "wb+")
