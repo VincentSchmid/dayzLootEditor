@@ -41,7 +41,7 @@ flags = ["count_in_cargo",
          "crafted",
          "deloot"]
 
-
+#returns a list of all items given that match with given name
 def findMatchingItem(name, items):
     matches = []
     if "gp_" in name.lower():
@@ -75,7 +75,7 @@ def findMatchingItem(name, items):
             matches.append(i.name)
     return matches
 
-
+#returns item type of given name if category is weapon else returns category
 def findType(name, category):
     if category == "weapons":
         if isGun(name):
@@ -95,7 +95,7 @@ def findType(name, category):
     else:
         return category
 
-
+#checks name if isGun
 def isGun(name):
     isGun = False
 
@@ -149,6 +149,7 @@ class Item():
         self.flags = []
         self.parameters = {}
 
+    #fills item values based on given type xml block
     def fill(self, xml):
         xml.attrib["name"]
         for col in xml:
@@ -192,6 +193,7 @@ class Item():
         self.type = findType(self.name, self.category)
         self.createParams()
 
+    #fills item values based on list of raw values
     def fillFromVal(self, val):
         self.name = val[0]
         self.category = val[1]
@@ -222,6 +224,7 @@ class Item():
             self.flags.append(val[p])
             p += 1
 
+    #creates dictonary of item values and fills them
     def createParams(self):
         dict = {"name": self.name, "category": self.category, "type": self.type,
                 "lifetime": self.lifetime, "quantmin": self.quantmin,
@@ -251,7 +254,9 @@ class Item():
 
         self.parameters = dict
 
-
+#almost Main function. It iterates over all xml type blocks, creates Item object.
+#creats list of all items. Each element of the list contains a list of all item values
+#it also creates a string of all keys with , delimiter (this function does multiple things and should be split)
 def createItemValAndParam():
     # create list with the values of all properties of each item
     itemValues = []
@@ -273,6 +278,7 @@ def createItemValAndParam():
 
 # dbFiller.insertItems(params, itemValues)
 
+#returns a list of tuples with each tuple containing (gun item.name, matching secondary item.name)
 def gunsAndMatchingItem(items):
     matching = []
     for i in items:
