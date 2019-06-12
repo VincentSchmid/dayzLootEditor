@@ -234,7 +234,7 @@ class Window(object):
     def distribute(self):
         self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get(), self.inclOptics.get(), self.inclAttachm.get()]
-        distibutor.distribute("gun", int(self.targetNominal.get()), flags)
+        distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), flags)
         self.changed = True
         self.updateDisplay(dao.viewType("gun"))
 
