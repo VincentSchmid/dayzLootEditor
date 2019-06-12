@@ -4,11 +4,12 @@ from tkinter import *
 from tkinter import ttk
 
 try:
-    from application import xmlParsing4, writeItemToXML, dao
+    from application import xmlParsing4, writeItemToXML, dao, distibutor
 except ModuleNotFoundError:
     import xmlParsing4
     import writeItemToXML
     import dao
+    import distibutor
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -149,8 +150,8 @@ class Window(object):
         self.distribution.grid(row=0, column=0)
 
         Label(self.distribution, text="Target Nominal").grid(row=0, column=0, sticky=W)
-        self.desiredNominal = StringVar()
-        self.desiredNomEntry = Entry(self.distribution, textvariable=self.desiredNominal, width=14).grid(row=1, sticky=W)
+        self.targetNominal = StringVar()
+        self.desiredNomEntry = Entry(self.distribution, textvariable=self.targetNominal, width=14).grid(row=1, sticky=W)
 
         self.inclAmmo = IntVar()
         Checkbutton(self.distribution, text='Ammo', variable=self.inclAmmo).grid(row=2, sticky=W)
@@ -161,7 +162,7 @@ class Window(object):
         self.inclAttachm = IntVar()
         Checkbutton(self.distribution, text='Attachments', variable=self.inclAttachm).grid(row=5, sticky=W)
 
-        Button(self.distribution, text="Distribute", width=12, command=window.destroy).grid(row=6)
+        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=6)
 
 
 
@@ -241,6 +242,10 @@ class Window(object):
         self.updateDisplay(rows)
         self.updateNominalInfo()
         self.changed = True
+
+    def distribute(self):
+        flags = [self.inclAmmo.get(), self.inclMags.get(), self.inclOptics.get(), self.inclAttachm.get()]
+        distibutor.distribute("gun", self.targetNominal, flags)
 
     def updateXML(self):
         writeItemToXML.update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)

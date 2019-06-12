@@ -1,4 +1,7 @@
-from application import dao
+try:
+    from application import dao
+except ModuleNotFoundError:
+    import dao
 
 #todo enum from rarities store at one place
 
@@ -20,7 +23,10 @@ def distribute(type, targetNominal, flags):
     itemsToDistribute = getItems(type)
     numElements = calculateNumElements(itemsToDistribute)
     nominalPerElement = targetNominal / numElements
-    setNominals(nominalPerElement, itemsToDistribute)
+    setValues(nominalPerElement, itemsToDistribute)
+
+    for item in itemsToDistribute:
+        updateDB(item)
 
 
 def getItems(type):
@@ -38,7 +44,7 @@ def calculateNumElements(itemsToDistribute):
     return numElements
 
 
-def setNominals(nominalPerElement, itemsToDistribute):
+def setValues(nominalPerElement, itemsToDistribute):
     overallNominal = 0
     for item in itemsToDistribute:
         item["nominal"] = int(round(rarityMultiplier[item["rarity"]] * nominalPerElement, 0))
