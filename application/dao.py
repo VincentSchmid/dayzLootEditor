@@ -165,6 +165,13 @@ def update(values):
         "rarity"] + " WHERE name = '" + values["name"] + "';")
     conn.commit()
 
+def updateMany(items):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.fast_executemany = True
+    cursor.executemany("UPDATE items SET nominal = ?, min= ?, \
+        restock= ?, lifetime= ?, rarity= ? WHERE name = ?;", items)
+
 
 def getItemsToDistibute(type):
     cursor = connection().cursor()

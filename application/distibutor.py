@@ -24,6 +24,7 @@ rarityMultiplier = {50: 1, 45: 1.5, 40: 2, 35: 2.5, 30: 3, 25: 4, 20: 5, 15: 7.5
 
 # input: type to distribute, target nominal, List of include flags
 def distribute(type, targetNominal, flags):
+    print(flags)
     itemsToDistribute = getItems(type)
     numElements = calculateNumElements(itemsToDistribute)
     nominalPerElement = targetNominal / numElements
@@ -32,11 +33,17 @@ def distribute(type, targetNominal, flags):
     for item in itemsToDistribute:
         updateDB(item)
 
+    if flags[0] == 1:
+        pass
+
+    if flags[1] == 1:
+        distributeMags(itemsToDistribute, nominalPerElement)
+
 
 def getItems(type):
     global itemsToDistribute
     itemsToDistribute = dao.getItemsToDistibute(type)
-    return createListOfDictFromRows(itemsToDistribute)
+    return getDicts(itemsToDistribute)
 
 
 def calculateNumElements(itemsToDistribute):
@@ -62,7 +69,7 @@ def updateDB(item):
     dao.update(item)
 
 
-def createListOfDictFromRows(itemsToDistribute):
+def getDicts(itemsToDistribute):
     itemsListOfDicts = []
     keys = dao.returnValues.split(", ")
     for item in itemsToDistribute:
@@ -73,3 +80,27 @@ def createListOfDictFromRows(itemsToDistribute):
         itemsListOfDicts.append(dict)
 
     return itemsListOfDicts
+
+def distributeMags(items, nominalPerElement):
+    zeroAllMags()
+    for item in items:
+        for corr in getDicts(dao.getWeaponAndCorresponding(item["name"])):
+            if corr["type"] == "mag":
+                corr["nominal"] += min(nominalPerElement * int(rarityMultiplier[int(item["rarity"])]), 7)
+                corr["min"] += int(math.ceil(int(item["nominal"]) / 2))
+
+                for k, v in corr.items():
+                    corr[k] = str(v)
+
+                dao.update(corr)
+
+
+def zeroAllMags():
+    for mag in getDicts(dao.viewType("mag")):
+        mag["nominal"] = 0
+        mag["min"] = 0
+
+        for k, v in mag.items():
+            mag[k] = str(v)
+
+        dao.update(mag)
