@@ -85,12 +85,12 @@ class Window(object):
 
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
+        self.raritySel.trace("w", self.raritySelChange)
 
-        typeDrop = OptionMenu(self.entryFrame, self.raritySel, *rarities9.values())
-        typeDrop.grid(row=0, column=11)
+        OptionMenu(self.entryFrame, self.raritySel, *rarities9.values()).grid(row=0, column=11)
 
-        b5 = Button(self.entryFrame, text="update selection", width=12, command=self.updateSel)
-        b5.grid(row=0, column=12, sticky="e")
+        Button(self.entryFrame, text="update selection", width=12, command=self.updateSel) \
+            .grid(row=0, column=12, sticky="e")
 
     def createTreeview(self):
         self.tree = ttk.Treeview(self.window,
@@ -119,7 +119,7 @@ class Window(object):
         self.buttons.grid(row=4, column=12, sticky="n")
 
         # todo get from backend
-        choices = {'gun', 'mag', 'optic', 'attachment', "ammo", 'weapons'}
+        self.choices = {'gun', 'mag', 'optic', 'attachment', "ammo", 'weapons'}
 
         self.buttons = Frame(self.window)
         self.buttons.grid(row=4, column=12, sticky="n")
@@ -127,45 +127,39 @@ class Window(object):
         self.typeSel = StringVar(window)
         self.typeSel.set('gun')
 
-        typeDrop = OptionMenu(self.buttons, self.typeSel, *choices)
-        typeDrop.grid(row=1, column=0)
+        OptionMenu(self.buttons, self.typeSel, *self.choices).grid(row=1, column=0)
 
-        b2 = Button(self.buttons, text="view type", width=12, command=self.viewType)
-        b2.grid(row=2, column=0)
-
-        b3 = Button(self.buttons, text="view linked items", width=12, command=self.viewLinked)
-        b3.grid(row=3, column=0)
-
-        b4 = Button(self.buttons, text="search by name", width=12, command=self.searchByName)
-        b4.grid(row=4, column=0)
-
-        b6 = Button(self.buttons, text="update XML", width=12, command=self.updateXML)
-        b6.grid(row=5, column=0)
-
-        b7 = Button(self.buttons, text="close", width=12, command=window.destroy)
-        b7.grid(row=6, column=0)
+        Button(self.buttons, text="view type", width=12, command=self.viewType).grid(row=2, column=0)
+        Button(self.buttons, text="view linked items", width=12, command=self.viewLinked).grid(row=3, column=0)
+        Button(self.buttons, text="search by name", width=12, command=self.searchByName).grid(row=4, column=0)
+        Button(self.buttons, text="update XML", width=12, command=self.updateXML).grid(row=5, column=0)
+        Button(self.buttons, text="close", width=12, command=window.destroy).grid(row=6, column=0)
 
     def createDistibutionBlock(self):
         self.distribution = LabelFrame(self.buttons, text="Rarity Distribution")
         self.distribution.grid(row=0, column=0)
 
-        Label(self.distribution, text="Target Nominal").grid(row=0, column=0, sticky=W)
+        self.distribSel = StringVar(window)
+        self.distribSel.set('gun')
+        self.distribSel.trace("w", self.distribSelChange)
+
+        typeDrop = OptionMenu(self.distribution, self.distribSel, *itemTypes).grid(row=0)
+
+        Label(self.distribution, text="Target Nominal").grid(row=1, sticky=W)
         self.targetNominal = StringVar()
         self.targetNominal.set(str(dao.getNominalByType("gun")))
-        self.desiredNomEntry = Entry(self.distribution, textvariable=self.targetNominal, width=14).grid(row=1, sticky=W)
+        self.desiredNomEntry = Entry(self.distribution, textvariable=self.targetNominal, width=14).grid(row=2, sticky=W)
 
         self.inclAmmo = IntVar()
-        Checkbutton(self.distribution, text='Ammo', variable=self.inclAmmo).grid(row=2, sticky=W)
+        Checkbutton(self.distribution, text='Ammo', variable=self.inclAmmo).grid(row=3, sticky=W)
         self.inclMags = IntVar()
-        Checkbutton(self.distribution, text='Mags', variable=self.inclMags).grid(row=3, sticky=W)
+        Checkbutton(self.distribution, text='Mags', variable=self.inclMags).grid(row=4, sticky=W)
         self.inclOptics = IntVar()
-        Checkbutton(self.distribution, text='Optics', variable=self.inclOptics).grid(row=4, sticky=W)
+        Checkbutton(self.distribution, text='Optics', variable=self.inclOptics).grid(row=5, sticky=W)
         self.inclAttachm = IntVar()
-        Checkbutton(self.distribution, text='Attachments', variable=self.inclAttachm).grid(row=5, sticky=W)
+        Checkbutton(self.distribution, text='Attachments', variable=self.inclAttachm).grid(row=6, sticky=W)
 
-        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=6)
-
-
+        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7)
 
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
@@ -186,17 +180,10 @@ class Window(object):
             deltaStart.set(0)
             self.deltaNom.append(deltaStart)
 
-            label = Label(self.infoFrame, text=type + ":")
-            label.grid(row=0, column=i)
-
-            label = Label(self.infoFrame, textvariable=var)
-            label.grid(row=0, column=i + 1)
-
-            label = Label(self.infoFrame, text="/")
-            label.grid(row=0, column=i + 2)
-
-            label2 = Label(self.infoFrame, textvariable=deltaStart)
-            label2.grid(row=0, column=i + 3)
+            Label(self.infoFrame, text=type + ":").grid(row=0, column=i)
+            Label(self.infoFrame, textvariable=var).grid(row=0, column=i + 1)
+            Label(self.infoFrame, text="/").grid(row=0, column=i + 2)
+            Label(self.infoFrame, textvariable=deltaStart).grid(row=0, column=i + 3)
 
             i += 4
 
@@ -250,7 +237,6 @@ class Window(object):
         distibutor.distribute("gun", int(self.targetNominal.get()), flags)
         self.changed = True
         self.updateDisplay(dao.viewType("gun"))
-
 
     def updateXML(self):
         writeItemToXML.update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
@@ -311,6 +297,15 @@ class Window(object):
             self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5], rarities9[row[6]]))
         self.updateNominalInfo()
         self.targetNominal.set(str(dao.getNominalByType("gun")))
+
+    def raritySelChange(self, *args):
+        if self.getSelectedValues()["rarity"] != self.raritySel.get():
+            self.updateSel()
+
+    def distribSelChange(self, *args):
+        for i in range(len(itemTypes)):
+            if self.distribSel.get() == itemTypes[i]:
+                self.targetNominal.set(self.nomVars[i].get())
 
     def on_close(self):
         if self.changed:

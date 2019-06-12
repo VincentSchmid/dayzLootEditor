@@ -3,7 +3,7 @@ try:
 except ModuleNotFoundError:
     import dao
 
-#todo enum from rarities store at one place
+# todo enum from rarities store at one place
 
 rarities9 = {0: "undefined",
              50: "Legendary",
@@ -18,7 +18,8 @@ rarities9 = {0: "undefined",
 
 rarityMultiplier = {50: 1, 45: 1.5, 40: 2, 35: 2.5, 30: 3, 25: 4, 20: 5, 15: 7.5, 10: 10}
 
-#input: type to distribute, target nominal, List of include flags
+
+# input: type to distribute, target nominal, List of include flags
 def distribute(type, targetNominal, flags):
     itemsToDistribute = getItems(type)
     numElements = calculateNumElements(itemsToDistribute)
@@ -56,6 +57,7 @@ def updateDB(item):
     for k, v in item.items():
         item[k] = str(v)
     dao.update(item)
+
 
 def createListOfDictFromRows(itemsToDistribute):
     itemsListOfDicts = []
