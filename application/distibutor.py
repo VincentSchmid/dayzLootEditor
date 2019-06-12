@@ -2,6 +2,7 @@ try:
     from application import dao
 except ModuleNotFoundError:
     import dao
+import math
 
 # todo enum from rarities store at one place
 
@@ -18,6 +19,8 @@ rarities9 = {0: "undefined",
 
 rarityMultiplier = {50: 1, 45: 1.5, 40: 2, 35: 2.5, 30: 3, 25: 4, 20: 5, 15: 7.5, 10: 10}
 
+
+# todo formula is not clear results are not as expected
 
 # input: type to distribute, target nominal, List of include flags
 def distribute(type, targetNominal, flags):
@@ -50,7 +53,7 @@ def setValues(nominalPerElement, itemsToDistribute):
     for item in itemsToDistribute:
         item["nominal"] = int(round(rarityMultiplier[item["rarity"]] * nominalPerElement, 0))
         overallNominal += item["nominal"]
-        item["min"] = int(item["nominal"] / 2)
+        item["min"] = int(math.ceil(item["nominal"] / 2))
 
 
 def updateDB(item):

@@ -168,7 +168,7 @@ def update(values):
 
 def getItemsToDistibute(type):
     cursor = connection().cursor()
-    cursor.execute("select " + returnValues + " from items where type = " + type + "and rarity != 'undefined'", )
+    cursor.execute("select " + returnValues + " from items where type = '" + type + "' and rarity <> 'undefined'")
     return cursor.fetchall()
 
 

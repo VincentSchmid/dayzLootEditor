@@ -316,7 +316,7 @@ class Window(object):
         if self.changed:
             self.backupDB("dayzitems.sql")
         self.window.destroy()
-        
+
     #todo move this functionality to dao
     def backupDB(self, filename):
         self.backupDatabase("root", "rootroot", "dayzitems",
