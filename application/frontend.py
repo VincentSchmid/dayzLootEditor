@@ -236,7 +236,7 @@ class Window(object):
         flags = [self.inclAmmo.get(), self.inclMags.get(), self.inclOptics.get(), self.inclAttachm.get()]
         distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), flags)
         self.changed = True
-        self.updateDisplay(dao.viewType("gun"))
+        self.updateDisplay(dao.viewType(self.distribSel.get()))
 
     def updateXML(self):
         writeItemToXML.update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
