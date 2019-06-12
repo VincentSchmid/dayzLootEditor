@@ -12,10 +12,18 @@ except ModuleNotFoundError:
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
-rarities9 = {0: "undefined", 50: "Legendary", 45: "Extremely Rare", 40: "Very Rare", 30: "Rare",
-             25: "Somewhat Rare", 20: "Uncommon", 15: "Not so Common", 10: "Common", 5: "All Over The Place"}
+rarities9 = {0: "undefined",
+             50: "Legendary",
+             45: "Extremely Rare",
+             40: "Very Rare",
+             35: "Rare",
+             30: "Somewhat Rare",
+             25: "Uncommon",
+             20: "Common",
+             15: "Very Common",
+             10: "All Over The Place"}
 
-rarities5 = {10: "Common", 20: "Uncommon", 30: "Rare", 40: "Very Rare", 50: "Legendary", 0: "undefined"}
+rarities5 = {15: "Common", 20: "Uncommon", 30: "Rare", 40: "Very Rare", 50: "Legendary", 0: "undefined"}
 
 
 class Window(object):
@@ -137,7 +145,7 @@ class Window(object):
         b7.grid(row=6, column=0)
 
     def createDistibutionBlock(self):
-        self.distribution = LabelFrame(self.buttons, text="Auto Distribution")
+        self.distribution = LabelFrame(self.buttons, text="Rarity Distribution")
         self.distribution.grid(row=0, column=0)
 
         Label(self.distribution, text="Target Nominal").grid(row=0, column=0, sticky=W)

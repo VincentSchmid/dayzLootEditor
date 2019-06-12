@@ -162,11 +162,16 @@ def update(values):
     cursor = conn.cursor()
     cursor.execute("UPDATE items SET nominal = " + values["nominal"] + ", min= " + values["min"] + ", \
         restock= " + values["restock"] + ", lifetime= " + values["lifetime"] + ", rarity=" + values[
-        "rarity"] + " WHERE name = '" + values[
-                       "name"] + "';")
+        "rarity"] + " WHERE name = '" + values["name"] + "';")
     conn.commit()
 
     return reExecuteLastQuery()
+
+
+def getItemsToDistibute(type):
+    cursor = connection().cursor()
+    cursor.execute("select "+returnValues+" from items where rarity != 'undefined'", )
+    return cursor.fetchall()
 
 
 def getAllItems():
