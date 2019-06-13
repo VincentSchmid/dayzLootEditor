@@ -1,5 +1,7 @@
-call C:\Users\puter\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src\compiled\installer.bat
-rmdir /Q/S C:\Users\puter\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src\compiled\build
-DEL /Q  C:\Users\puter\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src\compiled\*.spec
-DEL /Q  C:\Users\puter\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src\compiled\*.7z
-rmdir /Q/S C:\Users\puter\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src\application\__pycache__
+SET PATH_TO_PROJECT=G:\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src
+
+call %PATH_TO_PROJECT%\compiled\installer.bat
+rmdir /Q/S %PATH_TO_PROJECT%\compiled\build
+DEL /Q  %PATH_TO_PROJECT%\compiled\*.spec
+DEL /Q  %PATH_TO_PROJECT%\compiled\*.7z
+rmdir /Q/S %PATH_TO_PROJECT%\application\__pycache__
