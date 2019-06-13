@@ -1,16 +1,17 @@
 from os import getcwd, path
 import xml.etree.ElementTree as ET
 
-use_big_XML = True
-typesDir = path.abspath(path.join(getcwd(), "..", "data"))
-docName = ["testTypes.xml", "types.xml"]
+def parseXML():
+    use_big_XML = True
+    typesDir = path.abspath(path.join(getcwd(), "..", "data"))
+    docName = ["testTypes.xml", "types.xml"]
 
-myXML = docName[1] if use_big_XML else docName[0]
+    myXML = docName[1] if use_big_XML else docName[0]
 
-myXML = path.join(typesDir, myXML)
+    myXML = path.join(typesDir, myXML)
 
-tree = ET.parse(myXML)
-types = tree.getroot()
+    tree = ET.parse(myXML)
+    return tree.getroot()
 
 items = []
 

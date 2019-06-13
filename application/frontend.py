@@ -38,6 +38,7 @@ class Window(object):
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
         self.changed = False
 
+        self.createMenuBar()
         self.createEntryBar()
         self.createTreeview()
         self.createSideBar()
@@ -55,6 +56,30 @@ class Window(object):
         self.deltaNom = []
         self.startNominals = []
         self.createNominalInfo()
+
+    def createMenuBar(self):
+        menubar = Menu(self.window)
+
+        filemenu = Menu(menubar, tearoff=0)
+        filemenu.add_command(label="Load types.xml...", command=self.loadTypesXML)
+        filemenu.add_command(label="Load Database...")
+        filemenu.add_separator()
+        filemenu.add_command(label="Export types.xml...")
+        filemenu.add_command(label="Save Database As...")
+        filemenu.add_command(label="Save Database")
+        menubar.add_cascade(label="File", menu=filemenu)
+        filemenu.add_separator()
+        filemenu.add_command(label="Exit")
+
+        databasemenu = Menu(menubar, tearoff=0)
+        databasemenu.add_command(label="Connect...")
+        menubar.add_cascade(label="Database", menu=databasemenu)
+
+        helpmenu = Menu(menubar, tearoff=0)
+        helpmenu.add_command(label="You're on your own...")
+        menubar.add_cascade(label="Help", menu=helpmenu)
+
+        self.window.config(menu=menubar)
 
     def createEntryBar(self):
         self.entryFrame = Frame(self.window)
@@ -326,6 +351,9 @@ class Window(object):
         if self.changed:
             self.backupDB("dayzitems.sql")
         self.window.destroy()
+
+    def loadTypesXML(self):
+        pass
 
     #todo move this functionality to dao
     def backupDB(self, filename):
