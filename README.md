@@ -4,9 +4,6 @@ Built opon a a mysql database mostly generated and some manual editing
 written in python.
 types.xml needs to be in working directory
 
-packages to install:
-pyodbc
-
 ## Install
 
 There are a coupple of pesky preequisites:
@@ -21,6 +18,11 @@ Now you need the odbc driver from here: https://dev.mysql.com/downloads/connecto
 again make sure to download and install the 64 bit version.
 
 You need a data folder as in the repository containing an types.xml file on directory above executable
+
+### Developer install
+
+pyodbc
+pyinstaller
 
 ## Features
 Press Enter to search by name or update entries to database!
