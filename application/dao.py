@@ -160,9 +160,9 @@ def getMinByType(type):
 def update(values):
     conn = connection()
     cursor = conn.cursor()
-    cursor.execute("UPDATE items SET nominal = " + values["nominal"] + ", min= " + values["min"] + ", \
-        restock= " + values["restock"] + ", lifetime= " + values["lifetime"] + ", rarity=" + values[
-        "rarity"] + " WHERE name = '" + values["name"] + "';")
+    cursor.execute("UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
+        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", rarity=" + str(values[
+        "rarity"]) + " WHERE name = '" + str(values["name"]) + "';")
     conn.commit()
 
 def updateMany(items):

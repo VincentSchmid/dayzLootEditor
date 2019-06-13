@@ -23,21 +23,20 @@ rarityMultiplier = {50: 1, 45: 1.5, 40: 2, 35: 2.5, 30: 3, 25: 4, 20: 5, 15: 7.5
 # todo formula is not clear results are not as expected
 
 # input: type to distribute, target nominal, List of include flags
-def distribute(type, targetNominal, flags):
-    print(flags)
+def distribute(type, targetNominal, targetMag, flags):
     itemsToDistribute = getItems(type)
     numElements = calculateNumElements(itemsToDistribute)
     nominalPerElement = targetNominal / numElements
     setValues(nominalPerElement, itemsToDistribute)
 
     for item in itemsToDistribute:
-        updateDB(item)
+        dao.update(item)
 
     if flags[0] == 1:
         pass
 
     if flags[1] == 1:
-        distributeMags(itemsToDistribute, nominalPerElement)
+        distributeMags(itemsToDistribute, targetMag)
 
 
 def getItems(type):
@@ -56,17 +55,9 @@ def calculateNumElements(itemsToDistribute):
 
 
 def setValues(nominalPerElement, itemsToDistribute):
-    overallNominal = 0
     for item in itemsToDistribute:
-        item["nominal"] = int(round(rarityMultiplier[item["rarity"]] * nominalPerElement, 0))
-        overallNominal += item["nominal"]
+        item["nominal"] = int(round(rarityMultiplier[item["rarity"]] * nominalPerElement))
         item["min"] = int(math.ceil(item["nominal"] / 2))
-
-
-def updateDB(item):
-    for k, v in item.items():
-        item[k] = str(v)
-    dao.update(item)
 
 
 def getDicts(itemsToDistribute):
@@ -81,26 +72,39 @@ def getDicts(itemsToDistribute):
 
     return itemsListOfDicts
 
-def distributeMags(items, nominalPerElement):
+
+def distributeMags(guns, targetMag):
     zeroAllMags()
-    for item in items:
+    elementCount = 0
+    allMags = getDicts(dao.viewType("mag"))
+    for item in guns:
+        mags = []
+        elementCount += int(item["nominal"])
         for corr in getDicts(dao.getWeaponAndCorresponding(item["name"])):
             if corr["type"] == "mag":
-                corr["nominal"] += min(nominalPerElement * int(rarityMultiplier[int(item["rarity"])]), 7)
-                corr["min"] += int(math.ceil(int(item["nominal"]) / 2))
+                for mag in allMags:
+                    if mag["name"] == corr["name"]:
+                        mags.append(mag)
 
-                for k, v in corr.items():
-                    corr[k] = str(v)
+        for mag in mags:
+            mag["nominal"] += item["nominal"] / len(mags) + 1
 
-                dao.update(corr)
+    perUnit = targetMag / elementCount
+
+    for mag in allMags:
+        mag["nominal"] = int(math.ceil(mag["nominal"] * perUnit))
+        mag["min"] = int(math.ceil(mag["nominal"] / 2))
+
+        dao.update(mag)
+
+
+def get_digits(string):
+    return int(''.join(filter(lambda x: x.isdigit(), string)))
 
 
 def zeroAllMags():
     for mag in getDicts(dao.viewType("mag")):
         mag["nominal"] = 0
         mag["min"] = 0
-
-        for k, v in mag.items():
-            mag[k] = str(v)
 
         dao.update(mag)

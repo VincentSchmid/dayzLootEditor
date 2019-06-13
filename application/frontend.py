@@ -159,12 +159,18 @@ class Window(object):
         Checkbutton(self.distribution, text='Ammo', variable=self.inclAmmo).grid(row=3, sticky=W)
         self.inclMags = IntVar()
         Checkbutton(self.distribution, text='Mags', variable=self.inclMags).grid(row=4, sticky=W)
+
+        self.targetMag = StringVar()
+        self.targetMag.set(str(dao.getNominalByType("mag")))
+        self.targetMagEntry = Entry(self.distribution, textvariable=self.targetMag, width=5)
+        self.targetMagEntry.grid(row=4, column=1, sticky=W)
+
         self.inclOptics = IntVar()
         Checkbutton(self.distribution, text='Optics', variable=self.inclOptics).grid(row=5, sticky=W)
         self.inclAttachm = IntVar()
         Checkbutton(self.distribution, text='Attachments', variable=self.inclAttachm).grid(row=6, sticky=W)
 
-        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7)
+        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7, columnspan=2)
 
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
@@ -239,7 +245,7 @@ class Window(object):
     def distribute(self):
         self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get(), self.inclOptics.get(), self.inclAttachm.get()]
-        distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), flags)
+        distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), int(self.targetMag.get()), flags)
         self.changed = True
         self.updateDisplay(dao.viewType(self.distribSel.get()))
 
@@ -301,7 +307,11 @@ class Window(object):
         for row in rows:
             self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5], rarities9[row[6]]))
         self.updateNominalInfo()
+        self.updateDistribution()
+
+    def updateDistribution(self):
         self.targetNominal.set(str(dao.getNominalByType("gun")))
+        self.targetMag.set(str(dao.getNominalByType("mag")))
 
     def raritySelChange(self, *args):
         if self.getSelectedValues()["rarity"] != self.raritySel.get():
@@ -333,7 +343,8 @@ class Window(object):
         path = dao.getPath() + "bin\\"
         fname = askopenfilename(filetypes=[("SQL File", '*.sql')])
         cmdL1 = [path + "mysql", "-uroot", "-prootroot", "dayzitems"]
-        process = Popen("mysql -u root -prootroot -h 127.0.0.1 --default-character-set=utf8 dayzitems", shell=True, stdin=PIPE)
+        process = Popen("mysql -u root -prootroot -h 127.0.0.1 --default-character-set=utf8 dayzitems",
+                        shell=True, stdin=PIPE)
         process.stdin.write(open(fname, "rb").read())
         process.stdin.close()
         process.kill()
