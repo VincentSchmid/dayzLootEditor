@@ -1,5 +1,11 @@
 import pyodbc
 import textwrap
+from subprocess import Popen, PIPE
+try:
+    from application import windows
+except ModuleNotFoundError:
+    import windows
+
 
 returnValues = "name, nominal, min, restock, lifetime, type, rarity"
 lastQuery = "select " + returnValues + " from items"
@@ -185,6 +191,24 @@ def getAllItems():
     return cursor.fetchall()
 
 
+def createDB(name):
+    with pyodbc.connect(
+            r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
+            r'UID=root;'
+            r'PWD=rootroot;'
+            r'PORT=3306;'
+            r'SERVER=127.0.0.1;'
+            r'OPTION=3;'
+    ) as connection:
+        # Setting Encoding
+        connection.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
+        connection.setencoding(encoding='utf-8')
+
+        cursor = connection.cursor()
+        cursor.execute("CREATE DATABASE ?;\
+                       USE ?;", name, name)
+
+
 def getPath():
     cursor = connection().cursor()
     cursor.execute("select @@basedir")
@@ -196,3 +220,23 @@ def reExecuteLastQuery():
     cursor = connection().cursor()
     cursor.execute(lastQuery)
     return cursor.fetchall()
+
+
+def backupDatabase(user, password, db, loc):
+    path = getPath() + "bin\\"
+    cmdL1 = [path + "mysqldump", "--port=3306", "--force", "-u" + user, "-p" + password, db]
+    p1 = Popen(cmdL1, shell=True, stdout=PIPE)
+    windows.writeFile(p1.communicate()[0], loc)
+    p1.kill()
+
+def loadDB():
+    loadDB(windows.openFile("sql"))
+
+def loadDB(fname):
+    path = getPath() + "bin\\"
+    cmdL1 = [path + "mysql", "-uroot", "-prootroot", "dayzitems"]
+    process = Popen("mysql -u root -prootroot -h 127.0.0.1 --default-character-set=utf8 dayzitems",
+                    shell=True, stdin=PIPE)
+    process.stdin.write(open(fname, "rb").read())
+    process.stdin.close()
+    process.kill()

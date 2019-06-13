@@ -38,6 +38,8 @@ class Window(object):
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
         self.changed = False
 
+        self.checkForDatabase()
+
         self.createMenuBar()
         self.createEntryBar()
         self.createTreeview()
@@ -161,7 +163,7 @@ class Window(object):
         Button(self.buttons, text="view type", width=12, command=self.viewType).grid(row=2)
         Button(self.buttons, text="view linked items", width=12, command=self.viewLinked).grid(row=3)
         Button(self.buttons, text="search by name", width=12, command=self.searchByName).grid(row=4)
-        Button(self.buttons, text="Load Database", width=12, command=self.loadDB).grid(row=5)
+        Button(self.buttons, text="Load Database", width=12, command=dao.loadDB).grid(row=5)
         Button(self.buttons, text="update XML", width=12, command=self.updateXML).grid(row=6)
         Button(self.buttons, text="close", width=12, command=window.destroy).grid(row=7)
 
@@ -358,30 +360,11 @@ class Window(object):
 
     #todo move this functionality to dao
     def backupDB(self, filename):
-        self.backupDatabase("root", "rootroot", "dayzitems",
+        dao.backupDatabase("root", "rootroot", "dayzitems",
                             path.abspath(path.join(getcwd(), "..", "data", filename)))
 
-    def backupDatabase(self, user, password, db, loc):
-        path = dao.getPath() + "bin\\"
-        cmdL1 = [path + "mysqldump", "--port=3306", "--force", "-u" + user, "-p" + password, db]
-        p1 = Popen(cmdL1, shell=True, stdout=PIPE)
-        self.writeFile(p1.communicate()[0], loc)
-        p1.kill()
-
-    def loadDB(self):
-        path = dao.getPath() + "bin\\"
-        fname = askopenfilename(filetypes=[("SQL File", '*.sql')])
-        cmdL1 = [path + "mysql", "-uroot", "-prootroot", "dayzitems"]
-        process = Popen("mysql -u root -prootroot -h 127.0.0.1 --default-character-set=utf8 dayzitems",
-                        shell=True, stdin=PIPE)
-        process.stdin.write(open(fname, "rb").read())
-        process.stdin.close()
-        process.kill()
-
-    def writeFile(self, output, location):
-        f = open(location, "wb+")
-        f.write(output)
-        f.close()
+    def checkForDatabase(self):
+        dao.getNominalByType("weapon")
 
 
 window = Tk()
