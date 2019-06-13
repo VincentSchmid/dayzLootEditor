@@ -4,9 +4,6 @@ Built opon a a mysql database mostly generated and some manual editing
 written in python.
 types.xml needs to be in working directory
 
-packages to install:
-pyodbc
-
 ## Install
 
 There are a coupple of pesky preequisites:
@@ -20,23 +17,12 @@ Make sure to install the server and workbench 64bit
 Now you need the odbc driver from here: https://dev.mysql.com/downloads/connector/odbc/5.3.html
 again make sure to download and install the 64 bit version.
 
-Then you need to have Python 64bit installed during install make shure to add to Path variable when asked.
+You need a data folder as in the repository containing an types.xml file on directory above executable
 
-- first install 32bit: https://www.python.org/downloads/
+### Developer install
 
-then 64 bit on top. 
-- Windows: https://www.python.org/downloads/windows/
-- Mac: https://www.python.org/downloads/mac-osx/
-
-Then Install pyodbc:
-- Windows: Start search for CMD and enter in commandline: `pip install pyodbc`
-- Mac search for Terminal and enter `pip install pyodbc`
-
-Now you are good to go.
-Go to your terminal, navigate to the directory where the sourcecode is located in the application folder
-basically enter: `cd c:\user\downloads\dayzLootEditor\application\` replace this path with your path
-then when you're in the folder enter in the terminal:
-`python frontend.py`
+pyodbc
+pyinstaller
 
 ## Features
 Press Enter to search by name or update entries to database!
@@ -77,7 +63,7 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] loot overall droprate in percent adjusts nominal, min and restock
 - [x] enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
 - [ ] loading types.xml and then generating all database from that (including finding ammo for typical guns)
-- [ ] loading database with all links allready included
+- [x] loading database with all links allready included
 - [ ] 60round stanag is not implemented
 - [x] Crate Rarity in database include dropdown in item, base rarity on allready existing items - then distribute across nominal
 
