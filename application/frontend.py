@@ -275,7 +275,8 @@ class Window(object):
         self.updateDisplay(dao.viewType(self.distribSel.get()))
 
     def updateXML(self):
-        writeItemToXML.update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
+        xmlPath = path.abspath(path.join(getcwd(), "..", "data/types.xml"))
+        writeItemToXML.update(xmlPath)
 
     def clearTree(self):
         if self.tree.get_children() != ():

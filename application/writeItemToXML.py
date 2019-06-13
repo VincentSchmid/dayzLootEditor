@@ -1,3 +1,6 @@
+from os import getcwd, path
+import xml.etree.ElementTree as ET
+
 try:
     from application import xmlParsing4, dao
 except ModuleNotFoundError:
@@ -5,7 +8,10 @@ except ModuleNotFoundError:
     import dao
 
 
-def update(types, tree, dir):
+def update(dir):
+    tree = ET.parse(dir)
+    types = tree.getroot()
+
     items = []
     for val in dao.getAllItems():
         val = val[:-1]

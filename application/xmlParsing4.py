@@ -11,7 +11,8 @@ def parseXML():
     myXML = path.join(typesDir, myXML)
 
     tree = ET.parse(myXML)
-    return tree.getroot()
+    type = tree.getroot()
+    return ET.parse(myXML)
 
 items = []
 
