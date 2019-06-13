@@ -66,6 +66,7 @@ All items of the game are loaded and found if searched but the sorting only work
 - [x] loading database with all links allready included
 - [ ] 60round stanag is not implemented
 - [x] Crate Rarity in database include dropdown in item, base rarity on allready existing items - then distribute across nominal
+- [ ] Enter Hotkey in Rarity Distribution
 
 ## crazy ideas:
 
