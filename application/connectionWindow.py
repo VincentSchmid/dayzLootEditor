@@ -95,9 +95,10 @@ class ConnectionWindow(object):
         else:
             self.testDB()
 
-    def createDB(self):
+    def createDatabaseFromTypes(self):
         dao.createDB(self.database.get())
         dao.loadDB(abspath(join(getcwd(), "..", "data", "genesis_DayZitems.sql")))
+        filldataBase(dirToTypes)
 
     def testDB(self):
         pass
