@@ -1,4 +1,4 @@
-SET PATH_TO_PROJECT=G:\OneDrive\Dokumente\Projects\dayZ\loot\Loot\src
+SET PATH_TO_PROJECT=%~dp0..
 
 call %PATH_TO_PROJECT%\compiled\installer.bat
 rmdir /Q/S %PATH_TO_PROJECT%\compiled\build
