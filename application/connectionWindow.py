@@ -6,9 +6,10 @@ from subprocess import Popen, PIPE
 from tkinter import *
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename
+import time
 
 try:
-    from application import xmlParsing4, writeItemToXML, dao, distibutor, windows
+    from application import xmlParser, writeItemToXML, dao, distibutor, windows
 except ModuleNotFoundError:
     import xmlParsing4
     import writeItemToXML
@@ -83,25 +84,43 @@ class ConnectionWindow(object):
         buttonFrame = Frame(self.window)
         buttonFrame.grid(row=2, column=0, columnspan=3, pady=10)
 
-        Button(buttonFrame, text="Create / Test", width=12,).grid(row=0, column=1, sticky="w", padx=5)
-        Button(buttonFrame, text="Set", width=12,).grid(row=0, column=3, sticky="e", padx=5)
+        Button(buttonFrame, text="Create / Test", width=12, command=self.createTest).grid(row=0, column=1, sticky="w", padx=5)
+        Button(buttonFrame, text="Set", width=12, command=self.set).grid(row=0, column=3, sticky="e", padx=5)
 
     def openTypes(self):
         self.typesDir.set(windows.openFile("xml"))
 
     def createTest(self):
-        if self.v.get() == "create" and self.typesDir.get() != "":
-            self.createDB()
+        if self.v.get() == "create":
+            if self.typesDir.get() != "":
+                self.createDatabaseFromTypes()
+            else:
+                windows.showError("Specify File", "No Path to types.xml provided")
         else:
             self.testDB()
 
     def createDatabaseFromTypes(self):
+        self.passParams()
         dao.createDB(self.database.get())
-        dao.loadDB(abspath(join(getcwd(), "..", "data", "genesis_DayZitems.sql")))
-        filldataBase(dirToTypes)
+        dao.loadDB(abspath(join(getcwd(), "..", "data", "GENESIS.sql")))
+        items = xmlParser.parseAll(self.typesDir.get())
+        params = xmlParser.createStringFromKeys(items[0])
+        items = xmlParser.createValues(items)
+        time.sleep(1)
+        dao.insertItems(params, items)
 
     def testDB(self):
         pass
+
+    def set(self):
+        self.passParams()
+
+    def passParams(self):
+        dao.setConnectionParams(self.username.get(),
+                             self.password.get(),
+                             self.port.get(),
+                             self.database.get(),
+                             self.HostName.get())
 
 
 window = Tk()

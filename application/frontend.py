@@ -8,7 +8,7 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename
 
 try:
-    from application import xmlParsing4, writeItemToXML, dao, distibutor
+    from application import xmlParser, writeItemToXML, dao, distibutor
 except ModuleNotFoundError:
     import xmlParsing4
     import writeItemToXML
@@ -360,8 +360,7 @@ class Window(object):
 
     #todo move this functionality to dao
     def backupDB(self, filename):
-        dao.backupDatabase("root", "rootroot", "dayzitems",
-                            path.abspath(path.join(getcwd(), "..", "data", filename)))
+        dao.backupDatabase(path.abspath(path.join(getcwd(), "..", "data", filename)))
 
     def checkForDatabase(self):
         dao.getNominalByType("weapon")

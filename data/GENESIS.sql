@@ -36,10 +36,6 @@ CREATE TABLE `itemcombos` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `itemcombos`
---
-
---
 -- Table structure for table `items`
 --
 
@@ -83,14 +79,11 @@ CREATE TABLE `items` (
   `crafted` tinyint(1) unsigned zerofill NOT NULL,
   `deloot` tinyint(1) unsigned zerofill NOT NULL,
   `ingameName` varchar(45) DEFAULT NULL,
-  `rarity` tinyint(1) unsigned zerofill NOT NULL,
+  `rarity` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `items`
---
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -100,4 +93,4 @@ CREATE TABLE `items` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-14  0:51:08
+-- Dump completed on 2019-06-14 22:36:50

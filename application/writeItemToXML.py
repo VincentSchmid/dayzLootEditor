@@ -2,7 +2,7 @@ from os import getcwd, path
 import xml.etree.ElementTree as ET
 
 try:
-    from application import xmlParsing4, dao
+    from application import xmlParser, dao
 except ModuleNotFoundError:
     import xmlParsing4
     import dao
@@ -15,7 +15,7 @@ def update(dir):
     items = []
     for val in dao.getAllItems():
         val = val[:-1]
-        item = xmlParsing4.Item()
+        item = xmlParser.Item()
         item.fillFromVal(val)
         items.append(item)
 
@@ -53,7 +53,7 @@ def setType(xml, item):
 
         if col.tag == "flags":
             for i in range(len(col.items())):
-                col.set(xmlParsing4.flags[i], str(item.flags[i]))
+                col.set(xmlParser.flags[i], str(item.flags[i]))
 
 
 #update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
