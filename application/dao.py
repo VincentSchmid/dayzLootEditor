@@ -1,18 +1,58 @@
+from subprocess import Popen, PIPE
+
 import pyodbc
-import textwrap
+
+try:
+    from application import windows
+except ModuleNotFoundError:
+    import windows
 
 returnValues = "name, nominal, min, restock, lifetime, type, rarity"
 lastQuery = "select " + returnValues + " from items"
 
+user = ""
+pwd = ""
+port = ""
+database = ""
+server = ""
+
+
+def setConnectionParams(username, password, p, dbname, host):
+    windows.writeConfig(username, password, p, dbname, host)
+    global user
+    global pwd
+    global port
+    global database
+    global server
+    user = username
+    pwd = password
+    port = p
+    database = dbname
+    server = host
+
 
 def connection():
+    global user
+    global pwd
+    global port
+    global database
+    global server
+
+    if user == "":
+        c = windows.readConfig()
+        user = c[0]
+        pwd = c[1]
+        p = c[2]
+        database = c[3]
+        server = c[4]
+
     with pyodbc.connect(
             r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
-            r'UID=root;'
-            r'PWD=rootroot;'
-            r'PORT=3306;'
-            r'DATABASE=dayzitems;'
-            r'SERVER=127.0.0.1;'
+            r'UID=' + user + ';'
+            r'PWD=' + pwd + ';'
+            r'PORT=' + port + ';'
+            r'DATABASE=' + database + ';'
+            r'SERVER=' + server + ';'
             r'OPTION=3;'
     ) as connection:
         # Setting Encoding
@@ -22,19 +62,23 @@ def connection():
 
 
 def insertItems(parameters, items):
-    cursor = connection().cursor()
+    conn = connection()
+    cursor = conn.cursor()
 
     cursor.fast_executemany = True
     cursor.executemany(
         "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         items)
+    conn.commit()
 
 
 def createCombos(items):
-    cursor = connection().cursor()
+    conn = connection()
+    cursor = conn.cursor()
 
     cursor.fast_executemany = True
     cursor.executemany("insert into itemcombos(item1, item2) values (?, ?)", items)
+    conn.commit()
 
 
 def viewType(type):
@@ -162,8 +206,10 @@ def update(values):
     cursor = conn.cursor()
     cursor.execute("UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
         restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", rarity=" + str(values[
-        "rarity"]) + " WHERE name = '" + str(values["name"]) + "';")
+                                                                                                                                                                                                                            "rarity"]) + " WHERE name = '" + str(
+        values["name"]) + "';")
     conn.commit()
+
 
 def updateMany(items):
     conn = connection()
@@ -185,6 +231,37 @@ def getAllItems():
     return cursor.fetchall()
 
 
+def createDB(name):
+    global user
+    global pwd
+    global port
+    global database
+    global server
+
+    if user == "":
+        c = windows.readConfig()
+        user = c[0]
+        pwd = c[1]
+        p = c[2]
+        database = c[3]
+        server = c[4]
+
+    with pyodbc.connect(
+            r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
+            r'UID=' + user + ';'
+            r'PWD=' + pwd + ';'
+            r'PORT=' + port + ';'
+            r'SERVER=' + server + ';'
+            r'OPTION=3;'
+    ) as connection:
+        # Setting Encoding
+        connection.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
+        connection.setencoding(encoding='utf-8')
+
+        cursor = connection.cursor()
+        cursor.execute("CREATE DATABASE " + name + ";")
+
+
 def getPath():
     cursor = connection().cursor()
     cursor.execute("select @@basedir")
@@ -196,3 +273,52 @@ def reExecuteLastQuery():
     cursor = connection().cursor()
     cursor.execute(lastQuery)
     return cursor.fetchall()
+
+
+def backupDatabase(loc):
+    global user
+    global pwd
+    global port
+    global database
+    global server
+
+    if user == "":
+        c = windows.readConfig()
+        user = c[0]
+        pwd = c[1]
+        p = c[2]
+        database = c[3]
+        server = c[4]
+
+    path = getPath() + "bin\\"
+    cmdL1 = [path + "mysqldump", "--port=" + port, "--force", "-u" + user, "-p" + pwd, database]
+    p1 = Popen(cmdL1, shell=True, stdout=PIPE)
+    windows.writeFile(p1.communicate()[0], loc)
+    p1.kill()
+
+
+def loadDB():
+    loadDB(windows.openFile("sql"))
+
+
+def loadDB(fname):
+    global user
+    global pwd
+    global port
+    global database
+    global server
+
+    if user == "":
+        c = windows.readConfig()
+        user = c[0]
+        pwd = c[1]
+        p = c[2]
+        database = c[3]
+        server = c[4]
+
+    path = getPath() + "bin\\"
+    process = Popen("mysql -u " + user + " -p" + pwd + " -h " + server + " --default-character-set=utf8 " + database,
+                    shell=True, stdin=PIPE)
+    process.stdin.write(open(fname, "rb").read())
+    process.stdin.close()
+    process.kill()

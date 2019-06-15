@@ -1,18 +1,4 @@
-from os import getcwd, path
 import xml.etree.ElementTree as ET
-
-def parseXML():
-    use_big_XML = True
-    typesDir = path.abspath(path.join(getcwd(), "..", "data"))
-    docName = ["testTypes.xml", "types.xml"]
-
-    myXML = docName[1] if use_big_XML else docName[0]
-
-    myXML = path.join(typesDir, myXML)
-
-    tree = ET.parse(myXML)
-    type = tree.getroot()
-    return ET.parse(myXML)
 
 items = []
 
@@ -43,7 +29,48 @@ flags = ["count_in_cargo",
          "crafted",
          "deloot"]
 
-#returns a list of all items given that match with given name
+
+def parseAll(dir):
+    items = []
+    itemValues = []
+    try:
+        tree = ET.parse(dir)
+    except ET.ParseError:
+        raise Exception
+    types = tree.getroot()
+    for type in types:
+        item = createItemFromTypeBlock(type)
+        items.append(item)
+
+    return items
+
+
+def createValues(items):
+    values = []
+    for i in items:
+        values.append(createValuesFromItem(i))
+    return values
+
+
+def createItemFromTypeBlock(block):
+    item = Item()
+    item.fill(block)
+    return item
+
+
+def createValuesFromItem(item):
+    return list(item.parameters.values())
+
+
+def createStringFromKeys(item):
+    params = ""
+    for k in item.parameters.keys():
+        params += k + ", "
+    params = params[:-2]
+    return params
+
+
+# returns a list of all items given that match with given name
 def findMatchingItem(name, items):
     matches = []
     if "gp_" in name.lower():
@@ -77,7 +104,8 @@ def findMatchingItem(name, items):
             matches.append(i.name)
     return matches
 
-#returns item type of given name if category is weapon else returns category
+
+# returns item type of given name if category is weapon else returns category
 def findType(name, category):
     if category == "weapons":
         if isGun(name):
@@ -97,7 +125,8 @@ def findType(name, category):
     else:
         return category
 
-#checks name if isGun
+
+# checks name if isGun
 def isGun(name):
     isGun = False
 
@@ -151,9 +180,9 @@ class Item():
         self.flags = []
         self.parameters = {}
 
-    #fills item values based on given type xml block
+    # fills item values based on given type xml block
     def fill(self, xml):
-        xml.attrib["name"]
+        self.name = xml.attrib["name"]
         for col in xml:
             if col.tag == "category":
                 self.category = col.items()[0][1]
@@ -195,7 +224,7 @@ class Item():
         self.type = findType(self.name, self.category)
         self.createParams()
 
-    #fills item values based on list of raw values
+    # fills item values based on list of raw values
     def fillFromVal(self, val):
         self.name = val[0]
         self.category = val[1]
@@ -226,7 +255,7 @@ class Item():
             self.flags.append(val[p])
             p += 1
 
-    #creates dictonary of item values and fills them
+    # creates dictonary of item values and fills them
     def createParams(self):
         dict = {"name": self.name, "category": self.category, "type": self.type,
                 "lifetime": self.lifetime, "quantmin": self.quantmin,
@@ -256,31 +285,10 @@ class Item():
 
         self.parameters = dict
 
-#almost Main function. It iterates over all xml type blocks, creates Item object.
-#creats list of all items. Each element of the list contains a list of all item values
-#it also creates a string of all keys with , delimiter (this function does multiple things and should be split)
-def createItemValAndParam():
-    # create list with the values of all properties of each item
-    itemValues = []
-    for myType in types:
-        item = Item
-        item.fill(myType)
-        items.append(item)
-        itemValues.append(list(item.parameters.values()))
-
-    # create string for all keys
-    params = ""
-    for k in items[0].parameters.keys():
-        params += k + ", "
-    params = params[:-2]
-
-    print(params)
-    print(len(items[0].parameters.keys()))
-
 
 # dbFiller.insertItems(params, itemValues)
 
-#returns a list of tuples with each tuple containing (gun item.name, matching secondary item.name)
+# returns a list of tuples with each tuple containing (gun item.name, matching secondary item.name)
 def gunsAndMatchingItem(items):
     matching = []
     for i in items:

@@ -1,19 +1,17 @@
 from os import getcwd
 from os import path
-from os.path import abspath
-from os.path import join
-from subprocess import Popen, PIPE
 from tkinter import *
 from tkinter import ttk
-from tkinter.filedialog import askopenfilename
 
 try:
-    from application import xmlParsing4, writeItemToXML, dao, distibutor
+    from application import xmlParser, writeItemToXML, dao, distibutor, connectionWindow, windows
 except ModuleNotFoundError:
-    import xmlParsing4
+    import xmlParser
     import writeItemToXML
     import dao
     import distibutor
+    import connectionWindow
+    import windows
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -36,13 +34,17 @@ class Window(object):
         self.window = window
         self.window.wm_title("Loot Editor v0.2")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
+
         self.changed = False
+
+        self.checkForDatabase()
 
         self.createMenuBar()
         self.createEntryBar()
         self.createTreeview()
         self.createSideBar()
         self.createDistibutionBlock()
+        windows.center(self.window)
 
         # Keybindings
         self.tree.bind('<ButtonRelease-1>', self.fillEntryBoxes)
@@ -62,17 +64,16 @@ class Window(object):
 
         filemenu = Menu(menubar, tearoff=0)
         filemenu.add_command(label="Load types.xml...", command=self.loadTypesXML)
-        filemenu.add_command(label="Load Database...")
+        filemenu.add_command(label="Load Database...", command=self.loadDB)
         filemenu.add_separator()
-        filemenu.add_command(label="Export types.xml...")
-        filemenu.add_command(label="Save Database As...")
-        filemenu.add_command(label="Save Database")
+        filemenu.add_command(label="Export types.xml...", command=self.saveXML)
+        filemenu.add_command(label="Save Database As...", command=self.saveDB)
         menubar.add_cascade(label="File", menu=filemenu)
         filemenu.add_separator()
         filemenu.add_command(label="Exit")
 
         databasemenu = Menu(menubar, tearoff=0)
-        databasemenu.add_command(label="Connect...")
+        databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
         menubar.add_cascade(label="Database", menu=databasemenu)
 
         helpmenu = Menu(menubar, tearoff=0)
@@ -161,7 +162,7 @@ class Window(object):
         Button(self.buttons, text="view type", width=12, command=self.viewType).grid(row=2)
         Button(self.buttons, text="view linked items", width=12, command=self.viewLinked).grid(row=3)
         Button(self.buttons, text="search by name", width=12, command=self.searchByName).grid(row=4)
-        Button(self.buttons, text="Load Database", width=12, command=self.loadDB).grid(row=5)
+        Button(self.buttons, text="Load Database", width=12, command=dao.loadDB).grid(row=5)
         Button(self.buttons, text="update XML", width=12, command=self.updateXML).grid(row=6)
         Button(self.buttons, text="close", width=12, command=window.destroy).grid(row=7)
 
@@ -278,6 +279,11 @@ class Window(object):
         xmlPath = path.abspath(path.join(getcwd(), "..", "data/types.xml"))
         writeItemToXML.update(xmlPath)
 
+    def saveXML(self):
+        xmlPath = windows.saveAsFile("xml")
+        if xmlPath != None:
+            writeItemToXML.update(xmlPath)
+
     def clearTree(self):
         if self.tree.get_children() != ():
             self.tree.delete(*self.tree.get_children())
@@ -354,37 +360,34 @@ class Window(object):
         self.window.destroy()
 
     def loadTypesXML(self):
-        pass
-
-    #todo move this functionality to dao
-    def backupDB(self, filename):
-        self.backupDatabase("root", "rootroot", "dayzitems",
-                            path.abspath(path.join(getcwd(), "..", "data", filename)))
-
-    def backupDatabase(self, user, password, db, loc):
-        path = dao.getPath() + "bin\\"
-        cmdL1 = [path + "mysqldump", "--port=3306", "--force", "-u" + user, "-p" + password, db]
-        p1 = Popen(cmdL1, shell=True, stdout=PIPE)
-        self.writeFile(p1.communicate()[0], loc)
-        p1.kill()
+        fname = windows.openFile("xml")
+        if fname != "":
+            if windows.askOverwrite():
+                windows.loadTypesXML(fname)
 
     def loadDB(self):
-        path = dao.getPath() + "bin\\"
-        fname = askopenfilename(filetypes=[("SQL File", '*.sql')])
-        cmdL1 = [path + "mysql", "-uroot", "-prootroot", "dayzitems"]
-        process = Popen("mysql -u root -prootroot -h 127.0.0.1 --default-character-set=utf8 dayzitems",
-                        shell=True, stdin=PIPE)
-        process.stdin.write(open(fname, "rb").read())
-        process.stdin.close()
-        process.kill()
+        fname = windows.openFile("sql")
+        if fname != "":
+            dao.loadDB(fname)
 
-    def writeFile(self, output, location):
-        f = open(location, "wb+")
-        f.write(output)
-        f.close()
+    def saveDB(self):
+        windows.saveDB()
+
+    # todo move this functionality to dao
+    def backupDB(self, filename):
+        dao.backupDatabase(path.abspath(path.join(getcwd(), "..", "data", filename)))
+
+    def openConnectionWindow(self):
+        connectionWindow.ConnectionWindow(self.window)
+
+    def checkForDatabase(self):
+        try:
+            dao.getNominalByType("weapon")
+            self.connectionOK = True
+        except Exception:
+            self.openConnectionWindow()
 
 
 window = Tk()
 Window(window)
-
 window.mainloop()
