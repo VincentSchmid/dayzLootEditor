@@ -51,6 +51,7 @@ All items of the game are loaded and found if searched but the sorting only work
 ## Future Releases:
 
 ### Requirements for BETA
+- [ ] Updating Screenshots Creating Public Repository
 - [ ] Doing item assossiation inside the app
 - [ ] support for all item types
 - [ ] Ammo Distribution
