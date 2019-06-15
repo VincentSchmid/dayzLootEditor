@@ -97,7 +97,7 @@ class ConnectionWindow(object):
             if self.typesDir.get() != "":
                 self.createDatabaseFromTypes()
             else:
-                windows.showError("Specify File", "No Path to types.xml provided")
+                windows.showError(self.window, "Specify File", "No Path to types.xml provided")
         else:
             self.testDB()
 
