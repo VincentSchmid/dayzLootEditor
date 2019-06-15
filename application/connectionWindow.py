@@ -20,6 +20,7 @@ except ModuleNotFoundError:
 class ConnectionWindow(object):
     def __init__(self, root):
         self.window = Toplevel(root)
+        self.window.grab_set()
 
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=1, column=0, sticky="n,w,e", padx=30)
@@ -60,7 +61,7 @@ class ConnectionWindow(object):
 
         MODES = [("New Database", "create"), ("Use Existing", "use")]
         self.v = StringVar()
-        self.v.set("0")
+        self.v.set("use")
 
         Radiobutton(self.entryFrame, text=MODES[0][0], variable=self.v, value=MODES[0][1]).grid(row=6, column=0, pady=10)
         Radiobutton(self.entryFrame, text=MODES[1][0], variable=self.v, value=MODES[1][1]).grid(row=6, column=1)
@@ -87,6 +88,9 @@ class ConnectionWindow(object):
         Button(buttonFrame, text="Create / Test", width=12, command=self.createTest).grid(row=0, column=1, sticky="w", padx=5)
         Button(buttonFrame, text="Set", width=12, command=self.set).grid(row=0, column=3, sticky="e", padx=5)
 
+        windows.center(self.window)
+        self.window.wait_window()
+
     def openTypes(self):
         self.typesDir.set(windows.openFile("xml"))
 
@@ -103,17 +107,21 @@ class ConnectionWindow(object):
         self.passParams()
         dao.createDB(self.database.get())
         dao.loadDB(abspath(join(getcwd(), "..", "data", "GENESIS.sql")))
-        items = xmlParser.parseAll(self.typesDir.get())
-        params = xmlParser.createStringFromKeys(items[0])
-        items = xmlParser.createValues(items)
-        time.sleep(1)
-        dao.insertItems(params, items)
+        windows.loadTypesXML(self.typesDir.get())
 
     def testDB(self):
-        pass
+        self.passParams()
+        try:
+            dao.getNominalByType("gun")
+            windows.showError(self.window, "Success", "Connection Successfull!")
+        except Exception as e:
+            windows.showError(self.window, "Error", "Failed to connect:\n" + str(e))
+            windows.deleteParams()
+
 
     def set(self):
         self.passParams()
+        self.window.destroy()
 
     def passParams(self):
         dao.setConnectionParams(self.username.get(),
@@ -123,7 +131,8 @@ class ConnectionWindow(object):
                              self.HostName.get())
 
 
-window = Tk()
-ConnectionWindow(window)
+def testWindow():
+    window = Tk()
+    ConnectionWindow(window)
 
-window.mainloop()
+    window.mainloop()

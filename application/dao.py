@@ -19,6 +19,16 @@ server = ""
 
 def setConnectionParams(username, password, p, dbname, host):
     windows.writeConfig(username, password, p, dbname, host)
+    global user
+    global pwd
+    global port
+    global database
+    global server
+    user = username
+    pwd = password
+    port = p
+    database = dbname
+    server = host
 
 
 def connection():
@@ -63,10 +73,12 @@ def insertItems(parameters, items):
 
 
 def createCombos(items):
-    cursor = connection().cursor()
+    conn = connection()
+    cursor = conn.cursor()
 
     cursor.fast_executemany = True
     cursor.executemany("insert into itemcombos(item1, item2) values (?, ?)", items)
+    conn.commit()
 
 
 def viewType(type):

@@ -8,12 +8,14 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename
 
 try:
-    from application import xmlParser, writeItemToXML, dao, distibutor
+    from application import xmlParser, writeItemToXML, dao, distibutor, connectionWindow, windows
 except ModuleNotFoundError:
     import xmlParsing4
     import writeItemToXML
     import dao
     import distibutor
+    import connectionWindow
+    import windows
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -36,6 +38,7 @@ class Window(object):
         self.window = window
         self.window.wm_title("Loot Editor v0.2")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
+
         self.changed = False
 
         self.checkForDatabase()
@@ -45,6 +48,7 @@ class Window(object):
         self.createTreeview()
         self.createSideBar()
         self.createDistibutionBlock()
+        windows.center(self.window)
 
         # Keybindings
         self.tree.bind('<ButtonRelease-1>', self.fillEntryBoxes)
@@ -64,17 +68,16 @@ class Window(object):
 
         filemenu = Menu(menubar, tearoff=0)
         filemenu.add_command(label="Load types.xml...", command=self.loadTypesXML)
-        filemenu.add_command(label="Load Database...")
+        filemenu.add_command(label="Load Database...", command=self.loadDB)
         filemenu.add_separator()
-        filemenu.add_command(label="Export types.xml...")
-        filemenu.add_command(label="Save Database As...")
-        filemenu.add_command(label="Save Database")
+        filemenu.add_command(label="Export types.xml...", command=self.saveXML)
+        filemenu.add_command(label="Save Database As...", command=self.saveDB)
         menubar.add_cascade(label="File", menu=filemenu)
         filemenu.add_separator()
         filemenu.add_command(label="Exit")
 
         databasemenu = Menu(menubar, tearoff=0)
-        databasemenu.add_command(label="Connect...")
+        databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
         menubar.add_cascade(label="Database", menu=databasemenu)
 
         helpmenu = Menu(menubar, tearoff=0)
@@ -280,6 +283,11 @@ class Window(object):
         xmlPath = path.abspath(path.join(getcwd(), "..", "data/types.xml"))
         writeItemToXML.update(xmlPath)
 
+    def saveXML(self):
+        xmlPath = windows.saveAsFile("xml")
+        if xmlPath != None:
+            writeItemToXML.update(xmlPath)
+
     def clearTree(self):
         if self.tree.get_children() != ():
             self.tree.delete(*self.tree.get_children())
@@ -356,17 +364,37 @@ class Window(object):
         self.window.destroy()
 
     def loadTypesXML(self):
-        pass
+        fname = windows.openFile("xml")
+        if fname != "":
+            if windows.askOverwrite():
+                windows.loadTypesXML(fname)
+
+    def loadDB(self):
+        fname = windows.openFile("sql")
+        if fname != "":
+            dao.loadDB(fname)
+
+    def saveDB(self):
+        windows.saveDB()
+
 
     #todo move this functionality to dao
     def backupDB(self, filename):
         dao.backupDatabase(path.abspath(path.join(getcwd(), "..", "data", filename)))
 
+
+    def openConnectionWindow(self):
+        connectionWindow.ConnectionWindow(self.window)
+
     def checkForDatabase(self):
-        dao.getNominalByType("weapon")
+        try:
+            dao.getNominalByType("weapon")
+            self.connectionOK = True
+        except Exception:
+            self.openConnectionWindow()
+
 
 
 window = Tk()
 Window(window)
-
 window.mainloop()
