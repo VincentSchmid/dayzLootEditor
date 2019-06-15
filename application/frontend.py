@@ -32,12 +32,11 @@ rarities5 = {15: "Common", 20: "Uncommon", 30: "Rare", 40: "Very Rare", 50: "Leg
 class Window(object):
     def __init__(self, window):
         self.window = window
+        self.checkForDatabase()
         self.window.wm_title("Loot Editor v0.2")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
-
-        self.checkForDatabase()
 
         self.createMenuBar()
         self.createEntryBar()
@@ -140,7 +139,7 @@ class Window(object):
         self.treeview = self.tree
 
         sb1 = Scrollbar(window)
-        sb1.grid(row=3, rowspan=4, column=11, sticky="n,s")
+        sb1.grid(row=3, rowspan=5, column=11, sticky="n,s")
         self.tree.config(yscrollcommand=sb1.set)
         sb1.config(command=self.tree.yview)
 
@@ -162,13 +161,10 @@ class Window(object):
         Button(self.buttons, text="view type", width=12, command=self.viewType).grid(row=2)
         Button(self.buttons, text="view linked items", width=12, command=self.viewLinked).grid(row=3)
         Button(self.buttons, text="search by name", width=12, command=self.searchByName).grid(row=4)
-        Button(self.buttons, text="Load Database", width=12, command=dao.loadDB).grid(row=5)
-        Button(self.buttons, text="update XML", width=12, command=self.updateXML).grid(row=6)
-        Button(self.buttons, text="close", width=12, command=window.destroy).grid(row=7)
 
     def createDistibutionBlock(self):
         self.distribution = LabelFrame(self.buttons, text="Rarity Distribution")
-        self.distribution.grid(row=0, column=0)
+        self.distribution.grid(row=5, column=0, padx=20, pady=20)
 
         self.distribSel = StringVar(window)
         self.distribSel.set('gun')
@@ -196,11 +192,11 @@ class Window(object):
         self.inclAttachm = IntVar()
         Checkbutton(self.distribution, text='Attachments', variable=self.inclAttachm).grid(row=6, sticky=W)
 
-        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7, columnspan=2)
+        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7, columnspan=2, pady=10)
 
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
-        self.infoFrame.grid(row=10, column=0, sticky="s,w,e")
+        self.infoFrame.grid(row=11, column=0, sticky="s,w,e")
 
         i = 1
 
@@ -385,7 +381,9 @@ class Window(object):
             dao.getNominalByType("weapon")
             self.connectionOK = True
         except Exception:
+            self.window.withdraw()
             self.openConnectionWindow()
+            self.window.deiconify()
 
 
 window = Tk()

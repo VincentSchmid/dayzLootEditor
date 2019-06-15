@@ -106,12 +106,13 @@ class ConnectionWindow(object):
         dao.createDB(self.database.get())
         dao.loadDB(abspath(join(getcwd(), "..", "data", "GENESIS.sql")))
         windows.loadTypesXML(self.typesDir.get())
+        windows.connectionSuccess(self.window)
 
     def testDB(self):
         self.passParams()
         try:
             dao.getNominalByType("gun")
-            windows.showError(self.window, "Success", "Connection Successfull!")
+            windows.connectionSuccess(self.window)
         except Exception as e:
             windows.showError(self.window, "Error", "Failed to connect:\n" + str(e))
             windows.deleteParams()

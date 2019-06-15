@@ -51,6 +51,10 @@ def askUser(title, question):
     return MsgBox == "yes"
 
 
+def connectionSuccess(root):
+    showError(root, "Success", "Connection Successfull!")
+
+
 def askOverwrite():
     return askUser("Overwrite", "Are you sure you want to overwrite existing Database?")
 
