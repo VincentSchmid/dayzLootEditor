@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 try:
     from application import xmlParser, dao
 except ModuleNotFoundError:
-    import xmlParsing4
+    import xmlParser
     import dao
 
 

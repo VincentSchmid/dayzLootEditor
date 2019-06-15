@@ -6,7 +6,7 @@ from tkinter import *
 try:
     from application import xmlParser, writeItemToXML, dao, distibutor, windows
 except ModuleNotFoundError:
-    import xmlParsing4
+    import xmlParser
     import writeItemToXML
     import dao
     import distibutor
