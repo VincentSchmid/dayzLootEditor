@@ -1,6 +1,6 @@
-import pyodbc
-import textwrap
 from subprocess import Popen, PIPE
+
+import pyodbc
 
 try:
     from application import windows
@@ -39,7 +39,7 @@ def connection():
     global server
 
     if user == "":
-        c=windows.readConfig()
+        c = windows.readConfig()
         user = c[0]
         pwd = c[1]
         p = c[2]
@@ -239,7 +239,7 @@ def createDB(name):
     global server
 
     if user == "":
-        c=windows.readConfig()
+        c = windows.readConfig()
         user = c[0]
         pwd = c[1]
         p = c[2]
@@ -259,7 +259,8 @@ def createDB(name):
         connection.setencoding(encoding='utf-8')
 
         cursor = connection.cursor()
-        cursor.execute("CREATE DATABASE "+name+";")
+        cursor.execute("CREATE DATABASE " + name + ";")
+
 
 def getPath():
     cursor = connection().cursor()
@@ -282,7 +283,7 @@ def backupDatabase(loc):
     global server
 
     if user == "":
-        c=windows.readConfig()
+        c = windows.readConfig()
         user = c[0]
         pwd = c[1]
         p = c[2]
@@ -290,7 +291,7 @@ def backupDatabase(loc):
         server = c[4]
 
     path = getPath() + "bin\\"
-    cmdL1 = [path + "mysqldump", "--port="+port, "--force", "-u" + user, "-p" + pwd, database]
+    cmdL1 = [path + "mysqldump", "--port=" + port, "--force", "-u" + user, "-p" + pwd, database]
     p1 = Popen(cmdL1, shell=True, stdout=PIPE)
     windows.writeFile(p1.communicate()[0], loc)
     p1.kill()
@@ -308,7 +309,7 @@ def loadDB(fname):
     global server
 
     if user == "":
-        c=windows.readConfig()
+        c = windows.readConfig()
         user = c[0]
         pwd = c[1]
         p = c[2]
@@ -316,7 +317,7 @@ def loadDB(fname):
         server = c[4]
 
     path = getPath() + "bin\\"
-    process = Popen("mysql -u "+user+" -p"+pwd+" -h "+server+" --default-character-set=utf8 "+database,
+    process = Popen("mysql -u " + user + " -p" + pwd + " -h " + server + " --default-character-set=utf8 " + database,
                     shell=True, stdin=PIPE)
     process.stdin.write(open(fname, "rb").read())
     process.stdin.close()

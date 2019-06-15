@@ -1,11 +1,13 @@
 from tkinter import messagebox
-from tkinter import messagebox
 import tkinter.filedialog as filediag
-from os import path, remove
+import time
+import tkinter.filedialog as filediag
+from os import getcwd
+from os import remove
 from os.path import abspath
 from os.path import join
-from os import getcwd
-import time
+from tkinter import messagebox
+
 try:
     from application import dao, xmlParser
 except ModuleNotFoundError:
@@ -18,7 +20,7 @@ def deleteParams():
 
 
 def openFile(fileEnding):
-    return filediag.askopenfilename(filetypes=[(fileEnding.upper() + " File", "*."+fileEnding)])
+    return filediag.askopenfilename(filetypes=[(fileEnding.upper() + " File", "*." + fileEnding)])
 
 
 def saveAsFile(fileEnding):
@@ -26,6 +28,7 @@ def saveAsFile(fileEnding):
         return filediag.asksaveasfile(mode='w+', defaultextension=fileEnding)
     except TypeError:
         pass
+
 
 def saveDB():
     fname = saveAsFile("sql")
@@ -47,18 +50,18 @@ def askUser(title, question):
     MsgBox = messagebox.askquestion(title, question, icon='warning')
     return MsgBox == "yes"
 
+
 def askOverwrite():
     return askUser("Overwrite", "Are you sure you want to overwrite existing Database?")
 
 
-
 def writeConfig(user, pwd, port, database, server):
     with open(abspath(join(getcwd(), "..", "data", "config.txt")), 'w+') as the_file:
-        the_file.write(user+'\n')
-        the_file.write(pwd+'\n')
-        the_file.write(port+'\n')
-        the_file.write(database+'\n')
-        the_file.write(server+'\n')
+        the_file.write(user + '\n')
+        the_file.write(pwd + '\n')
+        the_file.write(port + '\n')
+        the_file.write(database + '\n')
+        the_file.write(server + '\n')
 
 
 def readConfig():
@@ -90,6 +93,3 @@ def center(toplevel):
     x = w / 2 - size[0] / 2
     y = h / 2 - size[1] / 2
     toplevel.geometry("%dx%d+%d+%d" % (size + (x, y)))
-
-
-

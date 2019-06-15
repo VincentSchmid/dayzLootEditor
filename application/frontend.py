@@ -1,11 +1,7 @@
 from os import getcwd
 from os import path
-from os.path import abspath
-from os.path import join
-from subprocess import Popen, PIPE
 from tkinter import *
 from tkinter import ttk
-from tkinter.filedialog import askopenfilename
 
 try:
     from application import xmlParser, writeItemToXML, dao, distibutor, connectionWindow, windows
@@ -377,11 +373,9 @@ class Window(object):
     def saveDB(self):
         windows.saveDB()
 
-
-    #todo move this functionality to dao
+    # todo move this functionality to dao
     def backupDB(self, filename):
         dao.backupDatabase(path.abspath(path.join(getcwd(), "..", "data", filename)))
-
 
     def openConnectionWindow(self):
         connectionWindow.ConnectionWindow(self.window)
@@ -392,7 +386,6 @@ class Window(object):
             self.connectionOK = True
         except Exception:
             self.openConnectionWindow()
-
 
 
 window = Tk()

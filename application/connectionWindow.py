@@ -1,12 +1,7 @@
 from os import getcwd
-from os import path
 from os.path import abspath
 from os.path import join
-from subprocess import Popen, PIPE
 from tkinter import *
-from tkinter import ttk
-from tkinter.filedialog import askopenfilename
-import time
 
 try:
     from application import xmlParser, writeItemToXML, dao, distibutor, windows
@@ -17,6 +12,7 @@ except ModuleNotFoundError:
     import distibutor
     import windows
 
+
 class ConnectionWindow(object):
     def __init__(self, root):
         self.window = Toplevel(root)
@@ -25,7 +21,7 @@ class ConnectionWindow(object):
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=1, column=0, sticky="n,w,e", padx=30)
 
-        #Host
+        # Host
         Label(self.entryFrame, text="Host:").grid(row=1, column=0, sticky="w")
 
         self.HostName = StringVar()
@@ -33,7 +29,7 @@ class ConnectionWindow(object):
         self.nameEntry = Entry(self.entryFrame, textvariable=self.HostName)
         self.nameEntry.grid(row=1, column=1, sticky="e", pady=5)
 
-        #Port
+        # Port
         Label(self.entryFrame, text="Port:").grid(row=2, column=0, sticky="w")
 
         self.port = StringVar()
@@ -41,7 +37,7 @@ class ConnectionWindow(object):
         self.nameEntry = Entry(self.entryFrame, textvariable=self.port)
         self.nameEntry.grid(row=2, column=1, sticky="e", pady=5)
 
-        #Username
+        # Username
         Label(self.entryFrame, text="Username:").grid(row=4, column=0, sticky="w")
 
         self.username = StringVar()
@@ -49,7 +45,7 @@ class ConnectionWindow(object):
         self.DBEntry = Entry(self.entryFrame, textvariable=self.username)
         self.DBEntry.grid(row=4, column=1, sticky="e", pady=5)
 
-        #Password
+        # Password
         Label(self.entryFrame, text="Password:").grid(row=5, column=0, sticky="w")
 
         self.password = StringVar()
@@ -57,13 +53,14 @@ class ConnectionWindow(object):
         self.DBEntry = Entry(self.entryFrame, textvariable=self.password)
         self.DBEntry.grid(row=5, column=1, sticky="e", pady=5)
 
-        #Database
+        # Database
 
         MODES = [("New Database", "create"), ("Use Existing", "use")]
         self.v = StringVar()
         self.v.set("use")
 
-        Radiobutton(self.entryFrame, text=MODES[0][0], variable=self.v, value=MODES[0][1]).grid(row=6, column=0, pady=10)
+        Radiobutton(self.entryFrame, text=MODES[0][0], variable=self.v, value=MODES[0][1]).grid(row=6, column=0,
+                                                                                                pady=10)
         Radiobutton(self.entryFrame, text=MODES[1][0], variable=self.v, value=MODES[1][1]).grid(row=6, column=1)
 
         Label(self.entryFrame, text="Database:").grid(row=7, column=0, sticky="w")
@@ -73,7 +70,7 @@ class ConnectionWindow(object):
         self.DBEntry = Entry(self.entryFrame, textvariable=self.database)
         self.DBEntry.grid(row=7, column=1, sticky="e", pady=5)
 
-        #Types
+        # Types
         Label(self.entryFrame, text="Types.xml:").grid(row=8, column=0, sticky="w")
 
         self.typesDir = StringVar()
@@ -85,7 +82,8 @@ class ConnectionWindow(object):
         buttonFrame = Frame(self.window)
         buttonFrame.grid(row=2, column=0, columnspan=3, pady=10)
 
-        Button(buttonFrame, text="Create / Test", width=12, command=self.createTest).grid(row=0, column=1, sticky="w", padx=5)
+        Button(buttonFrame, text="Create / Test", width=12, command=self.createTest).grid(row=0, column=1, sticky="w",
+                                                                                          padx=5)
         Button(buttonFrame, text="Set", width=12, command=self.set).grid(row=0, column=3, sticky="e", padx=5)
 
         windows.center(self.window)
@@ -118,17 +116,16 @@ class ConnectionWindow(object):
             windows.showError(self.window, "Error", "Failed to connect:\n" + str(e))
             windows.deleteParams()
 
-
     def set(self):
         self.passParams()
         self.window.destroy()
 
     def passParams(self):
         dao.setConnectionParams(self.username.get(),
-                             self.password.get(),
-                             self.port.get(),
-                             self.database.get(),
-                             self.HostName.get())
+                                self.password.get(),
+                                self.port.get(),
+                                self.database.get(),
+                                self.HostName.get())
 
 
 def testWindow():

@@ -1,4 +1,3 @@
-from os import getcwd, path
 import xml.etree.ElementTree as ET
 
 try:
@@ -25,7 +24,6 @@ def update(dir):
                 setType(xmlType, item)
 
     tree.write(dir)
-
 
 
 def setType(xml, item):
@@ -55,5 +53,4 @@ def setType(xml, item):
             for i in range(len(col.items())):
                 col.set(xmlParser.flags[i], str(item.flags[i]))
 
-
-#update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
+# update(xmlParsing4.types, xmlParsing4.tree, xmlParsing4.myXML)
