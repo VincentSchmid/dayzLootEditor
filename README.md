@@ -51,26 +51,31 @@ All items of the game are loaded and found if searched but the sorting only work
 ## Future Releases:
 
 ### Requirements for BETA
-- [ ] doing item assossiation inside the app
+- [ ] Doing item assossiation inside the app
 - [ ] support for all item types
+- [ ] Ammo Distribution
+- [ ] Optic Distribution
 - [ ] guns can be assinged an ammo type which creates automatic assossiations
 - [ ] Enter Hotkey in Rarity Distribution
 - [x] managing db connection
-
-### Requirements for Full Release
-- [ ] Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
-- [ ] drop percentages (not in types.xml)
-- [ ] overall loot settings (adjust for many items at once)
 - [x] enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
 - [x] loading types.xml and then generating all database from that 
-- [ ] finding ammo for vanilla guns
-- [ ] attachments for vanilla guns
 - [x] loading database with all links allready included
-- [ ] 60round stanag is not implemented
 - [x] Crate Rarity in database include dropdown in item, base rarity on allready existing items - then distribute across nominal
 
+### Requirements for Full Release
+- [ ] Attachment Distribution
+- [ ] Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
+- [ ] finding ammo for vanilla guns
+- [ ] attachments for vanilla guns
+- [ ] Loading / Exporting single tables and selected items not entire databases
 
-### crazy ideas:
+### Possible Features
+- [ ] Rerwiting Common Database connection errors
+- [ ] drop percentages (not in types.xml)
+- [ ] overall loot settings (adjust for many items at once)
+- [ ] Where the heck is the 60round STANAG??
 
+### Crazy ideas:
 - [ ] creating online database for all mods where people can add their itemsmods types.xml entries and a checkbox in app for a specific mod to add to types xml.
 - [ ] simulation of loot in game over time without having to run the game. graph for all items
