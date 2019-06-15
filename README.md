@@ -1,4 +1,4 @@
-# dayzLootEditor
+# DayZ LootEditor
 DayZ Loot Editor for types.xml.
 Helps with Visualizing end editing Loot. Has some Automatic functions for Loot distribution
 
