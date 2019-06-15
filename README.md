@@ -1,6 +1,16 @@
 # dayzLootEditor
-Visualize loot as a list from database Edit and update types.xml
-Built upon a MySQL database mostly generated and some manual editing
+DayZ Loot Editor for types.xml.
+Helps with Visualizing end editing Loot. Has some Automatic functions for Loot distribution
+
+- Visualize loot as a list from database
+- Automatically creates Sub-types for weapon items and links items that are used together (guns, ammo, mags,...)
+- Easily edit Loot Manually thanks to sub types and item linking
+- Set Rarity of item
+- Automatically generate distributions based on Rarity
+- Set appearence of linked item (example: if gun is rare, the ammo is also rare)
+- Export back to types.xml
+
+Built upon a MySQL database that will be automatically generated and some manual editing of item links.
 written in python.
 
 ## Install
@@ -64,6 +74,7 @@ All items of the game are loaded and found if searched but the sorting only work
 - [x] Crate Rarity in the database include dropdown in items. Derive rarity on already existing items - then distribute across nominal
 
 ### Requirements for Full Release
+- [ ] Mac and Linux Support
 - [ ] Attachment Distribution
 - [ ] Being able to paste in new items and associate these items with a mod that can be activated and deactivated
 - [ ] finding ammo for vanilla guns
