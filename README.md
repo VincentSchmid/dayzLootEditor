@@ -69,6 +69,7 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] finding ammo for vanilla guns
 - [ ] attachments for vanilla guns
 - [ ] Loading / Exporting single tables and selected items not entire databases
+- [ ] Loot Drop Location editing (Military, Hunting, ...)
 
 ### Possible Features
 - [ ] Rerwiting Common Database connection errors
