@@ -48,7 +48,7 @@ All items of the game are loaded and found if searched but the sorting only work
 
 ![weapons, gun, ammo, mag, attachment, optic](images/2019-06-05_14-24-52.png)
 
-## To do:
+## Future Releases:
 
 ### Requirements for BETA
 - [ ] doing item assossiation inside the app
@@ -70,7 +70,7 @@ All items of the game are loaded and found if searched but the sorting only work
 - [x] Crate Rarity in database include dropdown in item, base rarity on allready existing items - then distribute across nominal
 
 
-## crazy ideas:
+### crazy ideas:
 
 - [ ] creating online database for all mods where people can add their itemsmods types.xml entries and a checkbox in app for a specific mod to add to types xml.
 - [ ] simulation of loot in game over time without having to run the game. graph for all items
