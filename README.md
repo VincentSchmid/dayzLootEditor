@@ -5,19 +5,14 @@ written in python.
 types.xml needs to be in working directory
 
 ## Install
-
-There are a coupple of pesky preequisites:
-
 first off install MYSQL x64 Server 
 - Windows: [here](https://dev.mysql.com/downloads/windows/installer/8.0.html) 
 - Mac [here](https://dev.mysql.com/downloads/mysql/)
 
-Make sure to install the server and workbench 64bit
+Optionally you could install the workbench 64bit to edit database from there
 
 Now you need the odbc driver from here: https://dev.mysql.com/downloads/connector/odbc/5.3.html
 again make sure to download and install the 64 bit version.
-
-You need a data folder as in the repository containing an types.xml file on directory above executable
 
 ### Developer install
 
@@ -55,20 +50,25 @@ All items of the game are loaded and found if searched but the sorting only work
 
 ## To do:
 
-- [ ] Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
-- [ ] doing item assossiation inside of the app (most is automatic)
-- [ ] guns can be assinged an ammo type which creates automatic assossiations
+### Requirements for BETA
+- [ ] doing item assossiation inside the app
 - [ ] support for all item types
+- [ ] guns can be assinged an ammo type which creates automatic assossiations
+- [ ] Enter Hotkey in Rarity Distribution
+- [x] managing db connection
+
+### Requirements for Full Release
+- [ ] Beeing able to add paste in new items and assossiate these items with a mod that can be activated and deactivated
 - [ ] drop percentages (not in types.xml)
-- [ ] loot overall droprate in percent adjusts nominal, min and restock
+- [ ] overall loot settings (adjust for many items at once)
 - [x] enter hotkey: when editing name -> search, nominal... -> update sel, selecting -> select matching
 - [x] loading types.xml and then generating all database from that 
-- [ ] (including finding ammo for typical guns)
-- [x] managing db connection
+- [ ] finding ammo for vanilla guns
+- [ ] attachments for vanilla guns
 - [x] loading database with all links allready included
 - [ ] 60round stanag is not implemented
 - [x] Crate Rarity in database include dropdown in item, base rarity on allready existing items - then distribute across nominal
-- [ ] Enter Hotkey in Rarity Distribution
+
 
 ## crazy ideas:
 
