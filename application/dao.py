@@ -275,7 +275,7 @@ def reExecuteLastQuery():
     return cursor.fetchall()
 
 
-def backupDatabase(loc):
+def backupDatabase(file):
     global user
     global pwd
     global port
@@ -293,7 +293,7 @@ def backupDatabase(loc):
     path = getPath() + "bin\\"
     cmdL1 = [path + "mysqldump", "--port=" + port, "--force", "-u" + user, "-p" + pwd, database]
     p1 = Popen(cmdL1, shell=True, stdout=PIPE)
-    windows.writeFile(p1.communicate()[0], loc)
+    windows.writeFile(p1.communicate()[0], file)
     p1.kill()
 
 

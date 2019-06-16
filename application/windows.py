@@ -31,15 +31,14 @@ def saveAsFile(fileEnding, read):
 
 
 def saveDB():
-    fname = saveAsFile("sql", "w+")
+    fname = saveAsFile("sql", "wb+")
     if fname != None:
         dao.backupDatabase(fname)
 
 
-def writeFile(output, location):
-    f = open(location, "wb+")
-    f.write(output)
-    f.close()
+def writeFile(output, file):
+    file.write(output)
+    file.close()
 
 
 def showError(parent, title, message):
