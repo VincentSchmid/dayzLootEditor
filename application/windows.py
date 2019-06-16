@@ -23,15 +23,15 @@ def openFile(fileEnding):
     return filediag.askopenfilename(filetypes=[(fileEnding.upper() + " File", "*." + fileEnding)])
 
 
-def saveAsFile(fileEnding):
+def saveAsFile(fileEnding, read):
     try:
-        return filediag.asksaveasfile(mode='w+', defaultextension=fileEnding)
+        return filediag.asksaveasfile(mode=read, defaultextension=fileEnding)
     except TypeError:
         pass
 
 
 def saveDB():
-    fname = saveAsFile("sql")
+    fname = saveAsFile("sql", "w+")
     if fname != None:
         dao.backupDatabase(fname)
 

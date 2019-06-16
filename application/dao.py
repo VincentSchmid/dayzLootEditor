@@ -42,7 +42,7 @@ def connection():
         c = windows.readConfig()
         user = c[0]
         pwd = c[1]
-        p = c[2]
+        port = c[2]
         database = c[3]
         server = c[4]
 
@@ -242,7 +242,7 @@ def createDB(name):
         c = windows.readConfig()
         user = c[0]
         pwd = c[1]
-        p = c[2]
+        port = c[2]
         database = c[3]
         server = c[4]
 
@@ -286,7 +286,7 @@ def backupDatabase(loc):
         c = windows.readConfig()
         user = c[0]
         pwd = c[1]
-        p = c[2]
+        port = c[2]
         database = c[3]
         server = c[4]
 

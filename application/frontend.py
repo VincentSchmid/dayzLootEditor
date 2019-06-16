@@ -276,7 +276,7 @@ class Window(object):
         writeItemToXML.update(xmlPath)
 
     def saveXML(self):
-        xmlPath = windows.saveAsFile("xml")
+        xmlPath = windows.saveAsFile("xml", "r")
         if xmlPath != None:
             writeItemToXML.update(xmlPath)
 

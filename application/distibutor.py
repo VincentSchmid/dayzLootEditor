@@ -17,7 +17,7 @@ rarities9 = {0: "undefined",
              15: "Very Common",
              10: "All Over The Place"}
 
-rarityMultiplier = {50: 1, 45: 1.5, 40: 2, 35: 2.5, 30: 3, 25: 4, 20: 5, 15: 7.5, 10: 10}
+rarityMultiplier = {50: 1, 45: 1.5, 40: 2, 35: 2.5, 30: 3, 25: 5, 20: 8, 15: 12, 10: 20}
 
 
 # todo formula is not clear results are not as expected
@@ -30,6 +30,7 @@ def distribute(type, targetNominal, targetMag, flags):
     setValues(nominalPerElement, itemsToDistribute)
 
     for item in itemsToDistribute:
+        print(item["name"], item["nominal"])
         dao.update(item)
 
     if flags[0] == 1:
