@@ -56,6 +56,8 @@ class Window(object):
         self.nomVars = []
         self.deltaNom = []
         self.startNominals = []
+        self.totalNomDisplayed = StringVar()
+        self.totalNomDisplayed.set(0)
         self.createNominalInfo()
 
     def createMenuBar(self):
@@ -148,7 +150,7 @@ class Window(object):
         self.buttons.grid(row=4, column=12, sticky="n")
 
         # todo get from backend
-        self.choices = {'gun', 'mag', 'optic', 'attachment', "ammo", 'weapons'}
+        self.choices = xmlParser.itemTypes + xmlParser.categories
 
         self.buttons = Frame(self.window)
         self.buttons.grid(row=4, column=12, sticky="n")
@@ -158,7 +160,7 @@ class Window(object):
 
         OptionMenu(self.buttons, self.typeSel, *self.choices).grid(row=1, column=0)
 
-        Button(self.buttons, text="view type", width=12, command=self.viewType).grid(row=2)
+        Button(self.buttons, text="Show items", width=12, command=self.viewCategroy).grid(row=2)
         Button(self.buttons, text="view linked items", width=12, command=self.viewLinked).grid(row=3)
         Button(self.buttons, text="search by name", width=12, command=self.searchByName).grid(row=4)
 
@@ -187,21 +189,17 @@ class Window(object):
         self.targetMagEntry = Entry(self.distribution, textvariable=self.targetMag, width=5)
         self.targetMagEntry.grid(row=4, column=1, sticky=W)
 
-        self.inclOptics = IntVar()
-        Checkbutton(self.distribution, text='Optics', variable=self.inclOptics).grid(row=5, sticky=W)
-        self.inclAttachm = IntVar()
-        Checkbutton(self.distribution, text='Attachments', variable=self.inclAttachm).grid(row=6, sticky=W)
-
         Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7, columnspan=2, pady=10)
 
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
         self.infoFrame.grid(row=11, column=0, sticky="s,w,e")
 
-        i = 1
+        Label(self.infoFrame, text="overall nominal / delta:").grid(row=0, column=0)
 
-        label = Label(self.infoFrame, text="overall nominal / delta:")
-        label.grid(row=0, column=0)
+        Label(self.infoFrame, text="Displayed:").grid(row=0, column=1)
+        Label(self.infoFrame, textvariable=self.totalNomDisplayed).grid(row=0, column=2)
+        i = 3
 
         for type in itemTypes:
             var = StringVar()
@@ -213,7 +211,7 @@ class Window(object):
             deltaStart.set(0)
             self.deltaNom.append(deltaStart)
 
-            Label(self.infoFrame, text=type + ":").grid(row=0, column=i)
+            Label(self.infoFrame, text=type.capitalize() + ":").grid(row=0, column=i)
             Label(self.infoFrame, textvariable=var).grid(row=0, column=i + 1)
             Label(self.infoFrame, text="/").grid(row=0, column=i + 2)
             Label(self.infoFrame, textvariable=deltaStart).grid(row=0, column=i + 3)
@@ -226,7 +224,7 @@ class Window(object):
             self.nomVars[i].set(nominal)
             self.deltaNom[i].set(nominal - self.startNominals[i])
 
-    def viewType(self):
+    def viewCategroy(self):
         cat = self.typeSel.get()
         if cat in itemTypes:
             rows = dao.viewType(cat)
@@ -335,6 +333,7 @@ class Window(object):
         for row in rows:
             self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5], rarities9[row[6]]))
         self.updateNominalInfo()
+        self.totalNomDisplayed.set(sum(x[1] for x in rows))
         self.updateDistribution()
 
     def updateDistribution(self):

@@ -4,6 +4,8 @@ items = []
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
+categories = ["weapons", "containers", "clothes", "food", "tools", "vehiclesparts"]
+
 usages = ["Village",
           "Hunting",
           "Police",
