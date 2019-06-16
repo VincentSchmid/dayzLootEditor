@@ -60,8 +60,8 @@ All items of the game are loaded and found if searched but the sorting only work
 ## Future Releases:
 
 ### Requirements for BETA
-- [ ] fix saving db
-- [ ] fix saving types
+- [x] fix saving db
+- [x] fix saving types
 - [ ] lock items from distribution
 - [ ] show usages of items
 - [ ] Updating Screenshots Creating Public Repository
