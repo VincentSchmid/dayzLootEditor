@@ -60,8 +60,6 @@ All items of the game are loaded and found if searched but the sorting only work
 ## Future Releases:
 
 ### Requirements for BETA
-- [x] fix saving db
-- [x] fix saving types
 
 #### Distribution
 - [ ] choice if distributing by rarity or nominal
@@ -79,6 +77,8 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] show usages and tiers of items (2 new columns)
 - [ ] support for all item types
 - [x] enter hotkey: when editing name -> search, nominal... -> update selection, selecting -> select matching
+- [x] fix saving db
+- [x] fix saving types
 
 #### Item Association
 - [ ] Doing item association inside the app
