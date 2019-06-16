@@ -62,23 +62,39 @@ All items of the game are loaded and found if searched but the sorting only work
 ### Requirements for BETA
 - [x] fix saving db
 - [x] fix saving types
-- [ ] create a copy of types.xml to use as source types when saving to new file
-- [ ] lock items from distribution
-- [ ] show usages of items
-- [ ] Updating Screenshots Creating Public Repository
-- [ ] Doing item association inside the app
-- [ ] support for all item types
+
+#### Distribution
+- [ ] choice if distributing by rarity or nominal
+- [ ] abillity to distribute rarity across type/category or usage or tier
+- [ ] lock items from distribution (possibly rarity unassigned)
 - [ ] Ammo Distribution
-- [ ] Optic Distribution
-- [ ] guns can be assigned an ammo type which creates automatic associations
 - [ ] Enter Hotkey in Rarity Distribution
-- [x] managing DB connection
-- [x] enter hotkey: when editing name -> search, nominal... -> update selection, selecting -> select matching
-- [x] loading types.xml and then generating all database from that 
-- [x] loading database with all links already included
+- [x] Optic Distribution
 - [x] Crate Rarity in the database include dropdown in items. Derive rarity on already existing items - then distribute across nominal
 
+#### Main Display
+- [ ] abillity to view by type/category or usage or tier
+- [ ] show nominals of currentry displayed items
+- [ ] writing new types.xml
+- [ ] show usages and tiers of items (2 new columns)
+- [ ] support for all item types
+- [x] enter hotkey: when editing name -> search, nominal... -> update selection, selecting -> select matching
+
+#### Item Association
+- [ ] Doing item association inside the app
+- [ ] guns can be assigned an ammo type which creates automatic associations
+
+#### Database
+- [x] managing DB connection
+- [x] loading database with all links already included
+- [x] loading types.xml and then generating all database from that 
+
+#### General
+- [ ] Updating Screenshots Creating Public Repository
+
+
 ### Requirements for Full Release
+- [ ] App icon
 - [ ] Mac and Linux Support
 - [ ] Attachment Distribution
 - [ ] Being able to paste in new items and associate these items with a mod that can be activated and deactivated
