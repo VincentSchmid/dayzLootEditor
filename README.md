@@ -62,6 +62,7 @@ All items of the game are loaded and found if searched but the sorting only work
 ### Requirements for BETA
 - [x] fix saving db
 - [x] fix saving types
+- [ ] create a copy of types.xml to use as source types when saving to new file
 - [ ] lock items from distribution
 - [ ] show usages of items
 - [ ] Updating Screenshots Creating Public Repository
