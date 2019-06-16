@@ -30,7 +30,6 @@ def distribute(type, targetNominal, targetMag, flags):
     setValues(nominalPerElement, itemsToDistribute)
 
     for item in itemsToDistribute:
-        print(item["name"], item["nominal"])
         dao.update(item)
 
     if flags[0] == 1:

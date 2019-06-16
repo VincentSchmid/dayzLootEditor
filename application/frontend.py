@@ -33,7 +33,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.2")
+        self.window.wm_title("Loot Editor v0.5")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
@@ -371,7 +371,7 @@ class Window(object):
 
     # todo move this functionality to dao
     def backupDB(self, filename):
-        dao.backupDatabase(path.abspath(path.join(getcwd(), "..", "data", filename)))
+        dao.backupDatabase(open(windows.dataPath + "\\" + filename, "wb+"))
 
     def openConnectionWindow(self):
         connectionWindow.ConnectionWindow(self.window)
