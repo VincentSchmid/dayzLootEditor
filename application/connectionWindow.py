@@ -104,8 +104,8 @@ class ConnectionWindow(object):
     def createDatabaseFromTypes(self):
         self.passParams()
         dao.createDB(self.database.get())
-        dao.loadDB(abspath(join(getcwd(), "..", "data", "GENESIS.sql")))
-        windows.loadTypesXML(self.typesDir.get())
+        dao.loadDB(windows.dataPath + "\\GENESIS.sql")
+        windows.writeTypesToDatabase(self.typesDir.get())
         windows.connectionSuccess(self.window)
 
     def testDB(self):

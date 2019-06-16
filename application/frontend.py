@@ -272,7 +272,7 @@ class Window(object):
         self.updateDisplay(dao.viewType(self.distribSel.get()))
 
     def updateXML(self):
-        xmlPath = path.abspath(path.join(getcwd(), "..", "data/types.xml"))
+        xmlPath = windows.dataPath + "\\types.xml"
         writeItemToXML.update(xmlPath)
 
     def saveXML(self):
@@ -359,7 +359,7 @@ class Window(object):
         fname = windows.openFile("xml")
         if fname != "":
             if windows.askOverwrite():
-                windows.loadTypesXML(fname)
+                windows.writeTypesToDatabase(fname)
 
     def loadDB(self):
         fname = windows.openFile("sql")

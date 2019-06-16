@@ -14,9 +14,10 @@ except ModuleNotFoundError:
     import dao
     import xmlParser
 
+dataPath = abspath(join(getcwd(), "..", "data"))
 
 def deleteParams():
-    remove(abspath(join(getcwd(), "..", "data", "config.txt")))
+    remove(dataPath + "\\config.txt")
 
 
 def openFile(fileEnding):
@@ -59,7 +60,7 @@ def askOverwrite():
 
 
 def writeConfig(user, pwd, port, database, server):
-    with open(abspath(join(getcwd(), "..", "data", "config.txt")), 'w+') as the_file:
+    with open(dataPath + "\\config.txt", 'w+') as the_file:
         the_file.write(user + '\n')
         the_file.write(pwd + '\n')
         the_file.write(port + '\n')
@@ -69,7 +70,7 @@ def writeConfig(user, pwd, port, database, server):
 
 def readConfig():
     try:
-        with open(abspath(join(getcwd(), "..", "data", "config.txt")), 'r') as the_file:
+        with open(dataPath + "\\config.txt", 'r') as the_file:
             content = the_file.readlines()
             content = [x.strip() for x in content]
             return content
@@ -77,7 +78,7 @@ def readConfig():
         dao.setConnectionParams("root", "rootroot", "3306", "dayzitems", "127.0.0.1")
 
 
-def loadTypesXML(dir):
+def writeTypesToDatabase(dir):
     items = xmlParser.parseAll(dir)
     params = xmlParser.createStringFromKeys(items[0])
     itemVal = xmlParser.createValues(items)
