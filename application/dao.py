@@ -302,7 +302,8 @@ def backupDatabase(file):
     path = getPath() + "bin\\"
     cmdL1 = [path + "mysqldump", "--port=" + port, "--force", "-u" + user, "-p" + pwd, database]
     p1 = Popen(cmdL1, shell=True, stdout=PIPE)
-    windows.writeFile(p1.communicate()[0], file)
+    file.write(p1.communicate()[0])
+    file.close()
     p1.kill()
 
 

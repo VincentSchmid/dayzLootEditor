@@ -1,11 +1,9 @@
-from tkinter import messagebox
-import tkinter.filedialog as filediag
-import time
 import tkinter.filedialog as filediag
 from os import getcwd
 from os import remove
 from os.path import abspath
 from os.path import join
+from time import sleep
 from tkinter import messagebox
 
 try:
@@ -37,9 +35,10 @@ def saveDB():
         dao.backupDatabase(fname)
 
 
-def writeFile(output, file):
-    file.write(output)
-    file.close()
+def copyFile(fromdir, todir):
+    with open(fromdir) as f:
+        with open(todir, "w+") as f1:
+                    f1.write(f.read())
 
 
 def showError(parent, title, message):
@@ -82,11 +81,16 @@ def writeTypesToDatabase(dir):
     items = xmlParser.parseAll(dir)
     params = xmlParser.createStringFromKeys(items[0])
     itemVal = xmlParser.createValues(items)
-    time.sleep(1)
+    sleep(1)
     dao.insertItems(params, itemVal)
-    time.sleep(1)
+    sleep(1)
     matches = xmlParser.gunsAndMatchingItem(items)
     dao.createCombos(matches)
+
+
+def saveSourceTypes(dir, dbName):
+    copyFile(dir, dataPath + "\\SOURCETYPES_"+dbName+".xml")
+
 
 
 def center(toplevel):

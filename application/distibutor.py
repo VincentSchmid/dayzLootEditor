@@ -2,7 +2,7 @@ try:
     from application import dao
 except ModuleNotFoundError:
     import dao
-import math
+from math import ceil
 
 # todo enum from rarities store at one place
 
@@ -57,7 +57,7 @@ def calculateNumElements(itemsToDistribute):
 def setValues(nominalPerElement, itemsToDistribute):
     for item in itemsToDistribute:
         item["nominal"] = int(round(rarityMultiplier[item["rarity"]] * nominalPerElement))
-        item["min"] = int(math.ceil(item["nominal"] / 2))
+        item["min"] = int(ceil(item["nominal"] / 2))
 
 
 def getDicts(itemsToDistribute):
@@ -92,8 +92,8 @@ def distributeMags(guns, targetMag):
     perUnit = targetMag / elementCount
 
     for mag in allMags:
-        mag["nominal"] = int(math.ceil(mag["nominal"] * perUnit))
-        mag["min"] = int(math.ceil(mag["nominal"] / 2))
+        mag["nominal"] = int(ceil(mag["nominal"] * perUnit))
+        mag["min"] = int(ceil(mag["nominal"] / 2))
 
         dao.update(mag)
 

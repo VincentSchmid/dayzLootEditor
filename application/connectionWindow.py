@@ -18,6 +18,24 @@ class ConnectionWindow(object):
         self.window = Toplevel(root)
         self.window.grab_set()
 
+        self.user = "root"
+        self.pwd = "rootroot"
+        self.prt = "3306"
+        self.dbName = "dayzitems"
+        self.server = "localhost"
+
+        try:
+            c = windows.readConfig()
+            self.user = c[0]
+            self.pwd = c[1]
+            self.prt = c[2]
+            self.dbName = c[3]
+            self.server = c[4]
+
+        except FileNotFoundError:
+            pass
+
+
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=1, column=0, sticky="n,w,e", padx=30)
 
@@ -25,7 +43,7 @@ class ConnectionWindow(object):
         Label(self.entryFrame, text="Host:").grid(row=1, column=0, sticky="w")
 
         self.HostName = StringVar()
-        self.HostName.set("localhost")
+        self.HostName.set(self.server)
         self.nameEntry = Entry(self.entryFrame, textvariable=self.HostName)
         self.nameEntry.grid(row=1, column=1, sticky="e", pady=5)
 
@@ -33,7 +51,7 @@ class ConnectionWindow(object):
         Label(self.entryFrame, text="Port:").grid(row=2, column=0, sticky="w")
 
         self.port = StringVar()
-        self.port.set("3306")
+        self.port.set(self.prt)
         self.nameEntry = Entry(self.entryFrame, textvariable=self.port)
         self.nameEntry.grid(row=2, column=1, sticky="e", pady=5)
 
@@ -41,7 +59,7 @@ class ConnectionWindow(object):
         Label(self.entryFrame, text="Username:").grid(row=4, column=0, sticky="w")
 
         self.username = StringVar()
-        self.username.set("root")
+        self.username.set(self.user)
         self.DBEntry = Entry(self.entryFrame, textvariable=self.username)
         self.DBEntry.grid(row=4, column=1, sticky="e", pady=5)
 
@@ -49,7 +67,7 @@ class ConnectionWindow(object):
         Label(self.entryFrame, text="Password:").grid(row=5, column=0, sticky="w")
 
         self.password = StringVar()
-        self.password.set("rootroot")
+        self.password.set(self.pwd)
         self.DBEntry = Entry(self.entryFrame, textvariable=self.password)
         self.DBEntry.grid(row=5, column=1, sticky="e", pady=5)
 
@@ -66,7 +84,7 @@ class ConnectionWindow(object):
         Label(self.entryFrame, text="Database:").grid(row=7, column=0, sticky="w")
 
         self.database = StringVar()
-        self.database.set("dayzitems")
+        self.database.set(self.dbName)
         self.DBEntry = Entry(self.entryFrame, textvariable=self.database)
         self.DBEntry.grid(row=7, column=1, sticky="e", pady=5)
 
@@ -106,6 +124,7 @@ class ConnectionWindow(object):
         dao.createDB(self.database.get())
         dao.loadDB(windows.dataPath + "\\GENESIS.sql")
         windows.writeTypesToDatabase(self.typesDir.get())
+        windows.saveSourceTypes(self.typesDir.get(), self.database.get())
         windows.connectionSuccess(self.window)
 
     def testDB(self):

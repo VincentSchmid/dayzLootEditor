@@ -1,4 +1,4 @@
-import time
+from time import sleep
 from os import getcwd
 from os.path import abspath
 from os.path import join
@@ -25,5 +25,5 @@ def fillDB():
 
 
 createDB()
-time.sleep(1)
+sleep(1)
 fillDB()
