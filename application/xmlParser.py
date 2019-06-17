@@ -6,19 +6,36 @@ itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
 categories = ["weapons", "containers", "clothes", "food", "tools", "vehiclesparts"]
 
-usages = ["Village",
-          "Hunting",
-          "Police",
-          "Office",
-          "Medic",
-          "Coast",
-          "Firefighter",
-          "Town",
-          "Industrial",
-          "Military",
+selection = itemTypes + categories
+selection.append("all items")
+
+usages = ["Military",
           "Prison",
           "School",
-          "Farm"]
+          "Coast",
+          "Village",
+          "Industrial",
+          "Medic",
+          "Police",
+          "Hunting",
+          "Town",
+          "Farm",
+          "Firefighter",
+          "Office"]
+
+usagesAbr = ["Mil.",
+          "Pris.",
+          "School",
+          "Coast",
+          "Vil.",
+          "Ind.",
+          "Med.",
+          "Pol.",
+          "Hunt.",
+          "Town",
+          "Farm",
+          "Firef.",
+          "Office"]
 
 tiers = ["Tier1", "Tier2", "Tier3", "Tier4"]
 

@@ -7,7 +7,13 @@ try:
 except ModuleNotFoundError:
     import windows
 
-returnValues = "name, nominal, min, restock, lifetime, type, rarity"
+returnValues = "name,category,type,lifetime,quantmin,nominal,cost," \
+               "quantmax,min,restock,Military,Prison,School,Coast,Village," \
+               "Industrial,Medic,Police,Hunting,Town,Farm,Firefighter,Office," \
+               "Tier1,Tier2,Tier3,Tier4,shelves,floor," \
+               "count_in_cargo,count_in_hoarder,count_in_map,count_in_player," \
+               "crafted,deloot,ingameName,rarity"
+
 lastQuery = "select " + returnValues + " from items"
 
 user = ""
@@ -83,9 +89,9 @@ def createCombos(items):
 
 def viewType(type):
     global lastQuery
-    lastQuery = "select " + returnValues + " \
-        from items \
-        where type = '" + type + "';"
+    lastQuery = "select * \
+                from items \
+                where type = '" + type + "';"
 
     cursor = connection().cursor()
     cursor.execute(lastQuery)
@@ -94,7 +100,7 @@ def viewType(type):
 
 def viewCategory(category):
     global lastQuery
-    lastQuery = "select " + returnValues + " \
+    lastQuery = "select * \
                 from items \
                 where category = '" + category + "';"
 
@@ -105,7 +111,7 @@ def viewCategory(category):
 
 def getWeaponAndCorresponding(name):
     global lastQuery
-    lastQuery = "select " + returnValues + " \
+    lastQuery = "select * \
                 from items \
                 join \
                     (select item2 \
@@ -123,7 +129,7 @@ def getWeaponAndCorresponding(name):
 
 def getWeaponsFromAccessoire(name):
     global lastQuery
-    lastQuery = "select " + returnValues + " \
+    lastQuery = "select * \
                 from (select item1, item2, items.* \
                       from itemcombos \
                       join items on name = item1 \
@@ -138,7 +144,7 @@ def getWeaponsFromAccessoire(name):
 
 def searchByName(name):
     global lastQuery
-    lastQuery = "select " + returnValues + " \
+    lastQuery = "select * \
                 from items \
                 WHERE name LIKE '%" + name + "%';"
 
@@ -149,7 +155,7 @@ def searchByName(name):
 
 def searchByNameAndType(name, type):
     global lastQuery
-    lastQuery = "select " + returnValues + " \
+    lastQuery = "select * \
                 from items \
                 where type = '" + type + "' \
                 and name LIKE '%" + name + "%';"
@@ -161,7 +167,7 @@ def searchByNameAndType(name, type):
 
 def searchByNameAndCat(name, cat):
     global lastQuery
-    lastQuery = "select " + returnValues + " \
+    lastQuery = "select * \
                 from items \
                 where category = '" + cat + "' \
                 and name LIKE '%" + name + "%';"
@@ -221,13 +227,16 @@ def updateMany(items):
 
 def getItemsToDistibute(type):
     cursor = connection().cursor()
-    cursor.execute("select " + returnValues + " from items where type = '" + type + "' and rarity <> 'undefined'")
+    cursor.execute("select * from items where type = '" + type + "' and rarity <> 'undefined'")
     return cursor.fetchall()
 
 
 def getAllItems():
+    global lastQuery
+    lastQuery = "select * from items"
+
     cursor = connection().cursor()
-    cursor.execute("select * from items")
+    cursor.execute(lastQuery)
     return cursor.fetchall()
 
 

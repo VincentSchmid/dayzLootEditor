@@ -74,7 +74,7 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] abillity to view by type/category or usage or tier
 - [x] show nominals of currentry displayed items
 - [ ] writing new types.xml
-- [ ] show usages and tiers of items (2 new columns)
+- [x] show usages and tiers of items (2 new columns)
 - [x] support for all item types
 - [x] enter hotkey: when editing name -> search, nominal... -> update selection, selecting -> select matching
 - [x] fix saving db

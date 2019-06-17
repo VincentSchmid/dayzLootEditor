@@ -125,7 +125,7 @@ class Window(object):
 
     def createTreeview(self):
         self.tree = ttk.Treeview(self.window,
-                                 columns=('name', 'nominal', 'min', 'restock', 'lifetime', 'rarity'))
+                                 columns=('name', 'nominal', 'min', 'restock', 'lifetime', 'rarity', 'usage', 'tier'))
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -133,10 +133,17 @@ class Window(object):
         self.tree.heading('#4', text='Lifetime')
         self.tree.heading('#5', text='Type')
         self.tree.heading('#6', text='Rarity')
-        self.tree.column('#1', stretch=YES)
-        self.tree.column('#2', stretch=YES)
-        self.tree.column('#0', stretch=YES)
-        self.tree.column('#3', stretch=YES)
+        self.tree.heading('#7', text='Usage')
+        self.tree.heading('#8', text='Tier')
+        self.tree.column('#0', stretch=NO)
+        self.tree.column('#1', width=60, stretch=YES)
+        self.tree.column('#2', width=60, minwidth=20, stretch=YES)
+        self.tree.column('#3', width=80, stretch=YES)
+        self.tree.column('#4', width=80, stretch=YES)
+        self.tree.column('#5', width=60, stretch=YES)
+        self.tree.column('#6', width=150, stretch=YES)
+        self.tree.column('#7', width=270, stretch=NO)
+        self.tree.column('#8', width=150, stretch=YES)
         self.tree.grid(row=4, rowspan=4, columnspan=12, sticky='nsew')
         self.treeview = self.tree
 
@@ -150,7 +157,7 @@ class Window(object):
         self.buttons.grid(row=4, column=12, sticky="n")
 
         # todo get from backend
-        self.choices = xmlParser.itemTypes + xmlParser.categories
+        self.choices = xmlParser.selection
 
         self.buttons = Frame(self.window)
         self.buttons.grid(row=4, column=12, sticky="n")
@@ -172,7 +179,8 @@ class Window(object):
         self.distribSel.set('gun')
         self.distribSel.trace("w", self.distribSelChange)
 
-        typeDrop = OptionMenu(self.distribution, self.distribSel, *itemTypes).grid(row=0)
+        typeDrop = OptionMenu(self.distribution, self.distribSel, *xmlParser.selection)\
+            .grid(row=0)
 
         Label(self.distribution, text="Target Nominal").grid(row=1, sticky=W)
         self.targetNominal = StringVar()
@@ -226,10 +234,12 @@ class Window(object):
 
     def viewCategroy(self):
         cat = self.typeSel.get()
-        if cat in itemTypes:
+        if cat in xmlParser.categories:
+            rows = dao.viewCategory(cat)
+        elif cat in itemTypes:
             rows = dao.viewType(cat)
         else:
-            rows = dao.viewCategory(cat)
+            rows = dao.getAllItems()
 
         self.updateDisplay(rows)
 
@@ -264,7 +274,7 @@ class Window(object):
 
     def distribute(self):
         self.backupDB("dayzitems_before_Distribute.sql")
-        flags = [self.inclAmmo.get(), self.inclMags.get(), self.inclOptics.get(), self.inclAttachm.get()]
+        flags = [self.inclAmmo.get(), self.inclMags.get()]
         distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), int(self.targetMag.get()), flags)
         self.changed = True
         self.updateDisplay(dao.viewType(self.distribSel.get()))
@@ -306,15 +316,10 @@ class Window(object):
             pass
 
     def getSelectedValues(self):
-        val = {}
         dict = self.tree.item(self.tree.focus())
-        val["name"] = dict["text"]
-        val["nominal"] = dict["values"][0]
-        val["min"] = dict["values"][1]
-        val["restock"] = dict["values"][2]
-        val["lifetime"] = dict["values"][3]
-        val["type"] = dict["values"][4]
-        val["rarity"] = dict["values"][5]
+        val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
+               "restock": dict["values"][2], "lifetime": dict["values"][3], "type": dict["values"][4],
+               "rarity": dict["values"][5]}
 
         return val
 
@@ -331,10 +336,44 @@ class Window(object):
     def updateDisplay(self, rows):
         self.clearTree()
         for row in rows:
-            self.tree.insert('', "end", text=row[0], values=(row[1], row[2], row[3], row[4], row[5], rarities9[row[6]]))
+            row = self.dictFromRow(row)
+            self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
+                                                                  row["lifetime"], row["type"], row["rarity"],
+                                                                  row["usage"], row["tier"]))
         self.updateNominalInfo()
-        self.totalNomDisplayed.set(sum(x[1] for x in rows))
+        self.totalNomDisplayed.set(sum(x[5] for x in rows))
         self.updateDistribution()
+
+    def dictFromRow(self, row):
+        return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
+                   "type": row[2], "rarity": rarities9[row[36]],
+                   "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27])}
+
+    def createUsage(self, row):
+        usageNames = xmlParser.usages
+        if sum(row) > 5:
+            usageNames = xmlParser.usagesAbr
+        usage = ""
+
+        if sum(row) == len(usageNames) - 1:
+            usage = "everywhere except Coast"
+        else:
+            for i in range(len(xmlParser.usages)):
+                if row[i] == 1:
+                    usage += usageNames[i] + " "
+            if usage != "":
+                usage = usage[:-1]
+
+        return usage
+
+    def createTier(self, row):
+        tier = ""
+        for i in range(len(xmlParser.tiers)):
+            if row[i] == 1:
+                tier += xmlParser.tiers[i] + ","
+        if tier != "":
+            tier = tier[:-1]
+        return tier
 
     def updateDistribution(self):
         self.targetNominal.set(str(dao.getNominalByType("gun")))

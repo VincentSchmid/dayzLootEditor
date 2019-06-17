@@ -62,7 +62,7 @@ def setValues(nominalPerElement, itemsToDistribute):
 
 def getDicts(itemsToDistribute):
     itemsListOfDicts = []
-    keys = dao.returnValues.split(", ")
+    keys = dao.returnValues.split(",")
     for item in itemsToDistribute:
         dict = {}
         for k in range(len(item)):
