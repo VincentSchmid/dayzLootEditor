@@ -85,49 +85,61 @@ class Window(object):
 
     def createEntryBar(self):
         self.entryFrame = Frame(self.window)
-        self.entryFrame.grid(row=0, column=0, sticky="n,w,e")
+        self.entryFrame.grid(row=0, column=0, sticky="nw")
 
-        Label(self.entryFrame, text="name").grid(row=0, column=0, sticky="w")
-        Label(self.entryFrame, text="nominal").grid(row=1, column=0, sticky="w")
-        Label(self.entryFrame, text="min").grid(row=2, column=0, sticky="w")
-        Label(self.entryFrame, text="restock").grid(row=3, column=0, sticky="w")
-        Label(self.entryFrame, text="lifetime").grid(row=4, column=0, sticky="w")
-        Label(self.entryFrame, text="rarity").grid(row=5, column=0, sticky="w")
+        self.EFValues = Frame(self.entryFrame)
+        self.EFValues.grid(padx=8, pady=6)
+
+        Label(self.EFValues, text="name").grid(row=0, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="nominal").grid(row=1, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="min").grid(row=2, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="restock").grid(row=3, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="lifetime").grid(row=4, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="rarity").grid(row=6, column=0, sticky="w", pady=5)
 
         self.name_text = StringVar()
-        self.nameEntry = Entry(self.entryFrame, textvariable=self.name_text)
+        self.nameEntry = Entry(self.EFValues, textvariable=self.name_text)
         self.nameEntry.grid(row=0, column=1, sticky="w")
 
         self.nominal_text = StringVar()
-        self.nominalEntry = Entry(self.entryFrame, textvariable=self.nominal_text, width=4)
+        self.nominalEntry = Entry(self.EFValues, textvariable=self.nominal_text, width=8)
         self.nominalEntry.grid(row=1, column=1, sticky="w")
 
         self.min_text = StringVar()
-        self.minEntry = Entry(self.entryFrame, textvariable=self.min_text, width=4)
+        self.minEntry = Entry(self.EFValues, textvariable=self.min_text, width=8)
         self.minEntry.grid(row=2, column=1, sticky="w")
 
         self.restock_text = StringVar()
-        self.restockEntry = Entry(self.entryFrame, textvariable=self.restock_text, width=8)
+        self.restockEntry = Entry(self.EFValues, textvariable=self.restock_text, width=8)
         self.restockEntry.grid(row=3, column=1, sticky="w")
 
         self.lifetime_text = StringVar()
-        self.lifetimeEntry = Entry(self.entryFrame, textvariable=self.lifetime_text, width=8)
+        self.lifetimeEntry = Entry(self.EFValues, textvariable=self.lifetime_text, width=8)
         self.lifetimeEntry.grid(row=4, column=1, sticky="w")
-
-        self.deLoot = IntVar()
-        Checkbutton(self.entryFrame, text='Dynamic Event', variable=self.deLoot).grid(row=5, column=0, sticky="w")
 
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
         self.raritySel.trace("w", self.raritySelChange)
 
-        OptionMenu(self.entryFrame, self.raritySel, *rarities9.values()).grid(row=6, column=0, sticky="w")
+        OptionMenu(self.EFValues, self.raritySel, *rarities9.values()).grid(row=6, column=1, sticky="w")
 
-        Button(self.entryFrame, text="update selection", width=12, command=self.updateSel) \
-            .grid(row=7, column=0, sticky="w")
+        self.EFCheckboxe = Frame(self.entryFrame)
+        self.EFCheckboxe.grid(row=1, column=0, columnspan=2, sticky="w")
+
+        self.deLoot = IntVar()
+        Checkbutton(self.EFCheckboxe, text='Dynamic Event', variable=self.deLoot).grid(row=0, column=0, sticky="w")
+
+        Button(self.entryFrame, text="Update", width=12, command=self.updateSel) \
+            .grid(row=3, column=0, pady=9)
 
     def createTreeview(self):
-        self.tree = ttk.Treeview(self.window,
+        self.treeFrame = Frame(self.window)
+        self.treeFrame.grid(row=0, column=1, sticky="nsew")
+
+        self.treeFrame.grid_rowconfigure(0, weight=1)
+        self.treeFrame.grid_columnconfigure(0, weight=1)
+
+        self.tree = ttk.Treeview(self.treeFrame,
                                  columns=('name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event', 'rarity'))
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
@@ -148,13 +160,13 @@ class Window(object):
         self.tree.column('#6', width=270, stretch=NO)
         self.tree.column('#7', width=150, stretch=YES)
         self.tree.column('#8', width=80, stretch=YES)
-        self.tree.column('#9', width=150, stretch=YES)
+        self.tree.column('#9', width=120, stretch=YES)
 
-        self.tree.grid(row=0, column=1, rowspan=4, columnspan=11, sticky='nsew')
+        self.tree.grid(row=0, column=0, sticky='nsew')
         self.treeview = self.tree
 
-        sb1 = Scrollbar(self.window)
-        sb1.grid(row=0, rowspan=5, column=12, sticky="n,s")
+        sb1 = Scrollbar(self.treeFrame)
+        sb1.grid(row=0, column=1, sticky="n,s")
         self.tree.config(yscrollcommand=sb1.set)
         sb1.config(command=self.tree.yview)
 
@@ -164,7 +176,7 @@ class Window(object):
         self.choices = xmlParser.selection
 
         self.buttons = Frame(self.window)
-        self.buttons.grid(row=0, column=13, sticky="n")
+        self.buttons.grid(row=0, column=2, sticky="n")
 
         self.typeSel = StringVar(window)
         self.typeSel.set('gun')
@@ -205,7 +217,7 @@ class Window(object):
 
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
-        self.infoFrame.grid(row=11, column=0, sticky="s,w,e")
+        self.infoFrame.grid(row=1, column=1, sticky="s,w,e")
 
         Label(self.infoFrame, text="overall nominal / delta:").grid(row=0, column=0)
 
