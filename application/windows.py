@@ -52,11 +52,11 @@ def askUser(title, question):
 
 
 def connectionSuccess(root):
-    showError(root, "Success", "Connection Successfull!")
+    showError(root, "Success", "connection successful!")
 
 
 def askOverwrite():
-    return askUser("Overwrite", "Are you sure you want to overwrite existing Database?")
+    return askUser("Overwrite", "Are you sure you want to overwrite existing database?")
 
 
 def writeConfig(user, pwd, port, database, server):
