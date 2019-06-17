@@ -50,8 +50,8 @@ class Window(object):
         self.window.bind('<Return>', self.enterPress)
 
         # make windows extendable
-        self.window.grid_rowconfigure(4, weight=1)
-        self.window.grid_columnconfigure(0, weight=1)
+        self.window.grid_rowconfigure(0, weight=1)
+        self.window.grid_columnconfigure(1, weight=1)
 
         self.nomVars = []
         self.deltaNom = []
@@ -87,80 +87,84 @@ class Window(object):
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=0, column=0, sticky="n,w,e")
 
-        Label(self.entryFrame, text="name").grid(row=0, column=0)
-        Label(self.entryFrame, text="nominal").grid(row=0, column=2)
-        Label(self.entryFrame, text="min").grid(row=0, column=4)
-        Label(self.entryFrame, text="restock").grid(row=0, column=6)
-        Label(self.entryFrame, text="lifetime").grid(row=0, column=8)
-        Label(self.entryFrame, text="rarity").grid(row=0, column=10)
+        Label(self.entryFrame, text="name").grid(row=0, column=0, sticky="w")
+        Label(self.entryFrame, text="nominal").grid(row=1, column=0, sticky="w")
+        Label(self.entryFrame, text="min").grid(row=2, column=0, sticky="w")
+        Label(self.entryFrame, text="restock").grid(row=3, column=0, sticky="w")
+        Label(self.entryFrame, text="lifetime").grid(row=4, column=0, sticky="w")
+        Label(self.entryFrame, text="rarity").grid(row=5, column=0, sticky="w")
 
         self.name_text = StringVar()
         self.nameEntry = Entry(self.entryFrame, textvariable=self.name_text)
-        self.nameEntry.grid(row=0, column=1)
+        self.nameEntry.grid(row=0, column=1, sticky="w")
 
         self.nominal_text = StringVar()
-        self.nominalEntry = Entry(self.entryFrame, textvariable=self.nominal_text)
-        self.nominalEntry.grid(row=0, column=3)
+        self.nominalEntry = Entry(self.entryFrame, textvariable=self.nominal_text, width=4)
+        self.nominalEntry.grid(row=1, column=1, sticky="w")
 
         self.min_text = StringVar()
-        self.minEntry = Entry(self.entryFrame, textvariable=self.min_text)
-        self.minEntry.grid(row=0, column=5)
+        self.minEntry = Entry(self.entryFrame, textvariable=self.min_text, width=4)
+        self.minEntry.grid(row=2, column=1, sticky="w")
 
         self.restock_text = StringVar()
-        self.restockEntry = Entry(self.entryFrame, textvariable=self.restock_text)
-        self.restockEntry.grid(row=0, column=7)
+        self.restockEntry = Entry(self.entryFrame, textvariable=self.restock_text, width=8)
+        self.restockEntry.grid(row=3, column=1, sticky="w")
 
         self.lifetime_text = StringVar()
-        self.lifetimeEntry = Entry(self.entryFrame, textvariable=self.lifetime_text)
-        self.lifetimeEntry.grid(row=0, column=9)
+        self.lifetimeEntry = Entry(self.entryFrame, textvariable=self.lifetime_text, width=8)
+        self.lifetimeEntry.grid(row=4, column=1, sticky="w")
+
+        self.deLoot = IntVar()
+        Checkbutton(self.entryFrame, text='Dynamic Event', variable=self.deLoot).grid(row=5, column=0, sticky="w")
 
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
         self.raritySel.trace("w", self.raritySelChange)
 
-        OptionMenu(self.entryFrame, self.raritySel, *rarities9.values()).grid(row=0, column=11)
+        OptionMenu(self.entryFrame, self.raritySel, *rarities9.values()).grid(row=6, column=0, sticky="w")
 
         Button(self.entryFrame, text="update selection", width=12, command=self.updateSel) \
-            .grid(row=0, column=12, sticky="e")
+            .grid(row=7, column=0, sticky="w")
 
     def createTreeview(self):
         self.tree = ttk.Treeview(self.window,
-                                 columns=('name', 'nominal', 'min', 'restock', 'lifetime', 'rarity', 'usage', 'tier'))
+                                 columns=('name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event', 'rarity'))
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
         self.tree.heading('#3', text='Restock')
         self.tree.heading('#4', text='Lifetime')
         self.tree.heading('#5', text='Type')
-        self.tree.heading('#6', text='Rarity')
-        self.tree.heading('#7', text='Usage')
-        self.tree.heading('#8', text='Tier')
+        self.tree.heading('#6', text='Usage')
+        self.tree.heading('#7', text='Tier')
+        self.tree.heading('#8', text='Dyn. Event')
+        self.tree.heading('#9', text='Rarity')
         self.tree.column('#0', stretch=NO)
         self.tree.column('#1', width=60, stretch=YES)
         self.tree.column('#2', width=60, minwidth=20, stretch=YES)
         self.tree.column('#3', width=80, stretch=YES)
         self.tree.column('#4', width=80, stretch=YES)
         self.tree.column('#5', width=60, stretch=YES)
-        self.tree.column('#6', width=150, stretch=YES)
-        self.tree.column('#7', width=270, stretch=NO)
-        self.tree.column('#8', width=150, stretch=YES)
-        self.tree.grid(row=4, rowspan=4, columnspan=12, sticky='nsew')
+        self.tree.column('#6', width=270, stretch=NO)
+        self.tree.column('#7', width=150, stretch=YES)
+        self.tree.column('#8', width=80, stretch=YES)
+        self.tree.column('#9', width=150, stretch=YES)
+
+        self.tree.grid(row=0, column=1, rowspan=4, columnspan=11, sticky='nsew')
         self.treeview = self.tree
 
-        sb1 = Scrollbar(window)
-        sb1.grid(row=3, rowspan=5, column=11, sticky="n,s")
+        sb1 = Scrollbar(self.window)
+        sb1.grid(row=0, rowspan=5, column=12, sticky="n,s")
         self.tree.config(yscrollcommand=sb1.set)
         sb1.config(command=self.tree.yview)
 
     def createSideBar(self):
-        self.buttons = Frame(self.window, width=120)
-        self.buttons.grid(row=4, column=12, sticky="n")
 
         # todo get from backend
         self.choices = xmlParser.selection
 
         self.buttons = Frame(self.window)
-        self.buttons.grid(row=4, column=12, sticky="n")
+        self.buttons.grid(row=0, column=13, sticky="n")
 
         self.typeSel = StringVar(window)
         self.typeSel.set('gun')
@@ -313,6 +317,8 @@ class Window(object):
             self.lifetimeEntry.delete(0, END)
             self.lifetimeEntry.insert(END, dict["lifetime"])
 
+            self.deLoot.set(dict["deloot"])
+
             self.raritySel.set(dict["rarity"])
 
         except IndexError:
@@ -321,13 +327,13 @@ class Window(object):
     def getSelectedValues(self):
         dict = self.tree.item(self.tree.focus())
         val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
-               "restock": dict["values"][2], "lifetime": dict["values"][3], "type": dict["values"][4],
-               "rarity": dict["values"][5]}
+               "deloot": dict["values"][7],"restock": dict["values"][2], "lifetime": dict["values"][3],
+               "type": dict["values"][4], "rarity": dict["values"][8]}
 
         return val
 
     def getEditedValues(self):
-        val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(),
+        val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(), "deloot": self.deLoot.get(),
                "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "rarity": self.getRaritySel()}
         return val
 
@@ -341,15 +347,15 @@ class Window(object):
         for row in rows:
             row = self.dictFromRow(row)
             self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
-                                                                  row["lifetime"], row["type"], row["rarity"],
-                                                                  row["usage"], row["tier"]))
+                                                                  row["lifetime"], row["type"],  row["usage"],
+                                                                  row["tier"], row["deloot"], row["rarity"]))
         self.updateNominalInfo()
         self.totalNomDisplayed.set(sum(x[5] for x in rows))
         self.updateDistribution()
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
-                   "type": row[2], "rarity": rarities9[row[36]],
+                   "type": row[2], "rarity": rarities9[row[36]], "deloot": row[34],
                    "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27])}
 
     def createUsage(self, row):
