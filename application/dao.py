@@ -211,8 +211,8 @@ def update(values):
     conn = connection()
     cursor = conn.cursor()
     cursor.execute("UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
-        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", rarity=" + str(values[
-                                                                                                                                                                                                                            "rarity"]) + " WHERE name = '" + str(
+        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", \
+        rarity=" + str(values["rarity"]) + " WHERE name = '" + str(
         values["name"]) + "';")
     conn.commit()
 

@@ -267,7 +267,10 @@ class Window(object):
         self.updateDisplay(rows)
 
     def updateSel(self):
-        dao.update(self.getEditedValues())
+        for element in self.tree.selection():
+            val = self.getEditedValues()
+            val["name"] = self.tree.item(element)["text"]
+            dao.update(val)
         rows = dao.reExecuteLastQuery()
         self.updateDisplay(rows)
         self.changed = True
@@ -324,7 +327,7 @@ class Window(object):
         return val
 
     def getEditedValues(self):
-        val = {"name": self.name_text.get(), "nominal": self.nominal_text.get(), "min": self.min_text.get(),
+        val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(),
                "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "rarity": self.getRaritySel()}
         return val
 
@@ -407,7 +410,6 @@ class Window(object):
     def saveDB(self):
         windows.saveDB()
 
-    # todo move this functionality to dao
     def backupDB(self, filename):
         dao.backupDatabase(open(windows.dataPath + "\\" + filename, "wb+"))
 
