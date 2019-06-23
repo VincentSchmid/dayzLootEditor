@@ -78,7 +78,7 @@ def readConfig():
 
 
 def writeTypesToDatabase(dir):
-    items = xmlParser.parseAll(dir)
+    items = xmlParser.parseFromFile(dir)
     params = xmlParser.createStringFromKeys(items[0])
     itemVal = xmlParser.createValues(items)
     sleep(1)

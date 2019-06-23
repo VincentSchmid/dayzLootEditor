@@ -48,16 +48,26 @@ flags = ["count_in_cargo",
          "crafted",
          "deloot"]
 
+def parseFromString(xml):
+    return _parseRoot(ET.fromstring(xml))
 
-def parseAll(dir):
-    items = []
-    itemValues = []
+
+def parseFromFile(dir):
+
     try:
         tree = ET.parse(dir)
+
     except ET.ParseError:
         raise Exception
-    types = tree.getroot()
-    for type in types:
+
+    return _parseRoot(tree.getroot())
+
+
+def _parseRoot(root):
+    items = []
+    itemValues = []
+
+    for type in root:
         item = createItemFromTypeBlock(type)
         items.append(item)
 
@@ -92,8 +102,9 @@ def createStringFromKeys(item):
 # returns a list of all items given that match with given name
 def findMatchingItem(name, items):
     matches = []
-    if "gp_" in name.lower():
-        name = name[3:]
+
+    name = removeModPrefixes(name)
+
     if "_ak" in name.lower() or "akm" in name.lower():
         name = "ak_"
     if "mp5k" == name.lower():
@@ -145,17 +156,29 @@ def findType(name, category):
         return category
 
 
+def removeModPrefixes(name):
+    modPrefixes = ["Mass", "GP_", "gp_", "FP4_"]
+
+    for prefix in modPrefixes:
+        if name.startswith(prefix):
+            name = name[len(prefix):]
+    return name
+
+
 # checks name if isGun
 def isGun(name):
-    isGun = False
+    isGun = True
 
-    if name.lower().startswith("gp_"):
-        name = name[3:]
+    name = removeModPrefixes(name)
 
-    if "camo" not in name and "black" not in name and "green" not in name and "sawed" not in name and "_" not in name \
-            and "LRS" not in name and "Ammo" not in name and "Optic" not in name and "Suppressor" not in name \
-            and "Goggles" not in name and "Light" not in name and "Mag":
-        isGun = True
+    paintKeyWords = ["camo", "black", "green", "desert"]
+    notGunKeyWords = ["lrs", "ammo", "optic", "sawed", "suppressor", "goggles", "mag", "light", "rnd", "bttstck",
+                      "buttstock", "handguard", "hndgrd", "bayonet", "railatt", "compensator", "drum"]
+
+    for keyword in notGunKeyWords:
+        if keyword in name.lower():
+            isGun = False
+            break
 
     return isGun;
 
@@ -316,6 +339,25 @@ def gunsAndMatchingItem(items):
             for m in matches:
                 matching.append((i.name, m))
     return matching
+
+# returns 1 if beginning wrong
+# returns 2 if end wrong
+# returns 0 if good
+def checkIfTypesXML(text):
+    if text.startswith("<type"):
+        if text.endswith("</type>"):
+            return 0
+        else:
+            return 2
+
+    elif text.startswith("<types>"):
+        if text.endswith("</types>"):
+            return 0
+        else:
+            return 2
+
+    else:
+        return 1
 
 # dbFiller.createCombos(gunsAndMatchingItem(items))
 
