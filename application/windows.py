@@ -78,14 +78,36 @@ def readConfig():
 
 
 def writeTypesToDatabase(dir):
-    items = xmlParser.parseFromFile(dir)
+    items = xmlParser.parseXML(dir)
     params = xmlParser.createStringFromKeys(items[0])
     itemVal = xmlParser.createValues(items)
+    matches = xmlParser.gunsAndMatchingItem(items)
+
     sleep(1)
     dao.insertItems(params, itemVal)
     sleep(1)
-    matches = xmlParser.gunsAndMatchingItem(items)
     dao.createCombos(matches)
+
+
+def appendTypesToDatabase(xml, root):
+    count = 0
+    duplicates = []
+    message = " Items where added to database, duplicate items where not added:\n"
+    items = xmlParser.parseXML(xml)
+    params = xmlParser.createStringFromKeys(items[0])
+    itemVal = xmlParser.createValues(items)
+    matches = xmlParser.gunsAndMatchingItem(items)
+
+    for item in itemVal:
+        err = dao.insertItem(params, item)
+
+        if err == 1:
+            message += item[0] + "\n"
+
+        else:
+            count += 1
+
+    showError(root, "Success", str(count) + message)
 
 
 def saveSourceTypes(dir, dbName):

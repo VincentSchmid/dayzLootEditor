@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+from os.path import isfile
 
 items = []
 
@@ -48,12 +49,19 @@ flags = ["count_in_cargo",
          "crafted",
          "deloot"]
 
-def parseFromString(xml):
+
+def parseXML(dir):
+    if isfile(dir):
+        return _parseFromFile(dir)
+    else:
+        return _parseFromString(dir)
+
+
+def _parseFromString(xml):
     return _parseRoot(ET.fromstring(xml))
 
 
-def parseFromFile(dir):
-
+def _parseFromFile(dir):
     try:
         tree = ET.parse(dir)
 
@@ -328,8 +336,6 @@ class Item():
         self.parameters = dict
 
 
-# dbFiller.insertItems(params, itemValues)
-
 # returns a list of tuples with each tuple containing (gun item.name, matching secondary item.name)
 def gunsAndMatchingItem(items):
     matching = []
@@ -358,8 +364,3 @@ def checkIfTypesXML(text):
 
     else:
         return 1
-
-# dbFiller.createCombos(gunsAndMatchingItem(items))
-
-
-# dbFiller.createCombos(akAttachments(items))

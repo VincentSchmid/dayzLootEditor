@@ -78,6 +78,20 @@ def insertItems(parameters, items):
     conn.commit()
 
 
+def insertItem(parameters, item):
+    conn = connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            item)
+        conn.commit()
+        return 0
+    except pyodbc.IntegrityError:
+        return 1
+
+
 def createCombos(items):
     conn = connection()
     cursor = conn.cursor()
