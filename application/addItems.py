@@ -28,9 +28,6 @@ class addItems(object):
     def confirm(self):
         text = self.text.get(1.0, END).strip()
 
-        # returns 1 if beginning wrong
-        # returns 2 if end wrong
-        # returns 0 if good
         err = xmlParser.checkIfTypesXML(text)
         if err == 1:
             windows.showError(self.window, "Beginning of type is wrong", "type has to start with <type ")

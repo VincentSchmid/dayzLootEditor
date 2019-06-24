@@ -14,6 +14,9 @@ except ModuleNotFoundError:
 
 dataPath = abspath(join(getcwd(), "..", "data"))
 
+def getSourceTypes():
+    return dataPath + "\\SOURCETYPES_"+readConfig()[3]+".xml"
+
 def deleteParams():
     remove(dataPath + "\\config.txt")
 
@@ -31,13 +34,13 @@ def saveAsFile(fileEnding, read):
 
 def saveDB():
     fname = saveAsFile("sql", "wb+")
-    if fname != None:
+    if fname is not None:
         dao.backupDatabase(fname)
 
 
 def copyFile(fromdir, todir):
     with open(fromdir) as f:
-        with open(todir, "w+") as f1:
+        with todir as f1:
                     f1.write(f.read())
 
 
@@ -99,25 +102,24 @@ def appendTypesToDatabase(xml, root):
 
     for item in itemVal:
         err = dao.insertItem(params, item)
-
         if err == 1:
             message += item[0] + "\n"
-
         else:
             count += 1
             successes.append(item[0])
+
+    dao.createCombos(matches)
 
     showError(root, "Success", str(count) + message)
     return successes
 
 
 def saveSourceTypes(dir, dbName):
-    copyFile(dir, dataPath + "\\SOURCETYPES_"+dbName+".xml")
+    copyFile(dir, open(getSourceTypes(), "w+"))
 
 
 def appendtoSorce(types):
-    dbName = readConfig()[3]
-    path = dataPath + "\\SOURCETYPES_"+dbName+".xml"
+    path = getSourceTypes()
 
     readFile = open(path)
 

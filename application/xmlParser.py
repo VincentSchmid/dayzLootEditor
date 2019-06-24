@@ -181,7 +181,7 @@ def isGun(name):
             isGun = False
             break
 
-    return isGun;
+    return isGun
 
 
 def isAmmo(name):
@@ -206,7 +206,7 @@ def isMag(name):
         return False
 
 
-class Item():
+class Item:
     def __init__(self):
         self.name = ""
         self.category = ""
@@ -354,6 +354,5 @@ def checkIfTypesXML(text):
             return 0
         else:
             return 2
-
     else:
         return 1

@@ -143,7 +143,9 @@ class Window(object):
         self.treeFrame.grid_columnconfigure(0, weight=1)
 
         self.tree = ttk.Treeview(self.treeFrame,
-                                 columns=('name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event', 'rarity'))
+                                 columns=(
+                                 'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
+                                 'rarity'))
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -198,7 +200,7 @@ class Window(object):
         self.distribSel.set('gun')
         self.distribSel.trace("w", self.distribSelChange)
 
-        typeDrop = OptionMenu(self.distribution, self.distribSel, *xmlParser.selection)\
+        typeDrop = OptionMenu(self.distribution, self.distribSel, *xmlParser.selection) \
             .grid(row=0)
 
         Label(self.distribution, text="Target Nominal").grid(row=1, sticky=W)
@@ -216,7 +218,8 @@ class Window(object):
         self.targetMagEntry = Entry(self.distribution, textvariable=self.targetMag, width=5)
         self.targetMagEntry.grid(row=4, column=1, sticky=W)
 
-        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7, columnspan=2, pady=10)
+        Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7, columnspan=2,
+                                                                                             pady=10)
 
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
@@ -305,10 +308,12 @@ class Window(object):
         xmlPath = windows.dataPath + "\\types.xml"
         writeItemToXML.update(xmlPath)
 
+    # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):
-        xmlPath = windows.openFile("xml")
-        if xmlPath != None:
-            writeItemToXML.update(xmlPath)
+        xmlPath = windows.saveAsFile("xml", "w+")
+        if xmlPath is not None:
+            windows.copyFile(windows.getSourceTypes(), xmlPath)
+            writeItemToXML.update(xmlPath.name)
 
     def clearTree(self):
         if self.tree.get_children() != ():
@@ -342,7 +347,7 @@ class Window(object):
     def getSelectedValues(self):
         dict = self.tree.item(self.tree.focus())
         val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
-               "deloot": dict["values"][7],"restock": dict["values"][2], "lifetime": dict["values"][3],
+               "deloot": dict["values"][7], "restock": dict["values"][2], "lifetime": dict["values"][3],
                "type": dict["values"][4], "rarity": dict["values"][8]}
 
         return val
@@ -362,7 +367,7 @@ class Window(object):
         for row in rows:
             row = self.dictFromRow(row)
             self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
-                                                                  row["lifetime"], row["type"],  row["usage"],
+                                                                  row["lifetime"], row["type"], row["usage"],
                                                                   row["tier"], row["deloot"], row["rarity"]))
         self.updateNominalInfo()
         self.totalNomDisplayed.set(sum(x[5] for x in rows))
@@ -370,8 +375,8 @@ class Window(object):
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
-                   "type": row[2], "rarity": rarities9[row[36]], "deloot": row[34],
-                   "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27])}
+                "type": row[2], "rarity": rarities9[row[36]], "deloot": row[34],
+                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27])}
 
     def createUsage(self, row):
         usageNames = xmlParser.usages

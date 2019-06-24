@@ -7,7 +7,7 @@ Helps with Visualizing end editing Loot. Has some Automatic functions for Loot d
 - Easily edit Loot Manually thanks to sub types and item linking
 - Set Rarity of item
 - Automatically generate distributions based on Rarity
-- Set appearence of linked item (example: if gun is rare, the ammo is also rare)
+- Set appearance of linked item (example: if gun is rare, the ammo is also rare)
 - Export back to types.xml
 
 Built upon a MySQL database that will be automatically generated and some manual editing of item links.
@@ -43,7 +43,7 @@ it will show all items that can be attached to the item or are associated with i
 #### items that are linked to the FAL
 ![](images/linkedToFAL.png)
 
-#### guns that are assosiated with 556 Ammo
+#### guns that are associated with 556 Ammo
 ![](images/linkedTo556Ammo.png)
 
 ### overall loot info
@@ -63,7 +63,7 @@ All items of the game are loaded and found if searched but the sorting only work
 
 #### Distribution
 - [ ] choice if distributing by rarity or nominal
-- [ ] abillity to distribute rarity across type/category or usage or tier
+- [ ] ability to distribute rarity across type/category or usage or tier
 - [ ] lock items from distribution (possibly rarity unassigned)
 - [ ] Ammo Distribution
 - [ ] Enter Hotkey in Rarity Distribution
@@ -71,9 +71,11 @@ All items of the game are loaded and found if searched but the sorting only work
 - [x] Crate Rarity in the database include dropdown in items. Derive rarity on already existing items - then distribute across nominal
 
 #### Main Display
-- [ ] abillity to view by type/category or usage or tier
-- [x] show nominals of currentry displayed items
-- [ ] writing new types.xml
+- [ ] ability to view by type/category or usage or tier
+- [ ] associate these items with a mod that can be activated and deactivated
+- [x] show nominal of currently displayed items
+- [x] overall loot settings (adjust for many items at once)
+- [x] writing new types.xml
 - [x] show usages and tiers of items (2 new columns)
 - [x] support for all item types
 - [x] enter hotkey: when editing name -> search, nominal... -> update selection, selecting -> select matching
@@ -97,16 +99,14 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] App icon
 - [ ] Mac and Linux Support
 - [ ] Attachment Distribution
-- [ ] Being able to paste in new items and associate these items with a mod that can be activated and deactivated
 - [ ] finding ammo for vanilla guns
 - [ ] attachments for vanilla guns
 - [ ] Loading / Exporting single tables and selected items, not entire databases
 - [ ] Loot Drop Location editing (Military, Hunting, ...)
 
 ### Possible Features
-- [ ] Rewriteing Common Database connection errors
+- [ ] Rewriting Common Database connection errors
 - [ ] drop percentages (not in types.xml)
-- [ ] overall loot settings (adjust for many items at once)
 - [ ] Where the heck is the 60round STANAG??
 
 ### Crazy ideas:
