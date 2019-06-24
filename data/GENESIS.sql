@@ -79,7 +79,8 @@ CREATE TABLE `items` (
   `crafted` tinyint(1) unsigned zerofill NOT NULL,
   `deloot` tinyint(1) unsigned zerofill NOT NULL,
   `ingameName` varchar(45) DEFAULT NULL,
-  `rarity` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
+  `rarity` tinyint(1) unsigned zerofill NOT NULL,
+  `mod` varchar(25) NOT NULL DEFAULT 'Vanilla',
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -93,4 +94,4 @@ CREATE TABLE `items` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-14 22:36:50
+-- Dump completed on 2019-06-24 18:47:56
