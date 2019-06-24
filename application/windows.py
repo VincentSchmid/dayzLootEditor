@@ -1,4 +1,5 @@
 import tkinter.filedialog as filediag
+import xml.dom.minidom
 from os import getcwd
 from os import remove
 from os.path import abspath
@@ -108,7 +109,8 @@ def appendTypesToDatabase(xml, root):
             count += 1
             successes.append(item[0])
 
-    dao.createCombos(matches)
+    if len(matches) != 0:
+        dao.createCombos(matches)
 
     showError(root, "Success", str(count) + message)
     return successes
@@ -121,15 +123,9 @@ def saveSourceTypes(dir, dbName):
 def appendtoSorce(types):
     path = getSourceTypes()
 
-    readFile = open(path)
+    removeLastLineFromFile(path)
 
-    lines = readFile.readlines()
-
-    readFile.close()
-    w = open(path, 'w')
-
-    w.writelines([item for item in lines[:-1]])
-    w.writelines("\t")
+    w = open(path, "a")
     for line in types:
         w.writelines(line)
 
@@ -137,6 +133,15 @@ def appendtoSorce(types):
 
     w.close()
 
+
+def removeLastLineFromFile(path):
+    readFile = open(path)
+    lines = readFile.readlines()
+    readFile.close()
+    w = open(path, 'w')
+    lines[-2] = lines[-2].strip("\t").strip("\n")
+    w.writelines([item for item in lines[:-1]])
+    w.writelines("  ")
 
 
 def center(toplevel):

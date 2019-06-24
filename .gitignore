@@ -1,2 +1,4 @@
 *.exe
 *.7z
+application/__pycache__
+config.txt

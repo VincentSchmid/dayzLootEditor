@@ -37,15 +37,21 @@ class addItems(object):
                                                                    "Block possibly not closed")
         if err == 0:
             if text.startswith("<type"):
-                types = "<types>\n\t" + text + "\n</types>"
-
+                types = "<types>\n  " + text + "\n</types>"
+        #Outsource this to own logic
             newItemNames = windows.appendTypesToDatabase(types, self.window)
             text = text.split("</type>")
             toAppend = []
             for itemName in newItemNames:
                 for type in text:
                     if itemName in type.split(">")[0]:
-                        toAppend.append(type + "</type>")
+                        typeLines = type.split("\n")
+                        for i in range(len(typeLines)-2):
+                            typeLines[i+1] = "    " + typeLines[i+1].strip()
+                        type = ""
+                        for line in typeLines:
+                            type += line + "\n"
+                        toAppend.append("\n  " + type.replace("\t", "  ").strip() + "\n  </type>")
 
             windows.appendtoSorce(toAppend)
 
