@@ -16,12 +16,8 @@ written in python.
 ## Install
 first off install MYSQL x64 Server 
 - Windows: [here](https://dev.mysql.com/downloads/windows/installer/8.0.html) 
-- Mac [here](https://dev.mysql.com/downloads/mysql/)
-
-Optionally you could install the workbench 64bit to edit database from there
-
-Now you need the ODBC driver from here: https://dev.mysql.com/downloads/connector/odbc/5.3.html
-again make sure to download and install the 64-bit version.
+- (Optional) install Workbench 64bit to edit Database
+- Install 64-bit ODBC driver from here: https://dev.mysql.com/downloads/connector/odbc/5.3.html
 
 ### Developer install
 
