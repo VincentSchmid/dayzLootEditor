@@ -4,7 +4,7 @@ from tkinter import *
 from tkinter import ttk
 
 try:
-    from application import xmlParser, writeItemToXML, dao, distibutor, connectionWindow, windows
+    from application import xmlParser, writeItemToXML, dao, distibutor, connectionWindow, windows, addItems
 except ModuleNotFoundError:
     import xmlParser
     import writeItemToXML
@@ -12,6 +12,7 @@ except ModuleNotFoundError:
     import distibutor
     import connectionWindow
     import windows
+    import additems
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -69,6 +70,8 @@ class Window(object):
         filemenu.add_separator()
         filemenu.add_command(label="Export types.xml...", command=self.saveXML)
         filemenu.add_command(label="Save Database As...", command=self.saveDB)
+        filemenu.add_separator()
+        filemenu.add_command(label="Add to database from types", command=self.openAddItems)
         menubar.add_cascade(label="File", menu=filemenu)
         filemenu.add_separator()
         filemenu.add_command(label="Exit")
@@ -433,6 +436,9 @@ class Window(object):
 
     def openConnectionWindow(self):
         connectionWindow.ConnectionWindow(self.window)
+
+    def openAddItems(self):
+        addItems.addItems(self.window)
 
     def checkForDatabase(self):
         try:

@@ -14,6 +14,7 @@ except ModuleNotFoundError:
 class addItems(object):
     def __init__(self, root):
         self.window = Toplevel(root)
+        self.window.wm_title("Paste types")
         self.window.grab_set()
 
         self.text = Text(self.window)
@@ -21,6 +22,8 @@ class addItems(object):
         self.buttons = Frame(self.window)
         self.buttons.grid(row=1)
         Button(self.buttons, text="OK", height=1, width=10, command=self.confirm).grid(padx=10, pady=10)
+
+        windows.center(self.window)
 
     def confirm(self):
         text = self.text.get(1.0, END).strip()

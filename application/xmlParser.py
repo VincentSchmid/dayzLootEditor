@@ -50,18 +50,11 @@ flags = ["count_in_cargo",
          "deloot"]
 
 
-def parseXML(dir):
-    if isfile(dir):
-        return _parseFromFile(dir)
-    else:
-        return _parseFromString(dir)
-
-
-def _parseFromString(xml):
+def parseFromString(xml):
     return _parseRoot(ET.fromstring(xml))
 
 
-def _parseFromFile(dir):
+def parseFromFile(dir):
     try:
         tree = ET.parse(dir)
 

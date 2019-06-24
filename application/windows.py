@@ -78,7 +78,7 @@ def readConfig():
 
 
 def writeTypesToDatabase(dir):
-    items = xmlParser.parseXML(dir)
+    items = xmlParser.parseFromFile(dir)
     params = xmlParser.createStringFromKeys(items[0])
     itemVal = xmlParser.createValues(items)
     sleep(1)
@@ -92,7 +92,7 @@ def appendTypesToDatabase(xml, root):
     count = 0
     successes = []
     message = " Items where added to database, duplicate items where not added:\n"
-    items = xmlParser.parseXML(xml)
+    items = xmlParser.parseFromString(xml)
     params = xmlParser.createStringFromKeys(items[0])
     itemVal = xmlParser.createValues(items)
     matches = xmlParser.gunsAndMatchingItem(items)
