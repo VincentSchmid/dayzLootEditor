@@ -81,17 +81,16 @@ def writeTypesToDatabase(dir):
     items = xmlParser.parseXML(dir)
     params = xmlParser.createStringFromKeys(items[0])
     itemVal = xmlParser.createValues(items)
-    matches = xmlParser.gunsAndMatchingItem(items)
-
     sleep(1)
     dao.insertItems(params, itemVal)
     sleep(1)
+    matches = xmlParser.gunsAndMatchingItem(items)
     dao.createCombos(matches)
 
 
 def appendTypesToDatabase(xml, root):
     count = 0
-    duplicates = []
+    successes = []
     message = " Items where added to database, duplicate items where not added:\n"
     items = xmlParser.parseXML(xml)
     params = xmlParser.createStringFromKeys(items[0])
@@ -106,12 +105,35 @@ def appendTypesToDatabase(xml, root):
 
         else:
             count += 1
+            successes.append(item[0])
 
     showError(root, "Success", str(count) + message)
+    return successes
 
 
 def saveSourceTypes(dir, dbName):
     copyFile(dir, dataPath + "\\SOURCETYPES_"+dbName+".xml")
+
+
+def appendtoSorce(types):
+    dbName = readConfig()[3]
+    path = dataPath + "\\SOURCETYPES_"+dbName+".xml"
+
+    readFile = open(path)
+
+    lines = readFile.readlines()
+
+    readFile.close()
+    w = open(path, 'w')
+
+    w.writelines([item for item in lines[:-1]])
+    w.writelines("\t")
+    for line in types:
+        w.writelines(line)
+
+    w.writelines("\n</types>")
+
+    w.close()
 
 
 

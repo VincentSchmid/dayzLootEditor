@@ -37,13 +37,20 @@ class addItems(object):
                                                                    "Block possibly not closed")
         if err == 0:
             if text.startswith("<type"):
-                text = "<types>\n\t" + text + "\n</types>"
+                types = "<types>\n\t" + text + "\n</types>"
 
-            windows.appendTypesToDatabase(text, self.window)
+            newItemNames = windows.appendTypesToDatabase(types, self.window)
+            text = text.split("</type>")
+            toAppend = []
+            for itemName in newItemNames:
+                for type in text:
+                    if itemName in type.split(">")[0]:
+                        toAppend.append(type + "</type>")
+
+            windows.appendtoSorce(toAppend)
 
 
-
-window = Tk()
-addItems(window)
-
-window.mainloop()
+def testWindow():
+    window = Tk()
+    addItems(window)
+    window.mainloop()
