@@ -38,6 +38,7 @@ class Window(object):
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
+        self.selectedMods = []
 
         self.createMenuBar()
         self.createEntryBar()
@@ -83,11 +84,13 @@ class Window(object):
         menubar.add_cascade(label="Database", menu=databasemenu)
 
         modsmenu = Menu(menubar, tearoff=0)
-        self.modSelection = []
-        for mod in windows.getMods():
+        self.modSelectionVars = []
+        self.availableMods = windows.getMods()
+        for mod in self.availableMods:
             intVar = IntVar()
             intVar.set(1)
-            self.modSelection.append(intVar)
+            intVar.trace("w", self.updateModSelection)
+            self.modSelectionVars.append(intVar)
             modsmenu.add_checkbutton(label=mod, variable=intVar)
 
         menubar.add_cascade(label="Mods In Use", menu=modsmenu)
@@ -265,6 +268,12 @@ class Window(object):
             nominal = dao.getNominalByType(itemTypes[i])
             self.nomVars[i].set(nominal)
             self.deltaNom[i].set(nominal - self.startNominals[i])
+
+    def updateModSelection(self, *args):
+        self.selectedMods = []
+        for i in range(len(self.availableMods)):
+            if self.modSelectionVars[i].get() == 1:
+                self.selectedMods.append(self.availableMods[i])
 
     def viewCategroy(self):
         cat = self.typeSel.get()
