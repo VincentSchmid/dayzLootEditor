@@ -254,6 +254,15 @@ def getAllItems():
     return cursor.fetchall()
 
 
+def getMods():
+    cursor = connection().cursor()
+    cursor.execute("select `mod` \
+                    from items \
+                    group by `mod`;")
+    rows = cursor.fetchall()
+    return [row[0] for row in rows]
+
+
 def createDB(name):
     global user
     global pwd

@@ -71,6 +71,9 @@ def writeConfig(user, pwd, port, database, server):
         the_file.write(server + '\n')
 
 
+def getMods():
+    dao.getMods()
+
 def readConfig():
     try:
         with open(dataPath + "\\config.txt", 'r') as the_file:
@@ -92,13 +95,16 @@ def writeTypesToDatabase(dir):
     dao.createCombos(matches)
 
 
-def appendTypesToDatabase(xml, root):
+def appendTypesToDatabase(xml, root, mod):
     count = 0
     successes = []
     message = " Items where added to database, duplicate items where not added:\n"
-    items = xmlParser.parseFromString(xml)
+    items = xmlParser.parseFromString(xml, mod)
     params = xmlParser.createStringFromKeys(items[0])
+    params += ", mod"
     itemVal = xmlParser.createValues(items)
+    for item in itemVal:
+        item.append(mod)
     matches = xmlParser.gunsAndMatchingItem(items)
 
     for item in itemVal:
@@ -142,6 +148,10 @@ def removeLastLineFromFile(path):
     lines[-2] = lines[-2].strip("\t").strip("\n")
     w.writelines([item for item in lines[:-1]])
     w.writelines("  ")
+
+
+def getMods():
+    return dao.getMods()
 
 
 def center(toplevel):

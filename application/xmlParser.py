@@ -50,8 +50,8 @@ flags = ["count_in_cargo",
          "deloot"]
 
 
-def parseFromString(xml):
-    return _parseRoot(ET.fromstring(xml))
+def parseFromString(xml, mod="Vanilla"):
+    return _parseRoot(ET.fromstring(xml), mod)
 
 
 def parseFromFile(dir):
@@ -64,12 +64,12 @@ def parseFromFile(dir):
     return _parseRoot(tree.getroot())
 
 
-def _parseRoot(root):
+def _parseRoot(root, mod="Vanilla"):
     items = []
     itemValues = []
 
     for type in root:
-        item = createItemFromTypeBlock(type)
+        item = createItemFromTypeBlock(type, mod)
         items.append(item)
 
     return items
@@ -82,9 +82,10 @@ def createValues(items):
     return values
 
 
-def createItemFromTypeBlock(block):
+def createItemFromTypeBlock(block, mod):
     item = Item()
     item.fill(block)
+    item.mod = mod
     return item
 
 
@@ -222,6 +223,7 @@ class Item:
         self.tags = set()
         self.flags = []
         self.parameters = {}
+        self.mod = ""
 
     # fills item values based on given type xml block
     def fill(self, xml):
@@ -327,6 +329,34 @@ class Item:
             dict[flags[i]] = self.flags[i]
 
         self.parameters = dict
+
+    def getXML(self):
+        type = ""
+        craftable = False
+
+        if self.flags[-2] == 1:
+            craftable = True
+
+        type += "<type name=\"{}\">\n".format(self.name)
+        if not craftable:
+            type += "  <nominal>{}</nominal>\n".format(self.inominal)
+        type += "  <lifetime>{}</lifetime>\n".format(self.lifetime)
+        if not craftable:
+            type += "  <min>{}</min>\n".format(self.min)
+            type += "  <quantmin>{}</quantmin>\n".format(self.quantmin)
+            type += "  <quantmax>{}</quantmax>\n".format(self.quantmax)
+            type += "  <cost>{}</cost>\n".format(self.cost)
+        type += """  <flags count_in_cargo=\"{}\" count_in_hoarder=\"{}\" count_in_map=\"{}\" count_in_player=\"{}\" crafted=\"{}\" deloot=\"{}\" />\n""" \
+            .format(*self.flags)
+        if not craftable:
+            type += "  <category name=\"{}\"/>\n".format(self.category)
+            for usage in self.usages:
+                type += "  <usage name=\"{}\"/>\n".format(usage)
+            for tier in self.tiers:
+                type += "  <value name=\"{}\"/>\n".format(tier)
+        type += "</type>\n"
+
+        return type
 
 
 # returns a list of tuples with each tuple containing (gun item.name, matching secondary item.name)

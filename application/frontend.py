@@ -78,7 +78,19 @@ class Window(object):
 
         databasemenu = Menu(menubar, tearoff=0)
         databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
+        databasemenu.add_separator()
+        databasemenu.add_command(label="Add items...", command=self.openAddItems)
         menubar.add_cascade(label="Database", menu=databasemenu)
+
+        modsmenu = Menu(menubar, tearoff=0)
+        self.modSelection = []
+        for mod in windows.getMods():
+            intVar = IntVar()
+            intVar.set(1)
+            self.modSelection.append(intVar)
+            modsmenu.add_checkbutton(label=mod, variable=intVar)
+
+        menubar.add_cascade(label="Mods In Use", menu=modsmenu)
 
         helpmenu = Menu(menubar, tearoff=0)
         helpmenu.add_command(label="You're on your own...")
