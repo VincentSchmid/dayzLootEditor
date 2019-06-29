@@ -84,7 +84,7 @@ def insertItem(parameters, item):
 
     try:
         cursor.execute(
-            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             item)
         conn.commit()
         return 0
@@ -256,9 +256,9 @@ def getAllItems():
 
 def getMods():
     cursor = connection().cursor()
-    cursor.execute("select `mod` \
+    cursor.execute("select mods \
                     from items \
-                    group by `mod`;")
+                    group by mods;")
     rows = cursor.fetchall()
     return [row[0] for row in rows]
 

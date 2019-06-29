@@ -101,10 +101,7 @@ def appendTypesToDatabase(xml, root, mod):
     message = " Items where added to database, duplicate items where not added:\n"
     items = xmlParser.parseFromString(xml, mod)
     params = xmlParser.createStringFromKeys(items[0])
-    params += ", mod"
     itemVal = xmlParser.createValues(items)
-    for item in itemVal:
-        item.append(mod)
     matches = xmlParser.gunsAndMatchingItem(items)
 
     for item in itemVal:
