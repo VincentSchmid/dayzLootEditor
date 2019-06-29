@@ -79,7 +79,7 @@ CREATE TABLE `items` (
   `crafted` tinyint(1) unsigned zerofill NOT NULL,
   `deloot` tinyint(1) unsigned zerofill NOT NULL,
   `ingameName` varchar(45) DEFAULT NULL,
-  `rarity` tinyint(1) unsigned zerofill NOT NULL,
+  `rarity` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
   `mod` varchar(25) NOT NULL DEFAULT 'Vanilla',
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
