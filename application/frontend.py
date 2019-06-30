@@ -287,6 +287,7 @@ class Window(object):
 
         self.updateDisplay(rows)
 
+    #bug getWeaponAndCorresponding somehow returns rows with name at the end?
     def viewLinked(self):
         try:
             dict = self.getSelectedValues()
@@ -294,7 +295,6 @@ class Window(object):
                 rows = dao.getWeaponAndCorresponding(self.name_text.get())
                 for i in range(len(rows)):
                     rows[i] = rows[i][:-1]
-                    print(rows[i])
             else:
                 rows = dao.getWeaponsFromAccessoire(self.name_text.get())
 
