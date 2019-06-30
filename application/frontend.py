@@ -38,7 +38,8 @@ class Window(object):
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
-        self.selectedMods = []
+        self.availableMods = windows.getMods()
+        self.selectedMods = self.availableMods
 
         self.createMenuBar()
         self.createEntryBar()
@@ -85,7 +86,7 @@ class Window(object):
 
         modsmenu = Menu(menubar, tearoff=0)
         self.modSelectionVars = []
-        self.availableMods = windows.getMods()
+
         for mod in self.availableMods:
             intVar = IntVar()
             intVar.set(1)
@@ -160,7 +161,7 @@ class Window(object):
         self.tree = ttk.Treeview(self.treeFrame,
                                  columns=(
                                  'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
-                                 'rarity'))
+                                 'rarity', 'mod'))
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -171,6 +172,7 @@ class Window(object):
         self.tree.heading('#7', text='Tier')
         self.tree.heading('#8', text='Dyn. Event')
         self.tree.heading('#9', text='Rarity')
+        self.tree.heading('#10', text='Mod')
         self.tree.column('#0', stretch=NO)
         self.tree.column('#1', width=60, stretch=YES)
         self.tree.column('#2', width=60, minwidth=20, stretch=YES)
@@ -181,6 +183,7 @@ class Window(object):
         self.tree.column('#7', width=150, stretch=YES)
         self.tree.column('#8', width=80, stretch=YES)
         self.tree.column('#9', width=120, stretch=YES)
+        self.tree.column('#10', width=120, stretch=YES)
 
         self.tree.grid(row=0, column=0, sticky='nsew')
         self.treeview = self.tree
@@ -362,6 +365,10 @@ class Window(object):
 
             self.raritySel.set(dict["rarity"])
 
+            self.window.clipboard_clear()
+            self.window.clipboard_append(dict["name"])
+            self.window.update()
+
         except IndexError:
             pass
 
@@ -384,20 +391,24 @@ class Window(object):
                 return str(k)
 
     def updateDisplay(self, rows):
+        displayedNom = 0
         self.clearTree()
         for row in rows:
             row = self.dictFromRow(row)
-            self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
-                                                                  row["lifetime"], row["type"], row["usage"],
-                                                                  row["tier"], row["deloot"], row["rarity"]))
+            if row["mod"] in self.selectedMods:
+                displayedNom += row["nominal"]
+                self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
+                                                                      row["lifetime"], row["type"], row["usage"],
+                                                                      row["tier"], row["deloot"], row["rarity"],
+                                                                      row["mod"]))
         self.updateNominalInfo()
-        self.totalNomDisplayed.set(sum(x[5] for x in rows))
+        self.totalNomDisplayed.set(displayedNom)
         self.updateDistribution()
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
                 "type": row[2], "rarity": rarities9[row[36]], "deloot": row[34],
-                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27])}
+                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27]), "mod": row[-1]}
 
     def createUsage(self, row):
         usageNames = xmlParser.usages
