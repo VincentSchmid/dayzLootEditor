@@ -337,7 +337,7 @@ class Window(object):
         xmlPath = windows.saveAsFile("xml", "w+")
         if xmlPath is not None:
             windows.copyFile(windows.getSourceTypes(), xmlPath)
-            writeItemToXML.update(xmlPath.name)
+            writeItemToXML.update(xmlPath.name, self.selectedMods)
 
     def clearTree(self):
         if self.tree.get_children() != ():

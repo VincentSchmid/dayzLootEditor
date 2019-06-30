@@ -1,29 +1,26 @@
 import xml.etree.ElementTree as ET
 
 try:
-    from application import xmlParser, dao
+    from application import xmlParser, dao, windows
 except ModuleNotFoundError:
     import xmlParser
     import dao
+    import windows
 
 
-def update(dir):
-    tree = ET.parse(dir)
-    types = tree.getroot()
+def createItem(row):
+    item = xmlParser.Item()
+    item.fillFromVal(row)
+    return item.getXML()
 
-    items = []
-    for val in dao.getAllItems():
-        val = val[:-1]
-        item = xmlParser.Item()
-        item.fillFromVal(val)
-        items.append(item)
 
+def update(dir, includedMods):
+    f = open(dir)
+    items = dao.getAllItems()
     for item in items:
-        for xmlType in types:
-            if item.name == xmlType.attrib["name"]:
-                setType(xmlType, item)
+        if item[-1] in includedMods:
+            f.write(createItem(item))
 
-    tree.write(dir)
 
 
 def setType(xml, item):

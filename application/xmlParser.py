@@ -337,24 +337,24 @@ class Item:
         if self.flags[-2] == 1:
             craftable = True
 
-        type += "<type name=\"{}\">\n".format(self.name)
+        type += "  <type name=\"{}\">\n".format(self.name)
         if not craftable:
-            type += "  <nominal>{}</nominal>\n".format(self.inominal)
-        type += "  <lifetime>{}</lifetime>\n".format(self.lifetime)
+            type += "    <nominal>{}</nominal>\n".format(self.inominal)
+        type += "    <lifetime>{}</lifetime>\n".format(self.lifetime)
         if not craftable:
-            type += "  <min>{}</min>\n".format(self.min)
-            type += "  <quantmin>{}</quantmin>\n".format(self.quantmin)
-            type += "  <quantmax>{}</quantmax>\n".format(self.quantmax)
-            type += "  <cost>{}</cost>\n".format(self.cost)
-        type += """  <flags count_in_cargo=\"{}\" count_in_hoarder=\"{}\" count_in_map=\"{}\" count_in_player=\"{}\" crafted=\"{}\" deloot=\"{}\" />\n""" \
+            type += "    <min>{}</min>\n".format(self.min)
+            type += "    <quantmin>{}</quantmin>\n".format(self.quantmin)
+            type += "    <quantmax>{}</quantmax>\n".format(self.quantmax)
+            type += "    <cost>{}</cost>\n".format(self.cost)
+        type += """    <flags count_in_cargo=\"{}\" count_in_hoarder=\"{}\" count_in_map=\"{}\" count_in_player=\"{}\" crafted=\"{}\" deloot=\"{}\" />\n""" \
             .format(*self.flags)
         if not craftable:
-            type += "  <category name=\"{}\"/>\n".format(self.category)
+            type += "    <category name=\"{}\"/>\n".format(self.category)
             for usage in self.usages:
-                type += "  <usage name=\"{}\"/>\n".format(usage)
+                type += "    <usage name=\"{}\"/>\n".format(usage)
             for tier in self.tiers:
-                type += "  <value name=\"{}\"/>\n".format(tier)
-        type += "</type>\n"
+                type += "    <value name=\"{}\"/>\n".format(tier)
+        type += "  </type>\n"
 
         return type
 
