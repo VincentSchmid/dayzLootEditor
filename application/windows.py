@@ -69,9 +69,6 @@ def writeConfig(user, pwd, port, database, server):
         the_file.write(server + '\n')
 
 
-def getMods():
-    dao.getMods()
-
 def readConfig():
     try:
         with open(dataPath + "\\config.txt", 'r') as the_file:
