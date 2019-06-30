@@ -40,7 +40,7 @@ def saveDB():
 def copyFile(fromdir, todir):
     with open(fromdir) as f:
         with todir as f1:
-                    f1.write(f.read())
+            f1.write(f.read())
 
 
 def showError(parent, title, message):

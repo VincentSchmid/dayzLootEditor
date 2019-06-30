@@ -30,10 +30,11 @@ class addItems(object):
 
         self.buttons = Frame(self.window)
         self.buttons.grid(row=3, sticky="w")
-        Button(self.buttons, text="OK", height=1, width=10, command=self.confirm)\
+        Button(self.buttons, text="OK", height=1, width=10, command=self.confirm) \
             .grid(padx=10, pady=10)
 
         windows.center(self.window)
+        self.window.wait_window()
 
     def confirm(self):
         selectedMod = self.modSelector.get()
@@ -52,9 +53,10 @@ class addItems(object):
         if err == 0:
             if text.startswith("<type"):
                 types = "<types>\n  " + text + "\n</types>"
-        #Outsource this to own logic
+            # Outsource this to own logic
             windows.appendTypesToDatabase(types, self.window, selectedMod)
 
+        self.window.destroy()
 
 
 def testWindow():

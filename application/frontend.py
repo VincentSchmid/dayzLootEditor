@@ -84,7 +84,7 @@ class Window(object):
         databasemenu.add_command(label="Add items...", command=self.openAddItems)
         menubar.add_cascade(label="Database", menu=databasemenu)
 
-        modsmenu = Menu(menubar, tearoff=0)
+        self.modsmenu = Menu(menubar, tearoff=0)
         self.modSelectionVars = []
 
         for mod in self.availableMods:
@@ -92,9 +92,9 @@ class Window(object):
             intVar.set(1)
             intVar.trace("w", self.updateModSelection)
             self.modSelectionVars.append(intVar)
-            modsmenu.add_checkbutton(label=mod, variable=intVar)
+            self.modsmenu.add_checkbutton(label=mod, variable=intVar)
 
-        menubar.add_cascade(label="Mods In Use", menu=modsmenu)
+        menubar.add_cascade(label="Mods In Use", menu=self.modsmenu)
 
         helpmenu = Menu(menubar, tearoff=0)
         helpmenu.add_command(label="You're on your own...")
@@ -160,8 +160,8 @@ class Window(object):
 
         self.tree = ttk.Treeview(self.treeFrame,
                                  columns=(
-                                 'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
-                                 'rarity', 'mod'))
+                                     'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
+                                     'rarity', 'mod'))
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -321,6 +321,13 @@ class Window(object):
         self.updateDisplay(rows)
         self.changed = True
 
+    def addModMenu(self, mod):
+        intVar = IntVar()
+        intVar.set(1)
+        intVar.trace("w", self.updateModSelection)
+        self.modSelectionVars.append(intVar)
+        self.modsmenu.add_checkbutton(label=mod, variable=intVar)
+
     def distribute(self):
         self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get()]
@@ -328,15 +335,11 @@ class Window(object):
         self.changed = True
         self.updateDisplay(dao.viewType(self.distribSel.get()))
 
-    def updateXML(self):
-        xmlPath = windows.dataPath + "\\types.xml"
-        xmlWriter.update(xmlPath)
-
     # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):
         xmlPath = windows.saveAsFile("xml", "w+")
         if xmlPath is not None:
-            xmlWriter.update(xmlPath.name, self.selectedMods)
+            xmlWriter.update(xmlPath, self.selectedMods)
 
     def clearTree(self):
         if self.tree.get_children() != ():
@@ -403,6 +406,7 @@ class Window(object):
         self.updateNominalInfo()
         self.totalNomDisplayed.set(displayedNom)
         self.updateDistribution()
+        self.checkForNewMod()
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
@@ -475,6 +479,12 @@ class Window(object):
 
     def openAddItems(self):
         addItems.addItems(self.window)
+
+    def checkForNewMod(self):
+        databaseMods = windows.getMods()
+        if len(databaseMods) > len(self.availableMods):
+            if databaseMods[-1] != self.availableMods[-1]:
+                self.addModMenu(databaseMods[-1])
 
     def checkForDatabase(self):
         try:

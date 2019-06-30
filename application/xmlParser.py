@@ -339,7 +339,7 @@ class Item:
 
         type += "  <type name=\"{}\">\n".format(self.name)
         if not craftable:
-            type += "    <nominal>{}</nominal>\n".format(self.inominal)
+            type += "    <nominal>{}</nominal>\n".format(self.nominal)
         type += "    <lifetime>{}</lifetime>\n".format(self.lifetime)
         if not craftable:
             type += "    <min>{}</min>\n".format(self.min)

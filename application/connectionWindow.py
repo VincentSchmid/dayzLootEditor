@@ -35,7 +35,6 @@ class ConnectionWindow(object):
         except FileNotFoundError:
             pass
 
-
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=1, column=0, sticky="n,w,e", padx=30)
 
@@ -124,7 +123,6 @@ class ConnectionWindow(object):
         dao.createDB(self.database.get())
         dao.loadDB(windows.dataPath + "\\GENESIS.sql")
         windows.writeTypesToDatabase(self.typesDir.get())
-        windows.saveSourceTypes(self.typesDir.get(), self.database.get())
         windows.connectionSuccess(self.window)
 
     def testDB(self):

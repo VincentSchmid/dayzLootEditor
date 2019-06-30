@@ -15,8 +15,10 @@ def createItem(row):
 
 
 def update(dir, includedMods):
-    f = open(dir)
+    f = dir
     items = dao.getAllItems()
+    f.write("<types>\n")
     for item in items:
         if item[-1] in includedMods:
             f.write(createItem(item))
+    f.write("</types>\n")
