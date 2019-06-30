@@ -4,7 +4,7 @@ from tkinter import *
 from tkinter import ttk
 
 try:
-    from application import xmlParser, writeItemToXML, dao, distibutor, connectionWindow, windows, addItems
+    from application import xmlParser, xmlWriter, dao, distibutor, connectionWindow, windows, addItems
 except ModuleNotFoundError:
     import xmlParser
     import writeItemToXML
@@ -330,14 +330,13 @@ class Window(object):
 
     def updateXML(self):
         xmlPath = windows.dataPath + "\\types.xml"
-        writeItemToXML.update(xmlPath)
+        xmlWriter.update(xmlPath)
 
     # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):
         xmlPath = windows.saveAsFile("xml", "w+")
         if xmlPath is not None:
-            windows.copyFile(windows.getSourceTypes(), xmlPath)
-            writeItemToXML.update(xmlPath.name, self.selectedMods)
+            xmlWriter.update(xmlPath.name, self.selectedMods)
 
     def clearTree(self):
         if self.tree.get_children() != ():

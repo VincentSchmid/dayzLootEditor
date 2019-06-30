@@ -5,7 +5,7 @@ from tkinter import *
 from tkinter import ttk
 
 try:
-    from application import xmlParser, writeItemToXML, windows
+    from application import xmlParser, xmlWriter, windows
 except ModuleNotFoundError:
     import xmlParser
     import windows
@@ -53,21 +53,8 @@ class addItems(object):
             if text.startswith("<type"):
                 types = "<types>\n  " + text + "\n</types>"
         #Outsource this to own logic
-            newItemNames = windows.appendTypesToDatabase(types, self.window, selectedMod)
-            text = text.split("</type>")
-            toAppend = []
-            for itemName in newItemNames:
-                for type in text:
-                    if itemName in type.split(">")[0]:
-                        typeLines = type.split("\n")
-                        for i in range(len(typeLines)-2):
-                            typeLines[i+1] = "    " + typeLines[i+1].strip()
-                        type = ""
-                        for line in typeLines:
-                            type += line + "\n"
-                        toAppend.append("\n  " + type.replace("\t", "  ").strip() + "\n  </type>")
+            windows.appendTypesToDatabase(types, self.window, selectedMod)
 
-            windows.appendtoSorce(toAppend)
 
 
 def testWindow():

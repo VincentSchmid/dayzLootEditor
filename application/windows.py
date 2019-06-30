@@ -15,8 +15,6 @@ except ModuleNotFoundError:
 
 dataPath = abspath(join(getcwd(), "..", "data"))
 
-def getSourceTypes():
-    return dataPath + "\\SOURCETYPES_"+readConfig()[3]+".xml"
 
 def deleteParams():
     remove(dataPath + "\\config.txt")
@@ -104,6 +102,9 @@ def appendTypesToDatabase(xml, root, mod):
     itemVal = xmlParser.createValues(items)
     matches = xmlParser.gunsAndMatchingItem(items)
 
+    if len(itemVal) > 100:
+        sleep(1)
+
     for item in itemVal:
         err = dao.insertItem(params, item)
         if err == 1:
@@ -112,29 +113,14 @@ def appendTypesToDatabase(xml, root, mod):
             count += 1
             successes.append(item[0])
 
+    if len(itemVal) > 100:
+        sleep(1)
+
     if len(matches) != 0:
         dao.createCombos(matches)
 
     showError(root, "Success", str(count) + message)
     return successes
-
-
-def saveSourceTypes(dir, dbName):
-    copyFile(dir, open(getSourceTypes(), "w+"))
-
-
-def appendtoSorce(types):
-    path = getSourceTypes()
-
-    removeLastLineFromFile(path)
-
-    w = open(path, "a")
-    for line in types:
-        w.writelines(line)
-
-    w.writelines("\n</types>")
-
-    w.close()
 
 
 def removeLastLineFromFile(path):

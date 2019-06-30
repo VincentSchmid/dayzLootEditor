@@ -4,7 +4,7 @@ from os.path import join
 from tkinter import *
 
 try:
-    from application import xmlParser, writeItemToXML, dao, distibutor, windows
+    from application import xmlParser, xmlWriter, dao, distibutor, windows
 except ModuleNotFoundError:
     import xmlParser
     import writeItemToXML
