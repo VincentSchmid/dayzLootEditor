@@ -68,7 +68,8 @@ All items of the game are loaded and found if searched but the sorting only work
 
 #### Main Display
 - [ ] ability to view by type/category or usage or tier
-- [ ] associate these items with a mod that can be activated and deactivated
+- [x] automatically copies selected item name to clipboard
+- [x] associate these items with a mod that can be activated and deactivated
 - [x] show nominal of currently displayed items
 - [x] overall loot settings (adjust for many items at once)
 - [x] writing new types.xml
