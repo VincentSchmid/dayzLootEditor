@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 
 try:
-    from application import xmlParser, xmlWriter, dao, distibutor, connectionWindow, windows, addItems
+    from application import xmlParser, xmlWriter, dao, distibutor, connectionWindow, windows, addItems, itemLinker
 except ModuleNotFoundError:
     import xmlParser
     import writeItemToXML
@@ -11,6 +11,7 @@ except ModuleNotFoundError:
     import connectionWindow
     import windows
     import additems
+    import itemLinker
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -78,6 +79,7 @@ class Window(object):
         databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
         databasemenu.add_separator()
         databasemenu.add_command(label="Add items...", command=self.openAddItems)
+        databasemenu.add_command(label="Create item links...", command=self.openitemLinker)
         menubar.add_cascade(label="Database", menu=databasemenu)
 
         self.modsmenu = Menu(menubar, tearoff=0)
@@ -481,6 +483,9 @@ class Window(object):
         if len(databaseMods) > len(self.availableMods):
             if databaseMods[-1] != self.availableMods[-1]:
                 self.addModMenu(databaseMods[-1])
+
+    def openItemLinker(self):
+        itemLinker.itemLinker(self.window)
 
     def checkForDatabase(self):
         try:

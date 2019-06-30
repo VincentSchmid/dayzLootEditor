@@ -205,5 +205,3 @@ def testWindow():
     window = Tk()
     itemLinker(window)
     window.mainloop()
-
-testWindow()
