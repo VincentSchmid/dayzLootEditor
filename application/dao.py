@@ -124,15 +124,20 @@ def viewCategory(category):
 
 
 def getLinkedItems(item):
+    items = set()
     cursor = connection().cursor()
-    cursor.execute(
-        "select item2 from (" +
-        "       select item1, item2 " +
-        "       from itemcombos " +
-        "       where item1 = ?) as combos", item
-    )
-    return cursor.fetchval()
+    cursor.execute("select * from itemcombos where item1 = ? or item2 = ?", item, item)
+    fetched = cursor.fetchall()
+    result = []
+    for r in fetched:
+        result.append(r[1:])
 
+    if result is not None:
+        item1 = [row[0] for row in result]
+        item2 = [row[1] for row in result]
+        for item in item1 + item2:
+            items.add(item)
+    return items
 
 def getWeaponAndCorresponding(name):
     global lastQuery

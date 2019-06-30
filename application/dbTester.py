@@ -28,8 +28,11 @@ def fillDB():
 #sleep(1)
 #fillDB()
 all = ["All Items", "All Mods"]
-print(dao.getItemsFromCatMods("gun", "MassMany", *all))
-print(dao.getItemsFromCatMods("All Items", "MassMany", *all))
-print(dao.getItemsFromCatMods("ammo", "All Mods", *all))
-print(dao.getItemsFromCatMods("ammo", "MassMany", *all, "12ga"))
+def testGetItems():
+    print(dao.getItemsFromCatMods("gun", "MassMany", *all))
+    print(dao.getItemsFromCatMods("All Items", "MassMany", *all))
+    print(dao.getItemsFromCatMods("ammo", "All Mods", *all))
+    print(dao.getItemsFromCatMods("ammo", "MassMany", *all, "12ga"))
+
+print(dao.getLinkedItems("AKM"))
 

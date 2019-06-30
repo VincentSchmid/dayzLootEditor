@@ -180,7 +180,7 @@ class itemLinker(object):
             values = parentValues
             box = self.listBoxes[0]
 
-        if event.widget in allItemsValues:
+        if event.widget in allItemsWidgets:
             values = allItemsValues
             box = self.listBoxes[1]
 
@@ -193,8 +193,11 @@ class itemLinker(object):
             box.insert(END, row)
 
     def getLinks(self, event):
-        dao.getWeaponAndCorresponding()
-        self.listBoxes[0].get(ACTIVE)
+        self.listBoxes[2].delete(0, END)
+        for item in dao.getLinkedItems(self.listBoxes[0].get(ANCHOR)):
+            self.listBoxes[2].insert(END, item)
+
+
 
 def testWindow():
     window = Tk()
