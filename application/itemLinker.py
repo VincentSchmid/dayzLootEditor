@@ -86,7 +86,7 @@ class itemLinker(object):
         lFrame.grid_columnconfigure(0, weight=1)
 
 
-        lb = Listbox(listboxFrame, width=40, height=30, exportselection=False)
+        lb = Listbox(listboxFrame, width=35, height=30, exportselection=False)
         lb.grid(sticky="ns")
         self.listBoxes.append(lb)
 
@@ -128,10 +128,12 @@ class itemLinker(object):
         self.modEntries.append((ml, modSelector))
 
     def addLink(self):
-        pass
+        dao.createCombos([(self.listBoxes[0].get(ANCHOR), self.listBoxes[1].get(ANCHOR))])
+        self.getLinks()
 
     def removeLink(self):
-        pass
+        dao.removeCombo((self.listBoxes[0].get(ANCHOR), self.listBoxes[2].get(ANCHOR)))
+        self.getLinks()
 
     def fillBoxes(self):
         all = [xmlParser.selection[-1], self.mods[0]]
@@ -192,7 +194,7 @@ class itemLinker(object):
         for row in rows:
             box.insert(END, row)
 
-    def getLinks(self, event):
+    def getLinks(self, event=None):
         self.listBoxes[2].delete(0, END)
         for item in dao.getLinkedItems(self.listBoxes[0].get(ANCHOR)):
             self.listBoxes[2].insert(END, item)

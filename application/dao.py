@@ -97,9 +97,14 @@ def createCombos(items):
     cursor = conn.cursor()
 
     cursor.fast_executemany = True
-    cursor.executemany("insert into itemcombos(item1, item2) values (?, ?)", items)
+    cursor.executemany("insert ignore into itemcombos(item1, item2) values (?, ?)", items)
     conn.commit()
 
+def removeCombo(items):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM itemcombos WHERE item1 = ? AND item2 = ?", items[0], items[1])
+    conn.commit()
 
 def viewType(type):
     global lastQuery
@@ -138,6 +143,7 @@ def getLinkedItems(item):
         for item in item1 + item2:
             items.add(item)
     return items
+
 
 def getWeaponAndCorresponding(name):
     global lastQuery
