@@ -292,6 +292,9 @@ class Window(object):
             dict = self.getSelectedValues()
             if dict["type"] == 'gun':
                 rows = dao.getWeaponAndCorresponding(self.name_text.get())
+                for i in range(len(rows)):
+                    rows[i] = rows[i][:-1]
+                    print(rows[i])
             else:
                 rows = dao.getWeaponsFromAccessoire(self.name_text.get())
 
@@ -396,6 +399,7 @@ class Window(object):
         for row in rows:
             row = self.dictFromRow(row)
             if row["mod"] in self.selectedMods:
+
                 displayedNom += row["nominal"]
                 self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
                                                                       row["lifetime"], row["type"], row["usage"],
@@ -484,7 +488,7 @@ class Window(object):
             if databaseMods[-1] != self.availableMods[-1]:
                 self.addModMenu(databaseMods[-1])
 
-    def openItemLinker(self):
+    def openitemLinker(self):
         itemLinker.itemLinker(self.window)
 
     def checkForDatabase(self):
