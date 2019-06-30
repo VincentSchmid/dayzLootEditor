@@ -24,6 +24,12 @@ def fillDB():
     dao.insertItems(params, items)
 
 
-createDB()
-sleep(1)
-fillDB()
+#createDB()
+#sleep(1)
+#fillDB()
+all = ["All Items", "All Mods"]
+print(dao.getItemsFromCatMods("gun", "MassMany", *all))
+print(dao.getItemsFromCatMods("All Items", "MassMany", *all))
+print(dao.getItemsFromCatMods("ammo", "All Mods", *all))
+print(dao.getItemsFromCatMods("ammo", "MassMany", *all, "12ga"))
+

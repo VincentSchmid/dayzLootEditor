@@ -192,8 +192,9 @@ class itemLinker(object):
         for row in rows:
             box.insert(END, row)
 
-            
-
+    def getLinks(self, event):
+        dao.getWeaponAndCorresponding()
+        self.listBoxes[0].get(ACTIVE)
 
 def testWindow():
     window = Tk()

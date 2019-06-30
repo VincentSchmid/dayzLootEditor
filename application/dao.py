@@ -123,6 +123,17 @@ def viewCategory(category):
     return cursor.fetchall()
 
 
+def getLinkedItems(item):
+    cursor = connection().cursor()
+    cursor.execute(
+        "select item2 from (" +
+        "       select item1, item2 " +
+        "       from itemcombos " +
+        "       where item1 = ?) as combos", item
+    )
+    return cursor.fetchval()
+
+
 def getWeaponAndCorresponding(name):
     global lastQuery
     lastQuery = "select * \
