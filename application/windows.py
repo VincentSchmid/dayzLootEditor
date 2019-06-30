@@ -1,5 +1,4 @@
 import tkinter.filedialog as filediag
-import xml.dom.minidom
 from os import getcwd
 from os import remove
 from os.path import abspath

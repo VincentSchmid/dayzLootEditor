@@ -1,5 +1,3 @@
-import xml.etree.ElementTree as ET
-
 try:
     from application import xmlParser, dao, windows
 except ModuleNotFoundError:

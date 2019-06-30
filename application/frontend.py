@@ -1,5 +1,3 @@
-from os import getcwd
-from os import path
 from tkinter import *
 from tkinter import ttk
 
@@ -73,10 +71,8 @@ class Window(object):
         filemenu.add_command(label="Export types.xml...", command=self.saveXML)
         filemenu.add_command(label="Save Database As...", command=self.saveDB)
         filemenu.add_separator()
-        filemenu.add_command(label="Add to database from types", command=self.openAddItems)
+        filemenu.add_command(label="Exit", command=self.window.destroy)
         menubar.add_cascade(label="File", menu=filemenu)
-        filemenu.add_separator()
-        filemenu.add_command(label="Exit")
 
         databasemenu = Menu(menubar, tearoff=0)
         databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
@@ -189,7 +185,7 @@ class Window(object):
         self.treeview = self.tree
 
         sb1 = Scrollbar(self.treeFrame)
-        sb1.grid(row=0, column=1, sticky="n,s")
+        sb1.grid(row=0, column=1, sticky="ns")
         self.tree.config(yscrollcommand=sb1.set)
         sb1.config(command=self.tree.yview)
 

@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-from os.path import isfile
 
 items = []
 

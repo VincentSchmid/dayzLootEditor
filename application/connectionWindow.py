@@ -1,6 +1,3 @@
-from os import getcwd
-from os.path import abspath
-from os.path import join
 from tkinter import *
 
 try:

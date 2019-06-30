@@ -263,6 +263,30 @@ def getMods():
     return [row[0] for row in rows]
 
 
+def getItemsFromCatMods(category, mod, allItems, allMods, search = None):
+    search = None if search == "" else search
+    query = ""
+    if search is not None:
+        query += "select name from ("
+    query += "select name from items "
+    if category != allItems:
+        query += "WHERE type = \'{}\' ".format(category)
+    if mod != allMods:
+        if category != allItems:
+            query += "AND "
+        else:
+            query += "WHERE "
+        query += "mods = \'{}\'".format(mod)
+
+    if search is not None:
+        query += ") as filtered WHERE name LIKE \'%{}%\';".format(search)
+
+    cursor = connection().cursor()
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    return [row[0] for row in rows]
+
+
 def createDB(name):
     global user
     global pwd
