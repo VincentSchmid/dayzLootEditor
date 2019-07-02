@@ -61,7 +61,7 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] choice if distributing by rarity or nominal
 - [ ] ability to distribute rarity across type/category or usage or tier
 - [ ] lock items from distribution (possibly rarity unassigned)
-- [ ] Ammo Distribution
+- [x] Ammo Distribution
 - [ ] Enter Hotkey in Rarity Distribution
 - [x] Optic Distribution
 - [x] Crate Rarity in the database include dropdown in items. Derive rarity on already existing items - then distribute across nominal
@@ -80,8 +80,8 @@ All items of the game are loaded and found if searched but the sorting only work
 - [x] fix saving types
 
 #### Item Association
-- [ ] Doing item association inside the app
-- [ ] guns can be assigned an ammo type which creates automatic associations
+- [x] Doing item association inside the app
+- [ ] guns can be assigned an ammo type which creates automatic associations (scope groups)
 
 #### Database
 - [x] managing DB connection
@@ -104,7 +104,7 @@ All items of the game are loaded and found if searched but the sorting only work
 ### Possible Features
 - [ ] Rewriting Common Database connection errors
 - [ ] drop percentages (not in types.xml)
-- [ ] Where the heck is the 60round STANAG??
+- [x] Where the heck is the 60round STANAG??
 
 ### Crazy ideas:
 - [ ] creating an online database for all mods where people can add their items mods types.xml entries and a checkbox in-app for a specific mod to add to types XML.
