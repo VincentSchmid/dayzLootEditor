@@ -36,3 +36,4 @@ def testGetItems():
 
 print(dao.getLinkedItems("AKM"))
 print(dao.getWeaponAndCorresponding("AKM"))
+print(dao.getWeaponsFromAccessoire("AmmoBox_556x45Tracer_20Rnd"))

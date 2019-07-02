@@ -273,7 +273,10 @@ class Window(object):
         for i in range(len(self.nomVars)):
             nominal = dao.getNominalByType(itemTypes[i])
             self.nomVars[i].set(nominal)
-            self.deltaNom[i].set(nominal - self.startNominals[i])
+            try:
+                self.deltaNom[i].set(nominal - self.startNominals[i])
+            except TypeError:
+                self.deltaNom[i].set(nominal)
 
     def updateModSelection(self, *args):
         self.selectedMods = []

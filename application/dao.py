@@ -184,7 +184,7 @@ def getWeaponAndCorresponding(name):
 
 def getWeaponsFromAccessoire(name):
     global lastQuery
-    lastQuery = "select * \
+    lastQuery = "select "+columns+" \
                 from (select item1, item2, items.* \
                       from itemcombos \
                       join items on name = item1 \

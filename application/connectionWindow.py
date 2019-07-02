@@ -108,19 +108,21 @@ class ConnectionWindow(object):
 
     def createTest(self):
         if self.v.get() == "create":
+            self.createDatabase()
+            windows.connectionSuccess(self.window)
             if self.typesDir.get() != "":
-                self.createDatabaseFromTypes()
-            else:
-                windows.showError(self.window, "Specify File", "No Path to types.xml provided")
+                windows.writeTypesToDatabase(self.typesDir.get())
         else:
             self.testDB()
 
-    def createDatabaseFromTypes(self):
+    def createDatabase(self):
         self.passParams()
-        dao.createDB(self.database.get())
-        dao.loadDB(windows.dataPath + "\\GENESIS.sql")
-        windows.writeTypesToDatabase(self.typesDir.get())
-        windows.connectionSuccess(self.window)
+        try:
+            dao.createDB(self.database.get())
+            dao.loadDB(windows.dataPath + "\\GENESIS.sql")
+        except Exception as e:
+            windows.showError(self.window, "Error", "Failed to connect:\n" + str(e))
+            windows.deleteParams()
 
     def testDB(self):
         self.passParams()
