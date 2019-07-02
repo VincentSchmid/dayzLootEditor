@@ -6,7 +6,7 @@ try:
 except ModuleNotFoundError:
     import xmlParser
     import windows
-    import writeItemToXML
+    import xmlWriter
 
 
 class newWindow(object):

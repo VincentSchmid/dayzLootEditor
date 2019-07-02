@@ -5,12 +5,12 @@ try:
     from application import xmlParser, xmlWriter, dao, distibutor, connectionWindow, windows, addItems, itemLinker
 except ModuleNotFoundError:
     import xmlParser
-    import writeItemToXML
+    import xmlWriter
     import dao
     import distibutor
     import connectionWindow
     import windows
-    import additems
+    import addItems
     import itemLinker
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
@@ -33,7 +33,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.5")
+        self.window.wm_title("Loot Editor v0.7")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False

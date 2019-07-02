@@ -4,7 +4,7 @@ try:
     from application import xmlParser, xmlWriter, dao, distibutor, windows
 except ModuleNotFoundError:
     import xmlParser
-    import writeItemToXML
+    import xmlWriter
     import dao
     import distibutor
     import windows
