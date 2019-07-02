@@ -229,6 +229,11 @@ class Window(object):
         self.inclMags = IntVar()
         Checkbutton(self.distribution, text='Mags', variable=self.inclMags).grid(row=4, sticky=W)
 
+        self.targetAmmo = StringVar()
+        self.targetAmmo.set(str(dao.getNominalByType("ammo")))
+        self.targetAmmoEntry = Entry(self.distribution, textvariable=self.targetAmmo, width=5)
+        self.targetAmmoEntry.grid(row=3, column=1, sticky=W)
+
         self.targetMag = StringVar()
         self.targetMag.set(str(dao.getNominalByType("mag")))
         self.targetMagEntry = Entry(self.distribution, textvariable=self.targetMag, width=5)
@@ -287,14 +292,11 @@ class Window(object):
 
         self.updateDisplay(rows)
 
-    #bug getWeaponAndCorresponding somehow returns rows with name at the end?
     def viewLinked(self):
         try:
             dict = self.getSelectedValues()
             if dict["type"] == 'gun':
                 rows = dao.getWeaponAndCorresponding(self.name_text.get())
-                for i in range(len(rows)):
-                    rows[i] = rows[i][:-1]
             else:
                 rows = dao.getWeaponsFromAccessoire(self.name_text.get())
 
@@ -332,7 +334,8 @@ class Window(object):
     def distribute(self):
         self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get()]
-        distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), int(self.targetMag.get()), flags)
+        distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), int(self.targetMag.get()),
+                            int(self.targetAmmo.get()), flags)
         self.changed = True
         self.updateDisplay(dao.viewType(self.distribSel.get()))
 

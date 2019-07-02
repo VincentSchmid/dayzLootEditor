@@ -8,49 +8,11 @@ except ModuleNotFoundError:
     import windows
 
 
-lastQuery = "select " + returnValues + " from items"
-
 user = ""
 pwd = ""
 port = ""
 database = ""
 server = ""
-
-
-def getCoulumNames():
-    cursor = connection().cursor()
-    cursor.execute("""SELECT COLUMN_NAME
-                      FROM INFORMATION_SCHEMA.COLUMNS
-                      WHERE TABLE_SCHEMA= 'dayzitems'
-                      AND TABLE_NAME= 'items';""")
-    return [row[0] for row in cursor.fetchall()]
-
-
-def getDicts(items):
-    itemsListOfDicts = []
-    keys = getCoulumNames()
-    for item in items:
-        dict = {}
-        for k in range(len(item)):
-            dict[keys[k]] = item[k]
-
-        itemsListOfDicts.append(dict)
-
-    return itemsListOfDicts
-
-
-def setConnectionParams(username, password, p, dbname, host):
-    windows.writeConfig(username, password, p, dbname, host)
-    global user
-    global pwd
-    global port
-    global database
-    global server
-    user = username
-    pwd = password
-    port = p
-    database = dbname
-    server = host
 
 
 def connection():
@@ -81,6 +43,46 @@ def connection():
         connection.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
         connection.setencoding(encoding='utf-8')
         return connection
+
+
+def getCoulumNames():
+    cursor = connection().cursor()
+    cursor.execute("""SELECT COLUMN_NAME
+                      FROM INFORMATION_SCHEMA.COLUMNS
+                      WHERE TABLE_SCHEMA= 'dayzitems'
+                      AND TABLE_NAME= 'items';""")
+    return [row[0] for row in cursor.fetchall()]
+
+
+columns = ", ".join(getCoulumNames())
+lastQuery = "select * from items"
+
+
+def getDicts(items):
+    itemsListOfDicts = []
+    keys = getCoulumNames()
+    for item in items:
+        dict = {}
+        for k in range(len(item)):
+            dict[keys[k]] = item[k]
+
+        itemsListOfDicts.append(dict)
+
+    return itemsListOfDicts
+
+
+def setConnectionParams(username, password, p, dbname, host):
+    windows.writeConfig(username, password, p, dbname, host)
+    global user
+    global pwd
+    global port
+    global database
+    global server
+    user = username
+    pwd = password
+    port = p
+    database = dbname
+    server = host
 
 
 def insertItems(parameters, items):
@@ -163,7 +165,8 @@ def getLinkedItems(item):
 
 def getWeaponAndCorresponding(name):
     global lastQuery
-    lastQuery = "select * \
+    global columns
+    lastQuery = "select "+columns+" \
                 from items \
                 join \
                     (select item2 \
