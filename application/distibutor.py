@@ -65,16 +65,16 @@ def distributeLinkedItem(guns, targetCount, type):
     elementCount = 0
     allItems = dao.getDicts(dao.viewType(type))
     for gun in guns:
-        items = []
         elementCount += int(gun["nominal"])
-        for corr in dao.getDicts(dao.getWeaponAndCorresponding(gun["name"])):
-            if corr["type"] == type:
-                for item in allItems:
-                    if item["name"] == corr["name"]:
-                        items.append(item)
+        linkedItemsToGun = dao.getDicts(dao.getWeaponAndCorresponding(gun["name"]))
+        matchingItems = getLinkedOfType(linkedItemsToGun, type)
 
-        for item in items:
-            item["nominal"] += item["nominal"] / len(items) + 1
+        # If Multiple item types linked: multiple Mags for example, then the sum of nominals should equal the nominal
+        # of gun
+        for matchingItem in matchingItems:
+            for item in allItems:
+                if matchingItem["name"] == item["name"]:
+                    item["nominal"] += gun["nominal"] / len(matchingItems)
 
     perUnit = targetCount / elementCount if elementCount != 0 else 0
 
@@ -83,6 +83,14 @@ def distributeLinkedItem(guns, targetCount, type):
         item["min"] = int(ceil(item["nominal"] / 2))
 
         dao.update(item)
+
+
+def getLinkedOfType(linkedItems, type):
+    matchingType = []
+    for item in linkedItems:
+        if item["type"] == type:
+            matchingType.append(item)
+    return matchingType
 
 
 def get_digits(string):
