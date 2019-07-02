@@ -7,12 +7,6 @@ try:
 except ModuleNotFoundError:
     import windows
 
-returnValues = "name,category,type,lifetime,quantmin,nominal,cost," \
-               "quantmax,min,restock,Military,Prison,School,Coast,Village," \
-               "Industrial,Medic,Police,Hunting,Town,Farm,Firefighter,Office," \
-               "Tier1,Tier2,Tier3,Tier4,shelves,floor," \
-               "count_in_cargo,count_in_hoarder,count_in_map,count_in_player," \
-               "crafted,deloot,ingameName,rarity"
 
 lastQuery = "select " + returnValues + " from items"
 
@@ -21,6 +15,28 @@ pwd = ""
 port = ""
 database = ""
 server = ""
+
+
+def getCoulumNames():
+    cursor = connection().cursor()
+    cursor.execute("""SELECT COLUMN_NAME
+                      FROM INFORMATION_SCHEMA.COLUMNS
+                      WHERE TABLE_SCHEMA= 'dayzitems'
+                      AND TABLE_NAME= 'items';""")
+    return [row[0] for row in cursor.fetchall()]
+
+
+def getDicts(items):
+    itemsListOfDicts = []
+    keys = getCoulumNames()
+    for item in items:
+        dict = {}
+        for k in range(len(item)):
+            dict[keys[k]] = item[k]
+
+        itemsListOfDicts.append(dict)
+
+    return itemsListOfDicts
 
 
 def setConnectionParams(username, password, p, dbname, host):

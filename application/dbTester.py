@@ -35,4 +35,5 @@ def testGetItems():
     print(dao.getItemsFromCatMods("ammo", "MassMany", *all, "12ga"))
 
 print(dao.getLinkedItems("AKM"))
+print(dao.getCoulumNames())
 

@@ -42,7 +42,7 @@ def distribute(type, targetNominal, targetMag, flags):
 def getItems(type):
     global itemsToDistribute
     itemsToDistribute = dao.getItemsToDistibute(type)
-    return getDicts(itemsToDistribute)
+    return dao.getDicts(itemsToDistribute)
 
 
 def calculateNumElements(itemsToDistribute):
@@ -60,27 +60,14 @@ def setValues(nominalPerElement, itemsToDistribute):
         item["min"] = int(ceil(item["nominal"] / 2))
 
 
-def getDicts(itemsToDistribute):
-    itemsListOfDicts = []
-    keys = dao.returnValues.split(",")
-    for item in itemsToDistribute:
-        dict = {}
-        for k in range(len(item)):
-            dict[keys[k]] = item[k]
-
-        itemsListOfDicts.append(dict)
-
-    return itemsListOfDicts
-
-
 def distributeMags(guns, targetMag):
     zeroAllMags()
     elementCount = 0
-    allMags = getDicts(dao.viewType("mag"))
+    allMags = dao.getDicts(dao.viewType("mag"))
     for item in guns:
         mags = []
         elementCount += int(item["nominal"])
-        for corr in getDicts(dao.getWeaponAndCorresponding(item["name"])):
+        for corr in dao.getDicts(dao.getWeaponAndCorresponding(item["name"])):
             if corr["type"] == "mag":
                 for mag in allMags:
                     if mag["name"] == corr["name"]:
@@ -103,8 +90,13 @@ def get_digits(string):
 
 
 def zeroAllMags():
-    for mag in getDicts(dao.viewType("mag")):
+    for mag in dao.getDicts(dao.viewType("mag")):
         mag["nominal"] = 0
         mag["min"] = 0
 
         dao.update(mag)
+
+
+def zeroItemToDistribute(item):
+        item["nominal"] = 0
+        item["min"] = 0
