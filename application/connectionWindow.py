@@ -1,13 +1,10 @@
-from os import getcwd
-from os.path import abspath
-from os.path import join
 from tkinter import *
 
 try:
-    from application import xmlParser, writeItemToXML, dao, distibutor, windows
+    from application import xmlParser, xmlWriter, dao, distibutor, windows
 except ModuleNotFoundError:
     import xmlParser
-    import writeItemToXML
+    import xmlWriter
     import dao
     import distibutor
     import windows
@@ -34,7 +31,6 @@ class ConnectionWindow(object):
 
         except FileNotFoundError:
             pass
-
 
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=1, column=0, sticky="n,w,e", padx=30)
@@ -124,7 +120,6 @@ class ConnectionWindow(object):
         dao.createDB(self.database.get())
         dao.loadDB(windows.dataPath + "\\GENESIS.sql")
         windows.writeTypesToDatabase(self.typesDir.get())
-        windows.saveSourceTypes(self.typesDir.get(), self.database.get())
         windows.connectionSuccess(self.window)
 
     def testDB(self):

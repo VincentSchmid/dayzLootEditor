@@ -73,7 +73,7 @@ def insertItems(parameters, items):
 
     cursor.fast_executemany = True
     cursor.executemany(
-        "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         items)
     conn.commit()
 
@@ -84,7 +84,7 @@ def insertItem(parameters, item):
 
     try:
         cursor.execute(
-            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             item)
         conn.commit()
         return 0
@@ -97,9 +97,14 @@ def createCombos(items):
     cursor = conn.cursor()
 
     cursor.fast_executemany = True
-    cursor.executemany("insert into itemcombos(item1, item2) values (?, ?)", items)
+    cursor.executemany("insert ignore into itemcombos(item1, item2) values (?, ?)", items)
     conn.commit()
 
+def removeCombo(items):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM itemcombos WHERE item1 = ? AND item2 = ?", items[0], items[1])
+    conn.commit()
 
 def viewType(type):
     global lastQuery
@@ -121,6 +126,23 @@ def viewCategory(category):
     cursor = connection().cursor()
     cursor.execute(lastQuery)
     return cursor.fetchall()
+
+
+def getLinkedItems(item):
+    items = set()
+    cursor = connection().cursor()
+    cursor.execute("select * from itemcombos where item1 = ? or item2 = ?", item, item)
+    fetched = cursor.fetchall()
+    result = []
+    for r in fetched:
+        result.append(r[1:])
+
+    if result is not None:
+        item1 = [row[0] for row in result]
+        item2 = [row[1] for row in result]
+        for item in item1 + item2:
+            items.add(item)
+    return items
 
 
 def getWeaponAndCorresponding(name):
@@ -252,6 +274,39 @@ def getAllItems():
     cursor = connection().cursor()
     cursor.execute(lastQuery)
     return cursor.fetchall()
+
+
+def getMods():
+    cursor = connection().cursor()
+    cursor.execute("select mods \
+                    from items \
+                    group by mods;")
+    rows = cursor.fetchall()
+    return [row[0] for row in rows]
+
+
+def getItemsFromCatMods(category, mod, allItems, allMods, search = None):
+    search = None if search == "" else search
+    query = ""
+    if search is not None:
+        query += "select name from ("
+    query += "select name from items "
+    if category != allItems:
+        query += "WHERE type = \'{}\' ".format(category)
+    if mod != allMods:
+        if category != allItems:
+            query += "AND "
+        else:
+            query += "WHERE "
+        query += "mods = \'{}\'".format(mod)
+
+    if search is not None:
+        query += ") as filtered WHERE name LIKE \'%{}%\';".format(search)
+
+    cursor = connection().cursor()
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    return [row[0] for row in rows]
 
 
 def createDB(name):

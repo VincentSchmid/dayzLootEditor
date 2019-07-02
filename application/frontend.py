@@ -1,18 +1,17 @@
-from os import getcwd
-from os import path
 from tkinter import *
 from tkinter import ttk
 
 try:
-    from application import xmlParser, writeItemToXML, dao, distibutor, connectionWindow, windows, addItems
+    from application import xmlParser, xmlWriter, dao, distibutor, connectionWindow, windows, addItems, itemLinker
 except ModuleNotFoundError:
     import xmlParser
-    import writeItemToXML
+    import xmlWriter
     import dao
     import distibutor
     import connectionWindow
     import windows
-    import additems
+    import addItems
+    import itemLinker
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -34,10 +33,12 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.5")
+        self.window.wm_title("Loot Editor v0.7")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
+        self.availableMods = windows.getMods()
+        self.selectedMods = self.availableMods
 
         self.createMenuBar()
         self.createEntryBar()
@@ -71,14 +72,27 @@ class Window(object):
         filemenu.add_command(label="Export types.xml...", command=self.saveXML)
         filemenu.add_command(label="Save Database As...", command=self.saveDB)
         filemenu.add_separator()
-        filemenu.add_command(label="Add to database from types", command=self.openAddItems)
+        filemenu.add_command(label="Exit", command=self.window.destroy)
         menubar.add_cascade(label="File", menu=filemenu)
-        filemenu.add_separator()
-        filemenu.add_command(label="Exit")
 
         databasemenu = Menu(menubar, tearoff=0)
         databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
+        databasemenu.add_separator()
+        databasemenu.add_command(label="Add items...", command=self.openAddItems)
+        databasemenu.add_command(label="Create item links...", command=self.openitemLinker)
         menubar.add_cascade(label="Database", menu=databasemenu)
+
+        self.modsmenu = Menu(menubar, tearoff=0)
+        self.modSelectionVars = []
+
+        for mod in self.availableMods:
+            intVar = IntVar()
+            intVar.set(1)
+            intVar.trace("w", self.updateModSelection)
+            self.modSelectionVars.append(intVar)
+            self.modsmenu.add_checkbutton(label=mod, variable=intVar)
+
+        menubar.add_cascade(label="Mods In Use", menu=self.modsmenu)
 
         helpmenu = Menu(menubar, tearoff=0)
         helpmenu.add_command(label="You're on your own...")
@@ -144,8 +158,8 @@ class Window(object):
 
         self.tree = ttk.Treeview(self.treeFrame,
                                  columns=(
-                                 'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
-                                 'rarity'))
+                                     'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
+                                     'rarity', 'mod'))
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -156,6 +170,7 @@ class Window(object):
         self.tree.heading('#7', text='Tier')
         self.tree.heading('#8', text='Dyn. Event')
         self.tree.heading('#9', text='Rarity')
+        self.tree.heading('#10', text='Mod')
         self.tree.column('#0', stretch=NO)
         self.tree.column('#1', width=60, stretch=YES)
         self.tree.column('#2', width=60, minwidth=20, stretch=YES)
@@ -166,12 +181,13 @@ class Window(object):
         self.tree.column('#7', width=150, stretch=YES)
         self.tree.column('#8', width=80, stretch=YES)
         self.tree.column('#9', width=120, stretch=YES)
+        self.tree.column('#10', width=120, stretch=YES)
 
         self.tree.grid(row=0, column=0, sticky='nsew')
         self.treeview = self.tree
 
         sb1 = Scrollbar(self.treeFrame)
-        sb1.grid(row=0, column=1, sticky="n,s")
+        sb1.grid(row=0, column=1, sticky="ns")
         self.tree.config(yscrollcommand=sb1.set)
         sb1.config(command=self.tree.yview)
 
@@ -254,6 +270,12 @@ class Window(object):
             self.nomVars[i].set(nominal)
             self.deltaNom[i].set(nominal - self.startNominals[i])
 
+    def updateModSelection(self, *args):
+        self.selectedMods = []
+        for i in range(len(self.availableMods)):
+            if self.modSelectionVars[i].get() == 1:
+                self.selectedMods.append(self.availableMods[i])
+
     def viewCategroy(self):
         cat = self.typeSel.get()
         if cat in xmlParser.categories:
@@ -265,11 +287,14 @@ class Window(object):
 
         self.updateDisplay(rows)
 
+    #bug getWeaponAndCorresponding somehow returns rows with name at the end?
     def viewLinked(self):
         try:
             dict = self.getSelectedValues()
             if dict["type"] == 'gun':
                 rows = dao.getWeaponAndCorresponding(self.name_text.get())
+                for i in range(len(rows)):
+                    rows[i] = rows[i][:-1]
             else:
                 rows = dao.getWeaponsFromAccessoire(self.name_text.get())
 
@@ -297,6 +322,13 @@ class Window(object):
         self.updateDisplay(rows)
         self.changed = True
 
+    def addModMenu(self, mod):
+        intVar = IntVar()
+        intVar.set(1)
+        intVar.trace("w", self.updateModSelection)
+        self.modSelectionVars.append(intVar)
+        self.modsmenu.add_checkbutton(label=mod, variable=intVar)
+
     def distribute(self):
         self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get()]
@@ -304,16 +336,11 @@ class Window(object):
         self.changed = True
         self.updateDisplay(dao.viewType(self.distribSel.get()))
 
-    def updateXML(self):
-        xmlPath = windows.dataPath + "\\types.xml"
-        writeItemToXML.update(xmlPath)
-
     # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):
         xmlPath = windows.saveAsFile("xml", "w+")
         if xmlPath is not None:
-            windows.copyFile(windows.getSourceTypes(), xmlPath)
-            writeItemToXML.update(xmlPath.name)
+            xmlWriter.update(xmlPath, self.selectedMods)
 
     def clearTree(self):
         if self.tree.get_children() != ():
@@ -341,6 +368,10 @@ class Window(object):
 
             self.raritySel.set(dict["rarity"])
 
+            self.window.clipboard_clear()
+            self.window.clipboard_append(dict["name"])
+            self.window.update()
+
         except IndexError:
             pass
 
@@ -363,20 +394,26 @@ class Window(object):
                 return str(k)
 
     def updateDisplay(self, rows):
+        displayedNom = 0
         self.clearTree()
         for row in rows:
             row = self.dictFromRow(row)
-            self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
-                                                                  row["lifetime"], row["type"], row["usage"],
-                                                                  row["tier"], row["deloot"], row["rarity"]))
+            if row["mod"] in self.selectedMods:
+
+                displayedNom += row["nominal"]
+                self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
+                                                                      row["lifetime"], row["type"], row["usage"],
+                                                                      row["tier"], row["deloot"], row["rarity"],
+                                                                      row["mod"]))
         self.updateNominalInfo()
-        self.totalNomDisplayed.set(sum(x[5] for x in rows))
+        self.totalNomDisplayed.set(displayedNom)
         self.updateDistribution()
+        self.checkForNewMod()
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
                 "type": row[2], "rarity": rarities9[row[36]], "deloot": row[34],
-                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27])}
+                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27]), "mod": row[-1]}
 
     def createUsage(self, row):
         usageNames = xmlParser.usages
@@ -444,6 +481,15 @@ class Window(object):
 
     def openAddItems(self):
         addItems.addItems(self.window)
+
+    def checkForNewMod(self):
+        databaseMods = windows.getMods()
+        if len(databaseMods) > len(self.availableMods):
+            if databaseMods[-1] != self.availableMods[-1]:
+                self.addModMenu(databaseMods[-1])
+
+    def openitemLinker(self):
+        itemLinker.itemLinker(self.window)
 
     def checkForDatabase(self):
         try:

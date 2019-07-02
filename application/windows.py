@@ -1,5 +1,4 @@
 import tkinter.filedialog as filediag
-import xml.dom.minidom
 from os import getcwd
 from os import remove
 from os.path import abspath
@@ -15,8 +14,6 @@ except ModuleNotFoundError:
 
 dataPath = abspath(join(getcwd(), "..", "data"))
 
-def getSourceTypes():
-    return dataPath + "\\SOURCETYPES_"+readConfig()[3]+".xml"
 
 def deleteParams():
     remove(dataPath + "\\config.txt")
@@ -42,7 +39,7 @@ def saveDB():
 def copyFile(fromdir, todir):
     with open(fromdir) as f:
         with todir as f1:
-                    f1.write(f.read())
+            f1.write(f.read())
 
 
 def showError(parent, title, message):
@@ -92,14 +89,17 @@ def writeTypesToDatabase(dir):
     dao.createCombos(matches)
 
 
-def appendTypesToDatabase(xml, root):
+def appendTypesToDatabase(xml, root, mod):
     count = 0
     successes = []
     message = " Items where added to database, duplicate items where not added:\n"
-    items = xmlParser.parseFromString(xml)
+    items = xmlParser.parseFromString(xml, mod)
     params = xmlParser.createStringFromKeys(items[0])
     itemVal = xmlParser.createValues(items)
     matches = xmlParser.gunsAndMatchingItem(items)
+
+    if len(itemVal) > 100:
+        sleep(1)
 
     for item in itemVal:
         err = dao.insertItem(params, item)
@@ -109,29 +109,14 @@ def appendTypesToDatabase(xml, root):
             count += 1
             successes.append(item[0])
 
+    if len(itemVal) > 100:
+        sleep(1)
+
     if len(matches) != 0:
         dao.createCombos(matches)
 
     showError(root, "Success", str(count) + message)
     return successes
-
-
-def saveSourceTypes(dir, dbName):
-    copyFile(dir, open(getSourceTypes(), "w+"))
-
-
-def appendtoSorce(types):
-    path = getSourceTypes()
-
-    removeLastLineFromFile(path)
-
-    w = open(path, "a")
-    for line in types:
-        w.writelines(line)
-
-    w.writelines("\n</types>")
-
-    w.close()
 
 
 def removeLastLineFromFile(path):
@@ -142,6 +127,10 @@ def removeLastLineFromFile(path):
     lines[-2] = lines[-2].strip("\t").strip("\n")
     w.writelines([item for item in lines[:-1]])
     w.writelines("  ")
+
+
+def getMods():
+    return dao.getMods()
 
 
 def center(toplevel):

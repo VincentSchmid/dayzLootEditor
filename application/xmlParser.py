@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-from os.path import isfile
 
 items = []
 
@@ -50,8 +49,8 @@ flags = ["count_in_cargo",
          "deloot"]
 
 
-def parseFromString(xml):
-    return _parseRoot(ET.fromstring(xml))
+def parseFromString(xml, mod="Vanilla"):
+    return _parseRoot(ET.fromstring(xml), mod)
 
 
 def parseFromFile(dir):
@@ -64,12 +63,12 @@ def parseFromFile(dir):
     return _parseRoot(tree.getroot())
 
 
-def _parseRoot(root):
+def _parseRoot(root, mod="Vanilla"):
     items = []
     itemValues = []
 
     for type in root:
-        item = createItemFromTypeBlock(type)
+        item = createItemFromTypeBlock(type, mod)
         items.append(item)
 
     return items
@@ -82,9 +81,9 @@ def createValues(items):
     return values
 
 
-def createItemFromTypeBlock(block):
+def createItemFromTypeBlock(block, mod):
     item = Item()
-    item.fill(block)
+    item.fill(block, mod)
     return item
 
 
@@ -222,9 +221,10 @@ class Item:
         self.tags = set()
         self.flags = []
         self.parameters = {}
+        self.mod = ""
 
     # fills item values based on given type xml block
-    def fill(self, xml):
+    def fill(self, xml, mod):
         self.name = xml.attrib["name"]
         for col in xml:
             if col.tag == "category":
@@ -265,6 +265,7 @@ class Item:
                     self.flags.append(attr[1])
 
         self.type = findType(self.name, self.category)
+        self.mod = mod
         self.createParams()
 
     # fills item values based on list of raw values
@@ -303,7 +304,7 @@ class Item:
         dict = {"name": self.name, "category": self.category, "type": self.type,
                 "lifetime": self.lifetime, "quantmin": self.quantmin,
                 "nominal": self.nominal, "cost": self.cost, "quantmax": self.quantmax,
-                "min": self.min, "restock": self.restock}
+                "min": self.min, "restock": self.restock, "mods": self.mod}
 
         for u in usages:
             if u in self.usages:
@@ -327,6 +328,34 @@ class Item:
             dict[flags[i]] = self.flags[i]
 
         self.parameters = dict
+
+    def getXML(self):
+        type = ""
+        craftable = False
+
+        if self.flags[-2] == 1:
+            craftable = True
+
+        type += "  <type name=\"{}\">\n".format(self.name)
+        if not craftable:
+            type += "    <nominal>{}</nominal>\n".format(self.nominal)
+        type += "    <lifetime>{}</lifetime>\n".format(self.lifetime)
+        if not craftable:
+            type += "    <min>{}</min>\n".format(self.min)
+            type += "    <quantmin>{}</quantmin>\n".format(self.quantmin)
+            type += "    <quantmax>{}</quantmax>\n".format(self.quantmax)
+            type += "    <cost>{}</cost>\n".format(self.cost)
+        type += """    <flags count_in_cargo=\"{}\" count_in_hoarder=\"{}\" count_in_map=\"{}\" count_in_player=\"{}\" crafted=\"{}\" deloot=\"{}\" />\n""" \
+            .format(*self.flags)
+        if not craftable:
+            type += "    <category name=\"{}\"/>\n".format(self.category)
+            for usage in self.usages:
+                type += "    <usage name=\"{}\"/>\n".format(usage)
+            for tier in self.tiers:
+                type += "    <value name=\"{}\"/>\n".format(tier)
+        type += "  </type>\n"
+
+        return type
 
 
 # returns a list of tuples with each tuple containing (gun item.name, matching secondary item.name)
