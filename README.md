@@ -14,15 +14,24 @@ Built upon a MySQL database that will be automatically generated and some manual
 written in python.
 
 ## Install
-first off install MYSQL x64 Server 
-- Windows: [here](https://dev.mysql.com/downloads/windows/installer/8.0.html) 
-- (Optional) install Workbench 64bit to edit Database
-- Install 64-bit ODBC driver from here: https://dev.mysql.com/downloads/connector/odbc/5.3.html
+first off you need MYSQL x64 Server and ODBC Driver 8.0 x64
+- Download the installer [here](https://dev.mysql.com/downloads/windows/installer/8.0.html) (no account needed scroll to the bottom of the page to download)
+
+For minimal installation choose these settings:
+![Custom Installation](images/install1.jpg)
+
+Choose MYSQL Server x64 and Connector/ODBC 8.0 x64
+![MYSQL Server and ODBC 8.0](images/install2.jpg)
+
+Set a Password. I recommend `rootroot`. Does not need to be safe. It will be stored in plaintext!
+![Set Password](images/install3.jpg)
+
+Now download this app
 
 ### Developer install
 
-pyodbc
-pyinstaller
+- pyodbc
+- pyinstaller
 
 ## Features
 Press Enter to search by name or update entries to database!
