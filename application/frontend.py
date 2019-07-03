@@ -278,12 +278,6 @@ class Window(object):
             except TypeError:
                 self.deltaNom[i].set(nominal)
 
-    def updateModSelection(self, *args):
-        self.selectedMods = []
-        for i in range(len(self.availableMods)):
-            if self.modSelectionVars[i].get() == 1:
-                self.selectedMods.append(self.availableMods[i])
-
     def viewCategroy(self):
         cat = self.typeSel.get()
         if cat in xmlParser.categories:
@@ -327,12 +321,50 @@ class Window(object):
         self.updateDisplay(rows)
         self.changed = True
 
+    def updateModMenu(self):
+        newMods = self.checkForNewMod()
+        for mod in newMods:
+            self.availableMods.append(mod)
+            self.addModMenu(mod)
+
     def addModMenu(self, mod):
         intVar = IntVar()
         intVar.set(1)
         intVar.trace("w", self.updateModSelection)
         self.modSelectionVars.append(intVar)
         self.modsmenu.add_checkbutton(label=mod, variable=intVar)
+        self.availableMods.append(mod)
+        self.selectedMods.append(mod)
+
+    def clearModMenu(self):
+        for mod in self.availableMods:
+            self.modsmenu.delete(0)
+        self.availableMods = []
+        self.modSelectionVars = []
+
+    def fillModMenu(self):
+        databaseMods = windows.getMods()
+        for mod in databaseMods:
+            if mod not in self.availableMods:
+                self.addModMenu(mod)
+
+
+    def checkForNewMod(self):
+        newMods = []
+        databaseMods = windows.getMods()
+        for mod in databaseMods:
+            if mod not in self.availableMods:
+                newMods.append(mod)
+
+        return newMods
+
+    def updateModSelection(self, *args):
+        self.selectedMods = []
+        for i in range(len(self.availableMods)):
+            if self.modSelectionVars[i].get() == 1:
+                self.selectedMods.append(self.availableMods[i])
+
+        self.updateDisplay(dao.reExecuteLastQuery())
 
     def distribute(self):
         self.backupDB("dayzitems_before_Distribute.sql")
@@ -466,15 +498,19 @@ class Window(object):
         self.window.destroy()
 
     def loadTypesXML(self):
+        self.clearModMenu()
         fname = windows.openFile("xml")
         if fname != "":
             if windows.askOverwrite():
                 windows.writeTypesToDatabase(fname)
+        self.fillModMenu()
 
     def loadDB(self):
+        self.clearModMenu()
         fname = windows.openFile("sql")
         if fname != "":
             dao.loadDB(fname)
+        self.fillModMenu()
 
     def saveDB(self):
         windows.saveDB()
@@ -483,16 +519,13 @@ class Window(object):
         dao.backupDatabase(open(windows.dataPath + "\\" + filename, "wb+"))
 
     def openConnectionWindow(self):
+        self.clearModMenu()
         connectionWindow.ConnectionWindow(self.window)
+        self.fillModMenu()
 
     def openAddItems(self):
         addItems.addItems(self.window)
-
-    def checkForNewMod(self):
-        databaseMods = windows.getMods()
-        if len(databaseMods) > len(self.availableMods):
-            if databaseMods[-1] != self.availableMods[-1]:
-                self.addModMenu(databaseMods[-1])
+        self.updateModMenu()
 
     def openitemLinker(self):
         itemLinker.itemLinker(self.window)
