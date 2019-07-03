@@ -77,6 +77,7 @@ All items of the game are loaded and found if searched but the sorting only work
 
 #### Main Display
 - [ ] ability to view by type/category or usage or tier
+- [x] Loot Drop Location editing (Military, Hunting, ...)
 - [x] automatically copies selected item name to clipboard
 - [x] associate these items with a mod that can be activated and deactivated
 - [x] show nominal of currently displayed items
@@ -108,7 +109,6 @@ All items of the game are loaded and found if searched but the sorting only work
 - [ ] finding ammo for vanilla guns
 - [ ] attachments for vanilla guns
 - [ ] Loading / Exporting single tables and selected items, not entire databases
-- [ ] Loot Drop Location editing (Military, Hunting, ...)
 
 ### Possible Features
 - [ ] Rewriting Common Database connection errors
