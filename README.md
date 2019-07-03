@@ -15,7 +15,7 @@ written in python.
 
 ## Install
 first off you need MYSQL x64 Server and ODBC Driver 8.0 x64
-- Download the installer [here](https://dev.mysql.com/downloads/windows/installer/8.0.html) (no account needed scroll to the bottom of the page to download)
+- Download the installer [here](https://dev.mysql.com/downloads/windows/installer/8.0.html) the 20mb Version (no account needed scroll to the bottom of the page to download)
 
 For minimal installation choose these settings:
 ![Custom Installation](images/install1.jpg)
