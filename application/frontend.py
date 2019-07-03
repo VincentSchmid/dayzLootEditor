@@ -112,7 +112,9 @@ class Window(object):
         Label(self.EFValues, text="min").grid(row=2, column=0, sticky="w", pady=5)
         Label(self.EFValues, text="restock").grid(row=3, column=0, sticky="w", pady=5)
         Label(self.EFValues, text="lifetime").grid(row=4, column=0, sticky="w", pady=5)
-        Label(self.EFValues, text="rarity").grid(row=6, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="Usages").grid(row=5, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="Tiers").grid(row=6, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="rarity").grid(row=7, column=0, sticky="w", pady=5)
 
         self.name_text = StringVar()
         self.nameEntry = Entry(self.EFValues, textvariable=self.name_text)
@@ -134,11 +136,20 @@ class Window(object):
         self.lifetimeEntry = Entry(self.EFValues, textvariable=self.lifetime_text, width=8)
         self.lifetimeEntry.grid(row=4, column=1, sticky="w")
 
+        self.usageListBox = Listbox(self.EFValues, height=len(xmlParser.usages), selectmode='multiple', exportselection=False)
+        self.usageListBox.grid(row=5, column=1, pady=5, sticky="w")
+
+        self.tierListBox = Listbox(self.EFValues, height=4, selectmode='multiple', exportselection=False)
+        self.tierListBox.grid(row=6, column=1, pady=5, sticky="w")
+
+        windows.updateListBox(self.usageListBox, xmlParser.usages)
+        windows.updateListBox(self.tierListBox, xmlParser.tiers)
+
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
         self.raritySel.trace("w", self.raritySelChange)
 
-        OptionMenu(self.EFValues, self.raritySel, *rarities9.values()).grid(row=6, column=1, sticky="w")
+        OptionMenu(self.EFValues, self.raritySel, *rarities9.values()).grid(row=7, column=1, sticky="w")
 
         self.EFCheckboxe = Frame(self.entryFrame)
         self.EFCheckboxe.grid(row=1, column=0, columnspan=2, sticky="w")
@@ -159,7 +170,7 @@ class Window(object):
         self.tree = ttk.Treeview(self.treeFrame,
                                  columns=(
                                      'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
-                                     'rarity', 'mod'))
+                                     'rarity', 'mod'), height=28)
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -178,7 +189,7 @@ class Window(object):
         self.tree.column('#4', width=80, stretch=YES)
         self.tree.column('#5', width=60, stretch=YES)
         self.tree.column('#6', width=270, stretch=NO)
-        self.tree.column('#7', width=150, stretch=YES)
+        self.tree.column('#7', width=130, stretch=YES)
         self.tree.column('#8', width=80, stretch=YES)
         self.tree.column('#9', width=120, stretch=YES)
         self.tree.column('#10', width=120, stretch=YES)
@@ -348,7 +359,6 @@ class Window(object):
             if mod not in self.availableMods:
                 self.addModMenu(mod)
 
-
     def checkForNewMod(self):
         newMods = []
         databaseMods = windows.getMods()
@@ -402,6 +412,12 @@ class Window(object):
             self.lifetimeEntry.delete(0, END)
             self.lifetimeEntry.insert(END, dict["lifetime"])
 
+            self.usageListBox.selection_clear(0, END)
+            self.tierListBox.selection_clear(0, END)
+
+            windows.selectItemsFromLB(self.usageListBox, dao.getUsages(dict["name"]))
+            windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
+
             self.deLoot.set(dict["deloot"])
 
             self.raritySel.set(dict["rarity"])
@@ -423,8 +439,20 @@ class Window(object):
 
     def getEditedValues(self):
         val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(), "deloot": self.deLoot.get(),
-               "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "rarity": self.getRaritySel()}
+               "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "rarity": self.getRaritySel(),
+               "usage": self.getEditedListBox(self.usageListBox, xmlParser.usages),
+               "tier": self.getEditedListBox(self.tierListBox, xmlParser.tiers)}
         return val
+
+    def getEditedListBox(self, listBox, keys):
+        selection = []
+        for i in range(len(keys)):
+            if i in listBox.curselection():
+                selection.append(1)
+            else:
+                selection.append(0)
+
+        return selection
 
     def getRaritySel(self):
         for k, v in rarities9.items():
@@ -451,7 +479,8 @@ class Window(object):
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
                 "type": row[2], "rarity": rarities9[row[36]], "deloot": row[34],
-                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27]), "mod": row[-1]}
+                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27]), "mod": row[-1],
+                "usages": row[10:23], "tiers": row[23:27]}
 
     def createUsage(self, row):
         usageNames = xmlParser.usages

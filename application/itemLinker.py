@@ -144,12 +144,12 @@ class itemLinker(object):
         box = self.listBoxes
 
         rows = dao.getItemsFromCatMods(values[2], values[1], *all, values[0])
-        self.updateListBox(box[0], rows)
+        windows.updateListBox(box[0], rows)
 
         values = allItemsValues
 
         rows = dao.getItemsFromCatMods(values[2], values[1], *all, values[0])
-        self.updateListBox(box[1], rows)
+        windows.updateListBox(box[1], rows)
 
 
     def search(self, *args):
@@ -165,7 +165,7 @@ class itemLinker(object):
 
 
         rows = dao.getItemsFromCatMods(values[2], values[1], *all, values[0])
-        self.updateListBox(box, rows)
+        windows.updateListBox(box, rows)
 
     def updateView(self, event):
         #rough
@@ -187,12 +187,7 @@ class itemLinker(object):
             box = self.listBoxes[1]
 
         rows = dao.getItemsFromCatMods(values[2], values[1], *all, values[0])
-        self.updateListBox(box, rows)
-
-    def updateListBox(self, box, rows):
-        box.delete(0, END)
-        for row in rows:
-            box.insert(END, row)
+        windows.updateListBox(box, rows)
 
     def getLinks(self, event=None):
         self.listBoxes[2].delete(0, END)

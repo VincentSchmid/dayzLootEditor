@@ -5,6 +5,7 @@ from os.path import abspath
 from os.path import join
 from time import sleep
 from tkinter import messagebox
+from tkinter import END
 
 try:
     from application import dao, xmlParser
@@ -127,6 +128,18 @@ def removeLastLineFromFile(path):
     lines[-2] = lines[-2].strip("\t").strip("\n")
     w.writelines([item for item in lines[:-1]])
     w.writelines("  ")
+
+
+def selectItemsFromLB(listBox, rows):
+    for i in range(len(rows)):
+        if rows[i] == 1:
+            listBox.select_set(i)
+
+
+def updateListBox(box, rows):
+    box.delete(0, END)
+    for row in rows:
+        box.insert(END, row)
 
 
 def getMods():

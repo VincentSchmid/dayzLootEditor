@@ -3,9 +3,10 @@ from subprocess import Popen, PIPE
 import pyodbc
 
 try:
-    from application import windows
+    from application import windows, xmlParser
 except ModuleNotFoundError:
     import windows
+    import xmlParser
 
 
 user = ""
@@ -271,6 +272,9 @@ def update(values):
         values["name"]) + "';")
     conn.commit()
 
+    updateListValues(values["usage"], values["name"], xmlParser.usages)
+    updateListValues(values["tier"], values["name"], xmlParser.tiers)
+
 
 def updateMany(items):
     conn = connection()
@@ -357,6 +361,31 @@ def createDB(name):
 
         cursor = connection.cursor()
         cursor.execute("CREATE DATABASE " + name + ";")
+
+
+def getUsages(itemName):
+    cursor = connection().cursor()
+    cursor.execute("select " + ", ".join(xmlParser.usages) + " from items where name = '" + itemName + "'")
+    return cursor.fetchall()[0]
+
+def getTiers(itemName):
+    cursor = connection().cursor()
+    cursor.execute("select " + ", ".join(xmlParser.tiers) + " from items where name = '" + itemName + "'")
+    return cursor.fetchall()[0]
+
+def updateListValues(newValues, name, listItems):
+    usages = listItems
+    query = "UPDATE items SET "
+    for i in range(len(usages)):
+        query += usages[i] + " = " + str(newValues[i]) + ", "
+
+    query = query[:-2]
+    query += " WHERE name = '" + name + "';"
+
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(query)
+    conn.commit()
 
 
 def getPath():
