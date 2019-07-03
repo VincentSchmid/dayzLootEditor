@@ -14,6 +14,7 @@ pwd = ""
 port = ""
 database = ""
 server = ""
+odbcV = ""
 
 
 def connection():
@@ -22,6 +23,7 @@ def connection():
     global port
     global database
     global server
+    global odbcV
 
     if user == "":
         c = windows.readConfig()
@@ -30,9 +32,10 @@ def connection():
         port = c[2]
         database = c[3]
         server = c[4]
+        odbcV = c[5]
 
     with pyodbc.connect(
-            r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
+            r'DRIVER={MySQL ODBC '+odbcV+' Unicode Driver};'
             r'UID=' + user + ';'
             r'PWD=' + pwd + ';'
             r'PORT=' + port + ';'
@@ -72,18 +75,21 @@ def getDicts(items):
     return itemsListOfDicts
 
 
-def setConnectionParams(username, password, p, dbname, host):
-    windows.writeConfig(username, password, p, dbname, host)
+def setConnectionParams(username, password, p, dbname, host, odbcVersion):
+    windows.writeConfig(username, password, p, dbname, host, odbcVersion)
     global user
     global pwd
     global port
     global database
     global server
+    global odbcV
+
     user = username
     pwd = password
     port = p
     database = dbname
     server = host
+    odbcV = odbcVersion
 
 
 def insertItems(parameters, items):
@@ -338,6 +344,7 @@ def createDB(name):
     global port
     global database
     global server
+    global odbcV
 
     if user == "":
         c = windows.readConfig()
@@ -346,9 +353,30 @@ def createDB(name):
         port = c[2]
         database = c[3]
         server = c[4]
+        odbcV = c[5]
+
+    try:
+        pyodbc.connect(
+            r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
+            r'UID=' + user + ';'
+            r'PWD=' + pwd + ';'
+            r'PORT=' + port + ';'
+            r'SERVER=' + server + ';'
+            r'OPTION=3;'
+        )
+    except pyodbc.IntegrityError:
+        pyodbc.connect(
+            r'DRIVER={MySQL ODBC 8.0 Unicode Driver};'
+            r'UID=' + user + ';'
+            r'PWD=' + pwd + ';'
+            r'PORT=' + port + ';'
+            r'SERVER=' + server + ';'
+            r'OPTION=3;'
+        )
+        windows.writeConfig(user, pwd, port, database,server, "8.0")
 
     with pyodbc.connect(
-            r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
+            r'DRIVER={MySQL ODBC '+odbcV+' Unicode Driver};'
             r'UID=' + user + ';'
             r'PWD=' + pwd + ';'
             r'PORT=' + port + ';'

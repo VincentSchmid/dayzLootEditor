@@ -60,13 +60,14 @@ def askOverwrite():
     return askUser("Overwrite", "Are you sure you want to overwrite existing database?")
 
 
-def writeConfig(user, pwd, port, database, server):
+def writeConfig(user, pwd, port, database, server, odbcv):
     with open(dataPath + "\\config.txt", 'w+') as the_file:
         the_file.write(user + '\n')
         the_file.write(pwd + '\n')
         the_file.write(port + '\n')
         the_file.write(database + '\n')
         the_file.write(server + '\n')
+        the_file.write(odbcv + '\n')
 
 
 def readConfig():
@@ -76,7 +77,7 @@ def readConfig():
             content = [x.strip() for x in content]
             return content
     except FileNotFoundError:
-        dao.setConnectionParams("root", "rootroot", "3306", "dayzitems", "127.0.0.1")
+        dao.setConnectionParams("root", "rootroot", "3306", "dayzitems", "127.0.0.1", "8.0")
 
 
 def writeTypesToDatabase(dir):

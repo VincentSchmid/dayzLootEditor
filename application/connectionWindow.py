@@ -142,7 +142,8 @@ class ConnectionWindow(object):
                                 self.password.get(),
                                 self.port.get(),
                                 self.database.get(),
-                                self.HostName.get())
+                                self.HostName.get(),
+                                "5.3")
 
 
 def testWindow():
