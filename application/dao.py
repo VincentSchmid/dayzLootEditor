@@ -17,6 +17,23 @@ server = ""
 odbcV = ""
 
 
+def setConnectionParams(username, password, p, dbname, host, odbcVersion):
+    windows.writeConfig(username, password, p, dbname, host, odbcVersion)
+    global user
+    global pwd
+    global port
+    global database
+    global server
+    global odbcV
+
+    user = username
+    pwd = password
+    port = p
+    database = dbname
+    server = host
+    odbcV = odbcVersion
+
+
 def connection():
     global user
     global pwd
@@ -73,23 +90,6 @@ def getDicts(items):
         itemsListOfDicts.append(dict)
 
     return itemsListOfDicts
-
-
-def setConnectionParams(username, password, p, dbname, host, odbcVersion):
-    windows.writeConfig(username, password, p, dbname, host, odbcVersion)
-    global user
-    global pwd
-    global port
-    global database
-    global server
-    global odbcV
-
-    user = username
-    pwd = password
-    port = p
-    database = dbname
-    server = host
-    odbcV = odbcVersion
 
 
 def insertItems(parameters, items):
