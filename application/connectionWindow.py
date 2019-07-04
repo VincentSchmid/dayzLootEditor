@@ -20,6 +20,7 @@ class ConnectionWindow(object):
         self.prt = "3306"
         self.dbName = "dayzitems"
         self.server = "localhost"
+        self.odbcV = "8.0"
 
         try:
             c = windows.readConfig()
@@ -28,6 +29,7 @@ class ConnectionWindow(object):
             self.prt = c[2]
             self.dbName = c[3]
             self.server = c[4]
+            self.odbcV = c[5]
 
         except FileNotFoundError:
             pass
@@ -108,6 +110,7 @@ class ConnectionWindow(object):
 
     def createTest(self):
         if self.v.get() == "create":
+            self.passParams()
             self.createDatabase()
             windows.connectionSuccess(self.window)
             if self.typesDir.get() != "":
@@ -116,7 +119,6 @@ class ConnectionWindow(object):
             self.testDB()
 
     def createDatabase(self):
-        self.passParams()
         try:
             dao.createDB(self.database.get())
             dao.loadDB(windows.dataPath + "\\GENESIS.sql")
@@ -136,6 +138,7 @@ class ConnectionWindow(object):
     def set(self):
         self.passParams()
         self.window.destroy()
+        dao.setColumnNames()
 
     def passParams(self):
         dao.setConnectionParams(self.username.get(),
@@ -143,7 +146,7 @@ class ConnectionWindow(object):
                                 self.port.get(),
                                 self.database.get(),
                                 self.HostName.get(),
-                                "5.3")
+                                "8.0")
 
 
 def testWindow():

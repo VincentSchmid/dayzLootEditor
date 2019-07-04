@@ -548,7 +548,10 @@ class Window(object):
         dao.backupDatabase(open(windows.dataPath + "\\" + filename, "wb+"))
 
     def openConnectionWindow(self):
-        self.clearModMenu()
+        try:
+            self.clearModMenu()
+        except AttributeError:
+            pass
         connectionWindow.ConnectionWindow(self.window)
         self.fillModMenu()
 

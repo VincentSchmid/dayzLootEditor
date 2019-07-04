@@ -75,8 +75,12 @@ def getCoulumNames():
     return [row[0] for row in cursor.fetchall()]
 
 
-columns = ", ".join(getCoulumNames())
+columns = ""
 lastQuery = "select * from items"
+
+def setColumnNames():
+    global columns
+    columns = ", ".join(getCoulumNames())
 
 
 def getDicts(items):
@@ -246,6 +250,7 @@ def getNominalByType(type):
         from items \
         where type = ?", type
     )
+    setColumnNames()
     return cursor.fetchval()
 
 
@@ -364,7 +369,7 @@ def createDB(name):
             r'SERVER=' + server + ';'
             r'OPTION=3;'
         )
-    except pyodbc.IntegrityError:
+    except pyodbc.Error:
         pyodbc.connect(
             r'DRIVER={MySQL ODBC 8.0 Unicode Driver};'
             r'UID=' + user + ';'
