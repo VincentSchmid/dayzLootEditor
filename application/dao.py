@@ -488,3 +488,26 @@ def loadDB(fname):
     process.stdin.write(open(fname, "rb").read())
     process.stdin.close()
     process.kill()
+
+def getOdbcVersion():
+    try:
+        pyodbc.connect(
+            r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
+            r'UID=' + user + ';'
+            r'PWD=' + pwd + ';'
+            r'PORT=' + port + ';'
+            r'SERVER=' + server + ';'
+            r'OPTION=3;'
+        )
+        return "5.3"
+    except pyodbc.Error:
+        pyodbc.connect(
+            r'DRIVER={MySQL ODBC 8.0 Unicode Driver};'
+            r'UID=' + user + ';'
+            r'PWD=' + pwd + ';'
+            r'PORT=' + port + ';'
+            r'SERVER=' + server + ';'
+            r'OPTION=3;'
+        )
+        windows.writeConfig(user, pwd, port, database,server, "8.0")
+        return "8.0"

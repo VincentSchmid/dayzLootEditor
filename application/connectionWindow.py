@@ -146,7 +146,7 @@ class ConnectionWindow(object):
                                 self.port.get(),
                                 self.database.get(),
                                 self.HostName.get(),
-                                "8.0")
+                                dao.getOdbcVersion())
 
 
 def testWindow():
