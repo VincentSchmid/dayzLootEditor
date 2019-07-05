@@ -4,8 +4,8 @@ from os import remove
 from os.path import abspath
 from os.path import join
 from time import sleep
-from tkinter import messagebox
 from tkinter import END
+from tkinter import messagebox
 
 try:
     from application import dao, xmlParser

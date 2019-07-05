@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import ttk
 
 try:
     from application import xmlParser, xmlWriter, windows
@@ -25,5 +24,6 @@ def testWindow():
     window = Tk()
     newWindow(window)
     window.mainloop()
+
 
 testWindow()

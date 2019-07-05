@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import ttk
-from time import sleep
 
 try:
     from application import xmlParser, xmlWriter, dao, distibutor, connectionWindow, windows, addItems, itemLinker
@@ -139,7 +138,8 @@ class Window(object):
         self.lifetimeEntry = Entry(self.EFValues, textvariable=self.lifetime_text, width=8)
         self.lifetimeEntry.grid(row=4, column=1, sticky="w")
 
-        self.usageListBox = Listbox(self.EFValues, height=len(xmlParser.usages), selectmode='multiple', exportselection=False)
+        self.usageListBox = Listbox(self.EFValues, height=len(xmlParser.usages), selectmode='multiple',
+                                    exportselection=False)
         self.usageListBox.grid(row=5, column=1, pady=5, sticky="w")
 
         self.tierListBox = Listbox(self.EFValues, height=4, selectmode='multiple', exportselection=False)
@@ -152,7 +152,8 @@ class Window(object):
         self.typeEntrySel.set('')
         self.typeEntrySel.trace("w", self.typeSelChange)
 
-        OptionMenu(self.EFValues, self.typeEntrySel, *xmlParser.selection[:-1]).grid(row=7, column=1, sticky="w", pady=5)
+        OptionMenu(self.EFValues, self.typeEntrySel, *xmlParser.selection[:-1]).grid(row=7, column=1, sticky="w",
+                                                                                     pady=5)
 
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
@@ -393,7 +394,7 @@ class Window(object):
         self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get()]
         distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), int(self.targetMag.get()),
-                            int(self.targetAmmo.get()), flags)
+                              int(self.targetAmmo.get()), flags)
         self.changed = True
         self.updateDisplay(dao.viewType(self.distribSel.get()))
 
@@ -484,7 +485,6 @@ class Window(object):
         for row in rows:
             row = self.dictFromRow(row)
             if row["mod"] in self.selectedMods:
-
                 displayedNom += row["nominal"]
                 self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
                                                                       row["lifetime"], row["type"], row["usage"],
@@ -539,7 +539,6 @@ class Window(object):
 
     def raritySelChange(self, *args):
         selVal = self.getSelectedValues()["rarity"]
-        print(selVal)
         rareEntry = self.raritySel.get()
         if selVal != rareEntry:
             self.updateSel()

@@ -8,7 +8,6 @@ except ModuleNotFoundError:
     import windows
     import xmlParser
 
-
 user = ""
 pwd = ""
 port = ""
@@ -78,6 +77,7 @@ def getCoulumNames():
 columns = ""
 lastQuery = "select * from items"
 
+
 def setColumnNames():
     global columns
     columns = ", ".join(getCoulumNames())
@@ -129,11 +129,13 @@ def createCombos(items):
     cursor.executemany("insert ignore into itemcombos(item1, item2) values (?, ?)", items)
     conn.commit()
 
+
 def removeCombo(items):
     conn = connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM itemcombos WHERE item1 = ? AND item2 = ?", items[0], items[1])
     conn.commit()
+
 
 def viewType(type):
     global lastQuery
@@ -177,7 +179,7 @@ def getLinkedItems(item):
 def getWeaponAndCorresponding(name):
     global lastQuery
     global columns
-    lastQuery = "select "+columns+" \
+    lastQuery = "select " + columns + " \
                 from items \
                 join \
                     (select item2 \
@@ -195,7 +197,7 @@ def getWeaponAndCorresponding(name):
 
 def getWeaponsFromAccessoire(name):
     global lastQuery
-    lastQuery = "select "+columns+" \
+    lastQuery = "select " + columns + " \
                 from (select item1, item2, items.* \
                       from itemcombos \
                       join items on name = item1 \
@@ -319,7 +321,7 @@ def getMods():
     return [row[0] for row in rows]
 
 
-def getItemsFromCatMods(category, mod, allItems, allMods, search = None):
+def getItemsFromCatMods(category, mod, allItems, allMods, search=None):
     search = None if search == "" else search
     query = ""
     if search is not None:
@@ -401,10 +403,12 @@ def getUsages(itemName):
     cursor.execute("select " + ", ".join(xmlParser.usages) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
 
+
 def getTiers(itemName):
     cursor = connection().cursor()
     cursor.execute("select " + ", ".join(xmlParser.tiers) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
+
 
 def updateListValues(newValues, name, listItems):
     usages = listItems
@@ -477,8 +481,9 @@ def loadDB(fname):
         server = c[4]
 
     path = getPath() + "bin\\"
-    process = Popen("\"" + path + "mysql\" -u " + user + " -p" + pwd + " -h " + server + " --default-character-set=utf8 " + database,
-                    shell=True, stdin=PIPE)
+    process = Popen(
+        "\"" + path + "mysql\" -u " + user + " -p" + pwd + " -h " + server + " --default-character-set=utf8 " + database,
+        shell=True, stdin=PIPE)
     process.stdin.write(open(fname, "rb").read())
     process.stdin.close()
     process.kill()
