@@ -24,18 +24,18 @@ usages = ["Military",
           "Office"]
 
 usagesAbr = ["Mil.",
-          "Pris.",
-          "School",
-          "Coast",
-          "Vil.",
-          "Ind.",
-          "Med.",
-          "Pol.",
-          "Hunt.",
-          "Town",
-          "Farm",
-          "Firef.",
-          "Office"]
+             "Pris.",
+             "School",
+             "Coast",
+             "Vil.",
+             "Ind.",
+             "Med.",
+             "Pol.",
+             "Hunt.",
+             "Town",
+             "Farm",
+             "Firef.",
+             "Office"]
 
 tiers = ["Tier1", "Tier2", "Tier3", "Tier4"]
 
@@ -367,6 +367,7 @@ def gunsAndMatchingItem(items):
             for m in matches:
                 matching.append((i.name, m))
     return matching
+
 
 # returns 1 if beginning wrong
 # returns 2 if end wrong

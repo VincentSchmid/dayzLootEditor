@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from time import sleep
 
 try:
     from application import xmlParser, xmlWriter, dao, distibutor, connectionWindow, windows, addItems, itemLinker
@@ -114,7 +115,9 @@ class Window(object):
         Label(self.EFValues, text="lifetime").grid(row=4, column=0, sticky="w", pady=5)
         Label(self.EFValues, text="Usages").grid(row=5, column=0, sticky="w", pady=5)
         Label(self.EFValues, text="Tiers").grid(row=6, column=0, sticky="w", pady=5)
-        Label(self.EFValues, text="rarity").grid(row=7, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="type").grid(row=7, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="rarity").grid(row=8, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="mod").grid(row=9, column=0, sticky="w", pady=5)
 
         self.name_text = StringVar()
         self.nameEntry = Entry(self.EFValues, textvariable=self.name_text)
@@ -145,11 +148,21 @@ class Window(object):
         windows.updateListBox(self.usageListBox, xmlParser.usages)
         windows.updateListBox(self.tierListBox, xmlParser.tiers)
 
+        self.typeEntrySel = StringVar()
+        self.typeEntrySel.set('')
+        self.typeEntrySel.trace("w", self.typeSelChange)
+
+        OptionMenu(self.EFValues, self.typeEntrySel, *xmlParser.selection[:-1]).grid(row=7, column=1, sticky="w", pady=5)
+
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
-        self.raritySel.trace("w", self.raritySelChange)
+        self.rarityTrace = self.raritySel.trace("w", self.raritySelChange)
 
-        OptionMenu(self.EFValues, self.raritySel, *rarities9.values()).grid(row=7, column=1, sticky="w")
+        OptionMenu(self.EFValues, self.raritySel, *rarities9.values()).grid(row=8, column=1, sticky="w", pady=5)
+
+        self.mod_text = StringVar()
+        self.modEntry = Entry(self.EFValues, textvariable=self.mod_text, width=14)
+        self.modEntry.grid(row=9, column=1, sticky="w", pady=5)
 
         self.EFCheckboxe = Frame(self.entryFrame)
         self.EFCheckboxe.grid(row=1, column=0, columnspan=2, sticky="w")
@@ -170,7 +183,7 @@ class Window(object):
         self.tree = ttk.Treeview(self.treeFrame,
                                  columns=(
                                      'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
-                                     'rarity', 'mod'), height=28)
+                                     'rarity', 'mod'), height=32)
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -418,6 +431,10 @@ class Window(object):
             windows.selectItemsFromLB(self.usageListBox, dao.getUsages(dict["name"]))
             windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
 
+            self.typeEntrySel.set(dict["type"])
+
+            self.mod_text.set(dict["mod"])
+
             self.deLoot.set(dict["deloot"])
 
             self.raritySel.set(dict["rarity"])
@@ -431,15 +448,17 @@ class Window(object):
 
     def getSelectedValues(self):
         dict = self.tree.item(self.tree.focus())
+
         val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
                "deloot": dict["values"][7], "restock": dict["values"][2], "lifetime": dict["values"][3],
-               "type": dict["values"][4], "rarity": dict["values"][8]}
+               "type": dict["values"][4], "rarity": dict["values"][8], "mod": dict["values"][9]}
 
         return val
 
     def getEditedValues(self):
         val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(), "deloot": self.deLoot.get(),
                "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "rarity": self.getRaritySel(),
+               "type": self.typeEntrySel.get(), "mod": self.mod_text.get(),
                "usage": self.getEditedListBox(self.usageListBox, xmlParser.usages),
                "tier": self.getEditedListBox(self.tierListBox, xmlParser.tiers)}
         return val
@@ -512,8 +531,17 @@ class Window(object):
         self.targetNominal.set(str(dao.getNominalByType("gun")))
         self.targetMag.set(str(dao.getNominalByType("mag")))
 
+    def typeSelChange(self, *args):
+        selVal = self.getSelectedValues()["type"]
+        typeEntry = self.typeEntrySel.get()
+        if selVal != typeEntry:
+            self.updateSel()
+
     def raritySelChange(self, *args):
-        if self.getSelectedValues()["rarity"] != self.raritySel.get():
+        selVal = self.getSelectedValues()["rarity"]
+        print(selVal)
+        rareEntry = self.raritySel.get()
+        if selVal != rareEntry:
             self.updateSel()
 
     def distribSelChange(self, *args):
