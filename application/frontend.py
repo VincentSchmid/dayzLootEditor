@@ -61,6 +61,7 @@ class Window(object):
         self.totalNomDisplayed = StringVar()
         self.totalNomDisplayed.set(0)
         self.createNominalInfo()
+        self.viewCategroy()
 
     def createMenuBar(self):
         menubar = Menu(self.window)
