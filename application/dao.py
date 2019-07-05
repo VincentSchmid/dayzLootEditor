@@ -281,7 +281,8 @@ def update(values):
     cursor = conn.cursor()
     cursor.execute("UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
         restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", \
-        rarity=" + str(values["rarity"]) + ", deloot= " + str(values["deloot"]) + " WHERE name = '" + str(
+        rarity=" + str(values["rarity"]) + ", deloot= " + str(values["deloot"]) + ", mods= '" + str(values["mod"]) +"',\
+        type= '" + str(values["type"]) + "' WHERE name = '" + str(
         values["name"]) + "';")
     conn.commit()
 
