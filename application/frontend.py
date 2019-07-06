@@ -349,7 +349,7 @@ class Window(object):
         self.changed = True
 
     def updateModMenu(self):
-        newMods = self.checkForNewMod()
+        newMods = self._checkForNewMod()
         for mod in newMods:
             self.availableMods.append(mod)
             self.addModMenu(mod)
@@ -375,7 +375,7 @@ class Window(object):
             if mod not in self.availableMods:
                 self.addModMenu(mod)
 
-    def checkForNewMod(self):
+    def _checkForNewMod(self):
         newMods = []
         databaseMods = windows.getMods()
         for mod in databaseMods:
@@ -449,6 +449,7 @@ class Window(object):
         except IndexError:
             pass
 
+
     def getSelectedValues(self):
         dict = self.tree.item(self.tree.focus())
 
@@ -495,7 +496,7 @@ class Window(object):
         self.updateNominalInfo()
         self.totalNomDisplayed.set(displayedNom)
         self.updateDistribution()
-        self.checkForNewMod()
+        self.updateModMenu()
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],

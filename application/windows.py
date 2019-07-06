@@ -103,7 +103,8 @@ def writeTypesToDatabase(dir):
     dao.createCombos(matches)
 
 
-def appendTypesToDatabase(xml, root, mod):
+def appendTypesToDatabase(xml, root, mod, useNew):
+    print(useNew)
     count = 0
     successes = []
     message = " Items where added to database, duplicate items where not added:\n"
@@ -119,6 +120,13 @@ def appendTypesToDatabase(xml, root, mod):
         err = dao.insertItem(params, item)
         if err == 1:
             message += item[0] + "\n"
+            if useNew:
+                itemDict = dao.getDict(item)
+                itemDict["rarity"] = dao.getRarity(item[0])
+                itemDict["mod"] = mod
+                itemDict["usage"] = item[11:24]
+                itemDict["tier"] = item[24:28]
+                dao.update(itemDict)
         else:
             count += 1
             successes.append(item[0])

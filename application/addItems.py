@@ -22,6 +22,12 @@ class addItems(object):
         self.modSelector = ttk.Combobox(self.addInfoFrame, values=self.mods)
         self.modSelector.grid(row=0, column=1)
 
+        self.useNewVal = IntVar()
+        self.useNewVal.set(0)
+
+        Checkbutton(self.addInfoFrame, text="Use Values of Dublicate Items ", variable=self.useNewVal)\
+            .grid(row=0, column= 2, padx=10)
+
         self.text = Text(self.window)
         self.text.grid(row=1, padx=3, pady=3)
 
@@ -48,10 +54,10 @@ class addItems(object):
             windows.showError(self.window, "End of type is wrong", "Ending is wrong,\n"
                                                                    "Block possibly not closed")
         if err == 0:
-            if text.startswith("<type"):
+            if text.startswith("<type n"):
                 types = "<types>\n  " + text + "\n</types>"
             # Outsource this to own logic
-            windows.appendTypesToDatabase(types, self.window, selectedMod)
+            windows.appendTypesToDatabase(types, self.window, selectedMod, True if self.useNewVal.get() == 1 else False)
 
         self.window.destroy()
 

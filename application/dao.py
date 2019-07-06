@@ -85,15 +85,20 @@ def setColumnNames():
 
 def getDicts(items):
     itemsListOfDicts = []
-    keys = getCoulumNames()
-    for item in items:
-        dict = {}
-        for k in range(len(item)):
-            dict[keys[k]] = item[k]
 
-        itemsListOfDicts.append(dict)
+    for item in items:
+        itemsListOfDicts.append(getDict(item))
 
     return itemsListOfDicts
+
+
+def getDict(item):
+    dict = {}
+    keys = getCoulumNames()
+    for k in range(len(item)):
+        dict[keys[k]] = item[k]
+
+    return dict
 
 
 def insertItems(parameters, items):
@@ -174,6 +179,7 @@ def getLinkedItems(item):
         for item in item1 + item2:
             items.add(item)
     return items
+
 
 def getLinekd(name, type):
     if type == "gun":
@@ -282,13 +288,15 @@ def getMinByType(type):
 
 
 def update(values):
+    query = "UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
+        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", \
+        rarity=" + str(values["rarity"]) + ", deloot= '" + str(values["deloot"]) + "', mods= '" + str(values["mod"]) +\
+    "', type= '" + str(values["type"]) + "' WHERE name = '" + str(
+        values["name"] + "'")
+
     conn = connection()
     cursor = conn.cursor()
-    cursor.execute("UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
-        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", \
-        rarity=" + str(values["rarity"]) + ", deloot= " + str(values["deloot"]) + ", mods= '" + str(values["mod"]) +"',\
-        type= '" + str(values["type"]) + "' WHERE name = '" + str(
-        values["name"]) + "';")
+    cursor.execute(query)
     conn.commit()
 
     updateListValues(values["usage"], values["name"], xmlParser.usages)
@@ -414,6 +422,18 @@ def getTiers(itemName):
     cursor = connection().cursor()
     cursor.execute("select " + ", ".join(xmlParser.tiers) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
+
+
+def getRarity(itemName):
+    cursor = connection().cursor()
+    cursor.execute("select rarity from items where name = ?", itemName)
+    return cursor.fetchall()[0][0]
+
+
+def getModFromItem(itemName):
+    cursor = connection().cursor()
+    cursor.execute("SELECT mods FROM items WHERE name = ?", itemName)
+    return cursor.fetchall()
 
 
 def updateListValues(newValues, name, listItems):
