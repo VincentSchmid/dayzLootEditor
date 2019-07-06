@@ -175,6 +175,11 @@ def getLinkedItems(item):
             items.add(item)
     return items
 
+def getLinekd(name, type):
+    if type == "gun":
+        return getWeaponAndCorresponding(name)
+    else:
+        return getWeaponsFromAccessoire(name)
 
 def getWeaponAndCorresponding(name):
     global lastQuery

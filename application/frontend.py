@@ -72,6 +72,7 @@ class Window(object):
         filemenu.add_separator()
         filemenu.add_command(label="Export types.xml...", command=self.saveXML)
         filemenu.add_command(label="Save Database As...", command=self.saveDB)
+        filemenu.add_command(label="(Beta) Export Spawnabletypes...", command=self.exportSpawnable)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.window.destroy)
         menubar.add_cascade(label="File", menu=filemenu)
@@ -574,6 +575,10 @@ class Window(object):
 
     def backupDB(self, filename):
         dao.backupDatabase(open(windows.dataPath + "\\" + filename, "wb+"))
+
+    def exportSpawnable(self):
+        windows.exportSpawnable()
+
 
     def openConnectionWindow(self):
         try:

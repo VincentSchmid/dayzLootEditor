@@ -37,6 +37,18 @@ def saveDB():
         dao.backupDatabase(fname)
 
 
+def exportSpawnable():
+    fname = filediag.asksaveasfile(mode="w+", defaultextension="xml")
+    if fname is not None:
+        spawnable = ""
+        items = xmlParser.itemFromRows(dao.viewType("gun"))
+        for item in items:
+            if item.mod != "Vanilla":
+                spawnable += item.getSpawnableTypes()
+
+        fname.write(spawnable)
+
+
 def copyFile(fromdir, todir):
     with open(fromdir) as f:
         with todir as f1:

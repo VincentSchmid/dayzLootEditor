@@ -1,5 +1,10 @@
 import xml.etree.ElementTree as ET
 
+try:
+    from application import dao
+except ModuleNotFoundError:
+    import dao
+
 items = []
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
@@ -221,6 +226,7 @@ class Item:
         self.tags = set()
         self.flags = []
         self.parameters = {}
+        self.rarity = ""
         self.mod = ""
 
     # fills item values based on given type xml block
@@ -272,6 +278,7 @@ class Item:
     def fillFromVal(self, val):
         self.name = val[0]
         self.category = val[1]
+        self.type = val[2]
         self.lifetime = val[3]
         self.quantmin = val[4]
         self.nominal = val[5]
@@ -298,6 +305,9 @@ class Item:
         for i in range(len(flags)):
             self.flags.append(val[p])
             p += 1
+
+        self.rarity = val[p+1]
+        self.mod = val[p+2]
 
     # creates dictonary of item values and fills them
     def createParams(self):
@@ -356,6 +366,59 @@ class Item:
         type += "  </type>\n"
 
         return type
+
+    def getSpawnableTypes(self):
+        linkedItems = dao.getLinekd(self.name, self.type)
+
+        magChance= 0.3
+        opticChance = 0.1
+        attachmentChance = 0.2
+
+        mags = []
+        optics = []
+        attachments = []
+
+        for linkedItem in linkedItems:
+            if linkedItem.type == "mag":
+                mags.append(linkedItem)
+            if linkedItem.type == "optic":
+                optics.append(linkedItem)
+            if linkedItem.type == "attachment":
+                attachments.append(linkedItem)
+
+        type = ""
+
+        if self.type == "gun":
+            type += "  <type name=\"{}\">\n".format(self.name)
+
+        type += attachmentBlock(mags, magChance)
+        type += attachmentBlock(optics, opticChance)
+        type += attachmentBlock(attachments, attachmentChance)
+
+        type += "  </type>\n"
+
+        return type
+
+
+def attachmentBlock(items, chance):
+    type = ""
+    if len(items) != 0:
+        type += "    <attachments chance=\"{}\">\n".format(chance)
+        for item in items:
+            type += "      <item name=\"{}\" chance=\"{}\">\n".format(item.name, round(1.0 / len(items), 2))
+
+        type += "    </attachments>\n"
+
+    return type
+
+
+def itemFromRows(rows):
+    items = []
+    for row in rows:
+        item = Item()
+        item.fillFromVal(row)
+        items.append(item)
+    return items
 
 
 # returns a list of tuples with each tuple containing (gun item.name, matching secondary item.name)
