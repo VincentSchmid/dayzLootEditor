@@ -480,7 +480,7 @@ def backupDatabase(file):
         server = c[4]
 
     path = getPath() + "bin\\"
-    cmdL1 = ["\"" + path + "mysqldump\"", "--port=" + port, "--force", "-u" + user, "-p" + pwd, database]
+    cmdL1 = [path + "mysqldump", "--port=" + port, "--force", "-u" + user, "-p" + pwd, database]
     p1 = Popen(cmdL1, shell=True, stdout=PIPE)
     file.write(p1.communicate()[0])
     file.close()
