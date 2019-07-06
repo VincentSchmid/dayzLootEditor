@@ -32,5 +32,4 @@ def update(dir, includedMods):
         for item in items:
             if item[-1] in mod:
                 f.write(getXmlBlock(item))
-                items.remove(item)
     f.write("</types>\n")
