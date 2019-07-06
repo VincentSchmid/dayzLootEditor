@@ -6,17 +6,31 @@ except ModuleNotFoundError:
     import windows
 
 
-def createItem(row):
+def orderModList(mods):
+    for i in range(len(mods)):
+        if mods[i] == "Vanilla":
+            tmp = mods[0]
+            mods[0] = "Vanilla"
+            mods[i] = tmp
+
+    return mods
+
+
+def getXmlBlock(row):
     item = xmlParser.Item()
     item.fillFromVal(row)
     return item.getXML()
 
 
 def update(dir, includedMods):
+    includedMods = orderModList(includedMods)
     f = dir
     items = dao.getAllItems()
     f.write("<types>\n")
-    for item in items:
-        if item[-1] in includedMods:
-            f.write(createItem(item))
+    for mod in includedMods:
+        f.write("\n  <!--{}--> \n\n".format(mod))
+        for item in items:
+            if item[-1] in mod:
+                f.write(getXmlBlock(item))
+                items.remove(item)
     f.write("</types>\n")
