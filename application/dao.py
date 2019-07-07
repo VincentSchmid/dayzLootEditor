@@ -2,11 +2,8 @@ from subprocess import Popen, PIPE
 
 import pyodbc
 
-try:
-    from application import windows, xmlParser
-except ModuleNotFoundError:
-    import windows
-    import xmlParser
+import windows
+import xmlParser
 
 user = ""
 pwd = ""

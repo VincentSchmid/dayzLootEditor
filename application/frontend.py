@@ -1,17 +1,14 @@
 from tkinter import *
 from tkinter import ttk
 
-try:
-    from application import xmlParser, xmlWriter, dao, distibutor, connectionWindow, windows, addItems, itemLinker
-except ModuleNotFoundError:
-    import xmlParser
-    import xmlWriter
-    import dao
-    import distibutor
-    import connectionWindow
-    import windows
-    import addItems
-    import itemLinker
+import xmlParser
+import xmlWriter
+import dao
+import distibutor
+import connectionWindow
+import windows
+import addItems
+import itemLinker
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 

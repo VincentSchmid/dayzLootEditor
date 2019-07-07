@@ -3,7 +3,8 @@ from os import getcwd
 from os.path import abspath
 from os.path import join
 
-from application import dao
+import dao
+import xmlParser
 
 
 def createDB():
@@ -34,6 +35,9 @@ def testGetItems():
     print(dao.getItemsFromCatMods("ammo", "All Mods", *all))
     print(dao.getItemsFromCatMods("ammo", "MassMany", *all, "12ga"))
 
-print(dao.getLinkedItems("AKM"))
-print(dao.getWeaponAndCorresponding("AKM"))
-print(dao.getWeaponsFromAccessoire("AmmoBox_556x45Tracer_20Rnd"))
+    print(dao.getLinkedItems("AKM"))
+    print(dao.getWeaponAndCorresponding("AKM"))
+    print(dao.getWeaponsFromAccessoire("AmmoBox_556x45Tracer_20Rnd"))
+
+print(len(dao.viewType("gun")))
+print(len(xmlParser.itemFromRows(dao.viewType("gun"))))

@@ -7,11 +7,9 @@ from time import sleep
 from tkinter import END
 from tkinter import messagebox
 
-try:
-    from application import dao, xmlParser
-except ModuleNotFoundError:
-    import dao
-    import xmlParser
+
+import dao
+import xmlParser
 
 dataPath = abspath(join(getcwd(), "..", "data"))
 

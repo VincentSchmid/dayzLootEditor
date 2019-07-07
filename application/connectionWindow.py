@@ -1,13 +1,11 @@
 from tkinter import *
 
-try:
-    from application import xmlParser, xmlWriter, dao, distibutor, windows
-except ModuleNotFoundError:
-    import xmlParser
-    import xmlWriter
-    import dao
-    import distibutor
-    import windows
+
+import xmlParser
+import xmlWriter
+import dao
+import distibutor
+import windows
 
 
 class ConnectionWindow(object):

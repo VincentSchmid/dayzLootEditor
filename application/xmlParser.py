@@ -1,9 +1,7 @@
 import xml.etree.ElementTree as ET
 
-try:
-    from application import dao
-except ModuleNotFoundError:
-    import dao
+
+import dao
 
 items = []
 

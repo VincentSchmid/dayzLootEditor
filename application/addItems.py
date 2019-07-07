@@ -1,12 +1,10 @@
 from tkinter import *
 from tkinter import ttk
 
-try:
-    from application import xmlParser, xmlWriter, windows
-except ModuleNotFoundError:
-    import xmlParser
-    import windows
-    import xmlWriter
+
+import xmlParser
+import windows
+import xmlWriter
 
 
 class addItems(object):

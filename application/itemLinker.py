@@ -1,13 +1,11 @@
 from tkinter import *
 from tkinter import ttk
 
-try:
-    from application import xmlParser, xmlWriter, windows, dao
-except ModuleNotFoundError:
-    import xmlParser
-    import windows
-    import xmlWriter
-    import dao
+
+import xmlParser
+import windows
+import xmlWriter
+import dao
 
 
 class itemLinker(object):

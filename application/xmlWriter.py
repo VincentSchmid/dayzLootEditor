@@ -1,9 +1,7 @@
-try:
-    from application import xmlParser, dao, windows
-except ModuleNotFoundError:
-    import xmlParser
-    import dao
-    import windows
+
+import xmlParser
+import dao
+import windows
 
 
 def orderModList(mods):

@@ -1,11 +1,9 @@
 from tkinter import *
 
-try:
-    from application import xmlParser, xmlWriter, windows
-except ModuleNotFoundError:
-    import xmlParser
-    import windows
-    import xmlWriter
+
+import xmlParser
+import windows
+import xmlWriter
 
 
 class newWindow(object):

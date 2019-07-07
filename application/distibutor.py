@@ -1,7 +1,5 @@
-try:
-    from application import dao
-except ModuleNotFoundError:
-    import dao
+
+import dao
 from math import ceil
 
 # todo enum from rarities store at one place
