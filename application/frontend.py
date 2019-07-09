@@ -125,36 +125,36 @@ class Window(object):
         self.nominal_text = StringVar()
         self.nominalEntry = Entry(self.EFValues, textvariable=self.nominal_text, width=8)
         self.nominalEntry.grid(row=1, column=1, sticky="w")
-        self.nominalEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.nominalEntry.bind("<FocusIn>", self.addEditedVal)
         self.nominalEntry.val = self.nominal_text
 
         self.min_text = StringVar()
         self.minEntry = Entry(self.EFValues, textvariable=self.min_text, width=8)
         self.minEntry.grid(row=2, column=1, sticky="w")
-        self.minEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.minEntry.bind("<FocusIn>", self.addEditedVal)
         self.minEntry.val = self.min_text
 
         self.restock_text = StringVar()
         self.restockEntry = Entry(self.EFValues, textvariable=self.restock_text, width=8)
         self.restockEntry.grid(row=3, column=1, sticky="w")
-        self.restockEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.restockEntry.bind("<FocusIn>", self.addEditedVal)
         self.restockEntry.val = self.min_text
 
 
         self.lifetime_text = StringVar()
         self.lifetimeEntry = Entry(self.EFValues, textvariable=self.lifetime_text, width=8)
         self.lifetimeEntry.grid(row=4, column=1, sticky="w")
-        self.lifetimeEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.lifetimeEntry.bind("<FocusIn>", self.addEditedVal)
         self.lifetimeEntry.val = self.lifetime_text
 
         self.usageListBox = Listbox(self.EFValues, height=len(xmlParser.usages), selectmode='multiple',
                                     exportselection=False)
         self.usageListBox.grid(row=5, column=1, pady=5, sticky="w")
-        self.usageListBox.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.usageListBox.bind("<FocusIn>", self.addEditedVal)
 
         self.tierListBox = Listbox(self.EFValues, height=4, selectmode='multiple', exportselection=False)
         self.tierListBox.grid(row=6, column=1, pady=5, sticky="w")
-        self.tierListBox.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.tierListBox.bind("<FocusIn>", self.addEditedVal)
 
         windows.updateListBox(self.usageListBox, xmlParser.usages)
         windows.updateListBox(self.tierListBox, xmlParser.tiers)
@@ -191,6 +191,9 @@ class Window(object):
 
         Button(self.entryFrame, text="Update", width=12, command=self.updateSel) \
             .grid(row=3, column=0, pady=9)
+
+        Button(self.entryFrame, text="Delete", width=12, command=self.deleteSel)\
+            .grid(row=4, column=0, pady=5)
 
     def createTreeview(self):
         self.treeFrame = Frame(self.window)
@@ -346,7 +349,7 @@ class Window(object):
 
     def addEditedVal(self, event):
         widget = self.nameEntry.focus_get()
-        
+
         switcher = {
             self.nominalEntry: "nominal",
             self.minEntry: "min",
@@ -369,6 +372,10 @@ class Window(object):
     def searchByName(self):
         rows = dao.searchByName(self.name_text.get())
         self.updateDisplay(rows)
+
+    def deleteSel(self):
+        print(self.getSelectedValues(self.tree.focus())["name"])
+        dao.deleteItem(self.getSelectedValues(self.tree.focus())["name"])
 
     def updateSel(self):
         for element in self.tree.selection():
