@@ -285,11 +285,24 @@ def getMinByType(type):
     return cursor.fetchval()
 
 
+def updateType(itemName, type):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE items SET type = ? WHERE name = ?", type, itemName)
+    conn.commit()
+
+
+def updateRarity(itemName, rarity):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE items SET rarity = ? WHERE name = ?", rarity, itemName)
+    conn.commit()
+
+
 def update(values):
     query = "UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
-        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", \
-        rarity=" + str(values["rarity"]) + ", deloot= '" + str(values["deloot"]) + "', mods= '" + str(values["mod"]) + \
-            "', type= '" + str(values["type"]) + "' WHERE name = '" + str(
+        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) \
+        + ", deloot= '" + str(values["deloot"]) + "', mods= '" + str(values["mod"]) + "' WHERE name = '" + str(
         values["name"] + "'")
 
     conn = connection()
@@ -297,8 +310,11 @@ def update(values):
     cursor.execute(query)
     conn.commit()
 
-    updateListValues(values["usage"], values["name"], xmlParser.usages)
-    updateListValues(values["tier"], values["name"], xmlParser.tiers)
+    try:
+        updateListValues(values["usage"], values["name"], xmlParser.usages)
+        updateListValues(values["tier"], values["name"], xmlParser.tiers)
+    except KeyError:
+        pass
 
 
 def updateMany(items):

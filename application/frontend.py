@@ -36,6 +36,7 @@ class Window(object):
         self.changed = False
         self.availableMods = windows.getMods()
         self.selectedMods = self.availableMods
+        self.activatedFields = set()
 
         self.createMenuBar()
         self.createEntryBar()
@@ -124,25 +125,36 @@ class Window(object):
         self.nominal_text = StringVar()
         self.nominalEntry = Entry(self.EFValues, textvariable=self.nominal_text, width=8)
         self.nominalEntry.grid(row=1, column=1, sticky="w")
+        self.nominalEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.nominalEntry.val = self.nominal_text
 
         self.min_text = StringVar()
         self.minEntry = Entry(self.EFValues, textvariable=self.min_text, width=8)
         self.minEntry.grid(row=2, column=1, sticky="w")
+        self.minEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.minEntry.val = self.min_text
 
         self.restock_text = StringVar()
         self.restockEntry = Entry(self.EFValues, textvariable=self.restock_text, width=8)
         self.restockEntry.grid(row=3, column=1, sticky="w")
+        self.restockEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.restockEntry.val = self.min_text
+
 
         self.lifetime_text = StringVar()
         self.lifetimeEntry = Entry(self.EFValues, textvariable=self.lifetime_text, width=8)
         self.lifetimeEntry.grid(row=4, column=1, sticky="w")
+        self.lifetimeEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.lifetimeEntry.val = self.lifetime_text
 
         self.usageListBox = Listbox(self.EFValues, height=len(xmlParser.usages), selectmode='multiple',
                                     exportselection=False)
         self.usageListBox.grid(row=5, column=1, pady=5, sticky="w")
+        self.usageListBox.bind("<ButtonRelease-1>", self.addEditedVal)
 
         self.tierListBox = Listbox(self.EFValues, height=4, selectmode='multiple', exportselection=False)
         self.tierListBox.grid(row=6, column=1, pady=5, sticky="w")
+        self.tierListBox.bind("<ButtonRelease-1>", self.addEditedVal)
 
         windows.updateListBox(self.usageListBox, xmlParser.usages)
         windows.updateListBox(self.tierListBox, xmlParser.tiers)
@@ -151,24 +163,31 @@ class Window(object):
         self.typeEntrySel.set('')
         self.typeEntrySel.trace("w", self.typeSelChange)
 
-        OptionMenu(self.EFValues, self.typeEntrySel, *xmlParser.selection[:-1]).grid(row=7, column=1, sticky="w",
-                                                                                     pady=5)
+        self.typeOption = OptionMenu(self.EFValues, self.typeEntrySel, *xmlParser.selection[:-1])
+        self.typeOption.grid(row=7, column=1, sticky="w", pady=5)
+
 
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
         self.rarityTrace = self.raritySel.trace("w", self.raritySelChange)
 
-        OptionMenu(self.EFValues, self.raritySel, *rarities9.values()).grid(row=8, column=1, sticky="w", pady=5)
+        self.rarityOption = OptionMenu(self.EFValues, self.raritySel, *rarities9.values())
+        self.rarityOption.grid(row=8, column=1, sticky="w", pady=5)
 
         self.mod_text = StringVar()
         self.modEntry = Entry(self.EFValues, textvariable=self.mod_text, width=14)
         self.modEntry.grid(row=9, column=1, sticky="w", pady=5)
+        self.modEntry.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.modEntry.val = self.mod_text
 
         self.EFCheckboxe = Frame(self.entryFrame)
         self.EFCheckboxe.grid(row=1, column=0, columnspan=2, sticky="w")
 
         self.deLoot = IntVar()
-        Checkbutton(self.EFCheckboxe, text='Dynamic Event', variable=self.deLoot).grid(row=0, column=0, sticky="w")
+        self.deLootOption = Checkbutton(self.EFCheckboxe, text='Dynamic Event', variable=self.deLoot)
+        self.deLootOption.grid(row=0, column=0, sticky="w")
+        self.deLootOption.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.deLootOption.val = self.deLoot
 
         Button(self.entryFrame, text="Update", width=12, command=self.updateSel) \
             .grid(row=3, column=0, pady=9)
@@ -315,7 +334,7 @@ class Window(object):
 
     def viewLinked(self):
         try:
-            dict = self.getSelectedValues()
+            dict = self.getSelectedValues(self.tree.focus())
             if dict["type"] == 'gun':
                 rows = dao.getWeaponAndCorresponding(self.name_text.get())
             else:
@@ -324,6 +343,21 @@ class Window(object):
             self.updateDisplay(rows)
         except IndexError:
             pass
+
+    def addEditedVal(self, event):
+        widget = self.nameEntry.focus_get()
+        
+        switcher = {
+            self.nominalEntry: "nominal",
+            self.minEntry: "min",
+            self.restockEntry: "restock",
+            self.lifetimeEntry: "lifetime",
+            self.usageListBox: "usage",
+            self.tierListBox: "tier",
+            self.modEntry: "mod"
+        }
+
+        self.activatedFields.add(switcher.get(widget, "deloot"))
 
     def enterPress(self, event):
         if type(self.nameEntry.focus_get()) is type(self.nameEntry):
@@ -338,12 +372,13 @@ class Window(object):
 
     def updateSel(self):
         for element in self.tree.selection():
-            val = self.getEditedValues()
+            val = self.getEditedValues(element)
             val["name"] = self.tree.item(element)["text"]
             dao.update(val)
         rows = dao.reExecuteLastQuery()
         self.updateDisplay(rows)
         self.changed = True
+        self.activatedFields.clear()
 
     def updateModMenu(self):
         newMods = self._checkForNewMod()
@@ -409,7 +444,7 @@ class Window(object):
 
     def fillEntryBoxes(self, event):
         try:
-            dict = self.getSelectedValues()
+            dict = self.getSelectedValues(self.tree.focus())
             self.nameEntry.delete(0, END)
             self.nameEntry.insert(END, dict["name"])
 
@@ -446,9 +481,10 @@ class Window(object):
         except IndexError:
             pass
 
+        self.activatedFields.clear()
 
-    def getSelectedValues(self):
-        dict = self.tree.item(self.tree.focus())
+    def getSelectedValues(self, element):
+        dict = self.tree.item(element)
 
         val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
                "deloot": dict["values"][7], "restock": dict["values"][2], "lifetime": dict["values"][3],
@@ -456,13 +492,20 @@ class Window(object):
 
         return val
 
-    def getEditedValues(self):
+    def getEditedValues(self, element):
+        selected = self.getSelectedValues(element)
+        selected.pop("rarity")
+        selected.pop("type")
+
         val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(), "deloot": self.deLoot.get(),
-               "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "rarity": self.getRaritySel(),
-               "type": self.typeEntrySel.get(), "mod": self.mod_text.get(),
+               "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "mod": self.mod_text.get(),
                "usage": self.getEditedListBox(self.usageListBox, xmlParser.usages),
                "tier": self.getEditedListBox(self.tierListBox, xmlParser.tiers)}
-        return val
+
+        for field in self.activatedFields:
+            selected[field] = val[field]
+
+        return selected
 
     def getEditedListBox(self, listBox, keys):
         selection = []
@@ -532,16 +575,16 @@ class Window(object):
         self.targetMag.set(str(dao.getNominalByType("mag")))
 
     def typeSelChange(self, *args):
-        selVal = self.getSelectedValues()["type"]
+        selVal = self.getSelectedValues(self.tree.focus())["type"]
         typeEntry = self.typeEntrySel.get()
         if selVal != typeEntry:
-            self.updateSel()
+            dao.updateType(self.getSelectedValues(self.tree.focus())["name"], typeEntry)
 
     def raritySelChange(self, *args):
-        selVal = self.getSelectedValues()["rarity"]
+        selVal = self.getSelectedValues(self.tree.focus())["rarity"]
         rareEntry = self.raritySel.get()
         if selVal != rareEntry:
-            self.updateSel()
+            dao.updateRarity(self.getSelectedValues(self.tree.focus())["name"], rareEntry)
 
     def distribSelChange(self, *args):
         for i in range(len(itemTypes)):
