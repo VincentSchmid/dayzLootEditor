@@ -349,7 +349,7 @@ class Item:
             type += "    <nominal>{}</nominal>\n".format(self.nominal)
         type += "    <lifetime>{}</lifetime>\n".format(self.lifetime)
         if not craftable:
-            type += "    <restock>{}</restock>".format(self.restock)
+            type += "    <restock>{}</restock>\n".format(self.restock)
             type += "    <min>{}</min>\n".format(self.min)
             type += "    <quantmin>{}</quantmin>\n".format(self.quantmin)
             type += "    <quantmax>{}</quantmax>\n".format(self.quantmax)
