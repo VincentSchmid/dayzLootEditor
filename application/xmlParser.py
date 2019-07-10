@@ -349,6 +349,7 @@ class Item:
             type += "    <nominal>{}</nominal>\n".format(self.nominal)
         type += "    <lifetime>{}</lifetime>\n".format(self.lifetime)
         if not craftable:
+            type += "    <restock>{}</restock>".format(self.restock)
             type += "    <min>{}</min>\n".format(self.min)
             type += "    <quantmin>{}</quantmin>\n".format(self.quantmin)
             type += "    <quantmax>{}</quantmax>\n".format(self.quantmax)
@@ -368,9 +369,9 @@ class Item:
     def getSpawnableTypes(self):
         linkedItems = dao.getLinekd(self.name, self.type)
 
-        magChance= 0.3
-        opticChance = 0.1
-        attachmentChance = 0.2
+        magChance= "{:0.2f}".format(0.3)
+        opticChance = "{:0.2f}".format(0.10, 2)
+        attachmentChance = "{:0.2f}".format(0.20, 2)
 
         mags = []
         optics = []
