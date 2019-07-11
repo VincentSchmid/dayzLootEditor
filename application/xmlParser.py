@@ -404,7 +404,7 @@ def attachmentBlock(items, chance):
     if len(items) != 0:
         type += "    <attachments chance=\"{}\">\n".format(chance)
         for item in items:
-            type += "      <item name=\"{}\" chance=\"{}\">\n".format(item.name, round(1.0 / len(items), 2))
+            type += "      <item name=\"{}\" chance=\"{}\ /">\n".format(item.name, round(1.0 / len(items), 2))
 
         type += "    </attachments>\n"
 
