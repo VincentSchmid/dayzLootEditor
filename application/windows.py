@@ -102,7 +102,6 @@ def writeTypesToDatabase(dir):
 
 
 def appendTypesToDatabase(xml, root, mod, useNew):
-    print(useNew)
     count = 0
     successes = []
     message = " Items where added to database, duplicate items where not added:\n"

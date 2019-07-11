@@ -186,8 +186,32 @@ class Window(object):
         self.deLoot = IntVar()
         self.deLootOption = Checkbutton(self.EFCheckboxe, text='Dynamic Event', variable=self.deLoot)
         self.deLootOption.grid(row=0, column=0, sticky="w")
-        self.deLootOption.bind("<ButtonRelease-1>", self.addEditedVal)
+        self.deLootOption.bind("<Button-1>", lambda e: self.addEditedVal(self.deLootOption.focus_set()))
         self.deLootOption.val = self.deLoot
+
+        self.cargo = IntVar()
+        self.cargoOption = Checkbutton(self.EFCheckboxe, text='Count in Cargo', variable=self.cargo)
+        self.cargoOption.grid(row=1, column=0, sticky="w")
+        self.cargoOption.bind("<Button-1>", lambda e: self.addEditedVal(self.cargoOption.focus_set()))
+        self.cargoOption.val = self.cargo
+
+        self.hoarder = IntVar()
+        self.hoarderOption = Checkbutton(self.EFCheckboxe, text='Count in Hoarder', variable=self.hoarder)
+        self.hoarderOption.grid(row=2, column=0, sticky="w")
+        self.hoarderOption.bind("<Button-1>", lambda e: self.addEditedVal(self.hoarderOption.focus_set()))
+        self.hoarderOption.val = self.hoarder
+
+        self.map = IntVar()
+        self.mapOption = Checkbutton(self.EFCheckboxe, text='Count in Map', variable=self.map)
+        self.mapOption.grid(row=3, column=0, sticky="w")
+        self.mapOption.bind("<Button-1>", lambda e: self.addEditedVal(self.mapOption.focus_set()))
+        self.mapOption.val = self.map
+
+        self.player = IntVar()
+        self.playerOption = Checkbutton(self.EFCheckboxe, text='Count in Player', variable=self.player)
+        self.playerOption.grid(row=4, column=0, sticky="w")
+        self.playerOption.bind("<Button-1>", lambda e: self.addEditedVal(self.playerOption.focus_set()))
+        self.playerOption.val = self.player
 
         Button(self.entryFrame, text="Update", width=12, command=self.updateSel) \
             .grid(row=3, column=0, pady=9)
@@ -205,7 +229,7 @@ class Window(object):
         self.tree = ttk.Treeview(self.treeFrame,
                                  columns=(
                                      'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
-                                     'rarity', 'mod'), height=32)
+                                     'rarity', 'mod'), height=40)
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -348,7 +372,7 @@ class Window(object):
             pass
 
     def addEditedVal(self, event):
-        widget = self.nameEntry.focus_get()
+        widget = self.window.focus_get()
 
         switcher = {
             self.nominalEntry: "nominal",
@@ -357,10 +381,15 @@ class Window(object):
             self.lifetimeEntry: "lifetime",
             self.usageListBox: "usage",
             self.tierListBox: "tier",
-            self.modEntry: "mod"
+            self.modEntry: "mod",
+            self.deLootOption: "deloot",
+            self.cargoOption: "cargo",
+            self.hoarderOption: "hoarder",
+            self.mapOption: "map",
+            self.playerOption: "player"
         }
 
-        self.activatedFields.add(switcher.get(widget, "deloot"))
+        self.activatedFields.add(switcher.get(widget, "error"))
 
     def enterPress(self, event):
         if type(self.nameEntry.focus_get()) is type(self.nameEntry):
@@ -474,12 +503,14 @@ class Window(object):
             windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
 
             self.typeEntrySel.set(dict["type"])
-
+            self.raritySel.set(dict["rarity"])
             self.mod_text.set(dict["mod"])
 
             self.deLoot.set(dict["deloot"])
-
-            self.raritySel.set(dict["rarity"])
+            self.cargo.set(dict["cargo"])
+            self.hoarder.set(dict["hoarder"])
+            self.map.set(dict["map"])
+            self.player.set(dict["player"])
 
             self.window.clipboard_clear()
             self.window.clipboard_append(dict["name"])
@@ -492,10 +523,12 @@ class Window(object):
 
     def getSelectedValues(self, element):
         dict = self.tree.item(element)
+        flags = dao.getFlags(dict["text"])
 
         val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
                "deloot": dict["values"][7], "restock": dict["values"][2], "lifetime": dict["values"][3],
-               "type": dict["values"][4], "rarity": dict["values"][8], "mod": dict["values"][9]}
+               "type": dict["values"][4], "rarity": dict["values"][8], "mod": dict["values"][9],
+               "cargo": flags[0], "hoarder": flags[1], "map": flags[2], "player": flags[3], "flags": flags}
 
         return val
 
@@ -507,7 +540,9 @@ class Window(object):
         val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(), "deloot": self.deLoot.get(),
                "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "mod": self.mod_text.get(),
                "usage": self.getEditedListBox(self.usageListBox, xmlParser.usages),
-               "tier": self.getEditedListBox(self.tierListBox, xmlParser.tiers)}
+               "tier": self.getEditedListBox(self.tierListBox, xmlParser.tiers),
+               "cargo": self.cargo.get(), "hoarder": self.hoarder.get(),
+               "map": self.map.get(), "player": self.player.get()}
 
         for field in self.activatedFields:
             selected[field] = val[field]
@@ -626,7 +661,6 @@ class Window(object):
 
     def exportSpawnable(self):
         windows.exportSpawnable()
-
 
     def openConnectionWindow(self):
         try:

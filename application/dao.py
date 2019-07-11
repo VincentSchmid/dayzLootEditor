@@ -132,6 +132,13 @@ def createCombos(items):
     conn.commit()
 
 
+def deleteItem(itemName):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM items WHERE name = ?", itemName)
+    conn.commit()
+
+
 def removeCombo(items):
     conn = connection()
     cursor = conn.cursor()
@@ -310,11 +317,27 @@ def update(values):
     cursor.execute(query)
     conn.commit()
 
+    updateFlags(values)
+
     try:
         updateListValues(values["usage"], values["name"], xmlParser.usages)
+    except KeyError:
+        pass
+
+    try:
         updateListValues(values["tier"], values["name"], xmlParser.tiers)
     except KeyError:
         pass
+
+
+def updateFlags(values):
+    query = "UPDATE items SET count_in_cargo = ?, count_in_hoarder = ?, count_in_map = ?, count_in_player = ?\
+     WHERE name = ?"
+
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(query, values["cargo"], values["hoarder"], values["map"], values["player"], values["name"])
+    conn.commit()
 
 
 def updateMany(items):
@@ -442,6 +465,13 @@ def getRarity(itemName):
     cursor = connection().cursor()
     cursor.execute("select rarity from items where name = ?", itemName)
     return cursor.fetchall()[0][0]
+
+
+def getFlags(itemName):
+    cursor = connection().cursor()
+    cursor.execute("select count_in_cargo, count_in_hoarder, count_in_map, count_in_player, crafted, deloot \
+                    from items where name = ?", itemName)
+    return cursor.fetchall()[0]
 
 
 def getModFromItem(itemName):
