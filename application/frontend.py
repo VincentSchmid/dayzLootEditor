@@ -351,9 +351,9 @@ class Window(object):
     def viewCategroy(self):
         cat = self.typeSel.get()
         if cat in xmlParser.categories:
-            rows = dao.viewCategory(cat)
+            rows = dao.getCategory(cat)
         elif cat in itemTypes:
-            rows = dao.viewType(cat)
+            rows = dao.getType(cat)
         else:
             rows = dao.getAllItems()
 
@@ -361,11 +361,8 @@ class Window(object):
 
     def viewLinked(self):
         try:
-            dict = self.getSelectedValues(self.tree.focus())
-            if dict["type"] == 'gun':
-                rows = dao.getWeaponAndCorresponding(self.name_text.get())
-            else:
-                rows = dao.getWeaponsFromAccessoire(self.name_text.get())
+            type = self.getSelectedValues(self.tree.focus())["type"]
+            rows = dao.getLinekd(self.name_text.get(), type)
 
             self.updateDisplay(rows)
         except IndexError:
@@ -466,7 +463,7 @@ class Window(object):
         distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), int(self.targetMag.get()),
                               int(self.targetAmmo.get()), flags)
         self.changed = True
-        self.updateDisplay(dao.viewType(self.distribSel.get()))
+        self.updateDisplay(dao.getType(self.distribSel.get()))
 
     # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):

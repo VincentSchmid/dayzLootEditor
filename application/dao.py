@@ -67,7 +67,8 @@ def getCoulumNames():
     cursor.execute("""SELECT COLUMN_NAME
                       FROM INFORMATION_SCHEMA.COLUMNS
                       WHERE TABLE_SCHEMA= 'dayzitems'
-                      AND TABLE_NAME= 'items';""")
+                      AND TABLE_NAME= 'items'
+                      ORDER BY ORDINAL_POSITION;""")
     return [row[0] for row in cursor.fetchall()]
 
 
@@ -146,7 +147,7 @@ def removeCombo(items):
     conn.commit()
 
 
-def viewType(type):
+def getType(type):
     global lastQuery
     lastQuery = "select * \
                 from items \
@@ -157,7 +158,7 @@ def viewType(type):
     return cursor.fetchall()
 
 
-def viewCategory(category):
+def getCategory(category):
     global lastQuery
     lastQuery = "select * \
                 from items \
