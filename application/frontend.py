@@ -43,6 +43,7 @@ class Window(object):
         self.createTreeview()
         self.createSideBar()
         self.createDistibutionBlock()
+        self.createMultiplierBlock()
         windows.center(self.window)
 
         # Keybindings
@@ -312,6 +313,21 @@ class Window(object):
         Button(self.distribution, text="Distribute", width=12, command=self.distribute).grid(row=7, columnspan=2,
                                                                                              pady=10)
 
+    def createMultiplierBlock(self):
+        self.multiplierFrame = LabelFrame(self.buttons, text="Loot Multiplier")
+        self.multiplierFrame.grid(row=6, column=0, padx=20, pady=20)
+
+        self.multiplier = StringVar()
+        self.multiplier.set('0.00')
+
+        ttk.Scale(self.multiplierFrame, from_=0, to_=5, length=150,
+          command=lambda s:self.multiplier.set('%0.2f' % float(s))).grid(column=0, row=2)
+
+        ttk.Label(self.multiplierFrame, textvariable=self.multiplier).grid(column=0, row=1)
+
+        Button(self.multiplierFrame, text="Update", command=self.multiplySel).grid(row=3)
+
+
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
         self.infoFrame.grid(row=1, column=1, sticky="s,w,e")
@@ -403,10 +419,13 @@ class Window(object):
         print(self.getSelectedValues(self.tree.focus())["name"])
         dao.deleteItem(self.getSelectedValues(self.tree.focus())["name"])
 
-    def updateSel(self):
+    def updateSel(self, multiplier=None):
         for element in self.tree.selection():
             val = self.getEditedValues(element)
             val["name"] = self.tree.item(element)["text"]
+            if multiplier is not None:
+                val["nominal"] = val["nominal"]*multiplier
+                val["min"] = val["min"]*multiplier
             dao.update(val)
         rows = dao.reExecuteLastQuery()
         self.updateDisplay(rows)
@@ -464,6 +483,12 @@ class Window(object):
                               int(self.targetAmmo.get()), flags)
         self.changed = True
         self.updateDisplay(dao.getType(self.distribSel.get()))
+
+
+    def multiplySel(self):
+        self.updateSel(float(self.multiplier.get()))
+
+
 
     # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):
