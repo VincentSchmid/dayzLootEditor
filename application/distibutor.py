@@ -61,7 +61,7 @@ def setValues(nominalPerElement, itemsToDistribute):
 def distributeLinkedItem(guns, targetCount, type):
     zeroAllItems(type)
     elementCount = 0
-    allItems = dao.getDicts(dao.viewType(type))
+    allItems = dao.getDicts(dao.getType(type))
     for gun in guns:
         elementCount += int(gun["nominal"])
         linkedItemsToGun = dao.getDicts(dao.getWeaponAndCorresponding(gun["name"]))
@@ -96,7 +96,7 @@ def get_digits(string):
 
 
 def zeroAllItems(type):
-    for item in dao.getDicts(dao.viewType(type)):
+    for item in dao.getDicts(dao.getType(type)):
         item["nominal"] = 0
         item["min"] = 0
 

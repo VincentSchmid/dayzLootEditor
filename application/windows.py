@@ -39,7 +39,7 @@ def exportSpawnable():
     fname = filediag.asksaveasfile(mode="w+", defaultextension="xml")
     if fname is not None:
         spawnable = ""
-        items = xmlParser.itemFromRows(dao.viewType("gun"))
+        items = xmlParser.itemFromRows(dao.getType("gun"))
         for item in items:
             if item.mod != "Vanilla":
                 spawnable += item.getSpawnableTypes()

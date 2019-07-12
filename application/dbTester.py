@@ -39,5 +39,5 @@ def testGetItems():
     print(dao.getWeaponAndCorresponding("AKM"))
     print(dao.getWeaponsFromAccessoire("AmmoBox_556x45Tracer_20Rnd"))
 
-print(len(dao.viewType("gun")))
-print(len(xmlParser.itemFromRows(dao.viewType("gun"))))
+print(len(dao.getType("gun")))
+print(len(xmlParser.itemFromRows(dao.getType("gun"))))
