@@ -1,7 +1,7 @@
 from subprocess import Popen, PIPE
 
 import pyodbc
-
+import distibutor
 import windows
 import xmlParser
 
@@ -94,7 +94,14 @@ def getDict(item):
     dict = {}
     keys = getCoulumNames()
     for k in range(len(item)):
-        dict[keys[k]] = item[k]
+        key = keys[k]
+        if key == "mods":
+            key = "mod"
+        if key.startswith("count_in_"):
+            key = key[9:]
+
+        dict[key] = item[k]
+
 
     return dict
 
@@ -301,6 +308,12 @@ def updateType(itemName, type):
 
 
 def updateRarity(itemName, rarity):
+    rarities = distibutor.rarities9
+    if rarity in rarities.values():
+        for key, value in rarities.items():
+            if rarity == value:
+                rarity = key
+
     conn = connection()
     cursor = conn.cursor()
     cursor.execute("UPDATE items SET rarity = ? WHERE name = ?", rarity, itemName)

@@ -25,10 +25,10 @@ def update(dir, includedMods):
     f = dir
     items = dao.getAllItems()
     f.write("<types>\n")
-    print(includedMods)
     for mod in includedMods:
         f.write("  <!--{}--> \n".format(mod))
         for item in items:
-            if item[-1] in mod:
-                f.write(getXmlBlock(item))
+            if item[5] != 0:
+                if item[-1] in mod:
+                    f.write(getXmlBlock(item))
     f.write("</types>\n")
