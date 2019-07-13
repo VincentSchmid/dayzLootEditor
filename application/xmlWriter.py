@@ -1,4 +1,4 @@
-
+import items
 import xmlParser
 import dao
 import windows
@@ -15,7 +15,7 @@ def orderModList(mods):
 
 
 def getXmlBlock(row):
-    item = xmlParser.Item()
+    item = items.Item()
     item.fillFromVal(row)
     return item.getXML()
 

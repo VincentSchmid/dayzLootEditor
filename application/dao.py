@@ -1,6 +1,8 @@
 from subprocess import Popen, PIPE
 
 import pyodbc
+
+import items
 import distibutor
 import windows
 import xmlParser
@@ -335,12 +337,12 @@ def update(values):
     updateFlags(values)
 
     try:
-        updateListValues(values["usage"], values["name"], xmlParser.usages)
+        updateListValues(values["usage"], values["name"], items.usages)
     except KeyError:
         pass
 
     try:
-        updateListValues(values["tier"], values["name"], xmlParser.tiers)
+        updateListValues(values["tier"], values["name"], items.tiers)
     except KeyError:
         pass
 
@@ -466,13 +468,13 @@ def createDB(name):
 
 def getUsages(itemName):
     cursor = connection().cursor()
-    cursor.execute("select " + ", ".join(xmlParser.usages) + " from items where name = '" + itemName + "'")
+    cursor.execute("select " + ", ".join(items.usages) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
 
 
 def getTiers(itemName):
     cursor = connection().cursor()
-    cursor.execute("select " + ", ".join(xmlParser.tiers) + " from items where name = '" + itemName + "'")
+    cursor.execute("select " + ", ".join(items.tiers) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
 
 

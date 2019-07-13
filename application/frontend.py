@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
+import items
 import xmlParser
 import xmlWriter
 import dao
@@ -148,7 +149,7 @@ class Window(object):
         self.lifetimeEntry.bind("<FocusIn>", self.addEditedVal)
         self.lifetimeEntry.val = self.lifetime_text
 
-        self.usageListBox = Listbox(self.EFValues, height=len(xmlParser.usages), selectmode='multiple',
+        self.usageListBox = Listbox(self.EFValues, height=len(items.usages), selectmode='multiple',
                                     exportselection=False)
         self.usageListBox.grid(row=5, column=1, pady=5, sticky="w")
         self.usageListBox.bind("<FocusIn>", self.addEditedVal)
@@ -157,8 +158,8 @@ class Window(object):
         self.tierListBox.grid(row=6, column=1, pady=5, sticky="w")
         self.tierListBox.bind("<FocusIn>", self.addEditedVal)
 
-        windows.updateListBox(self.usageListBox, xmlParser.usages)
-        windows.updateListBox(self.tierListBox, xmlParser.tiers)
+        windows.updateListBox(self.usageListBox, items.usages)
+        windows.updateListBox(self.tierListBox, items.tiers)
 
         self.typeEntrySel = StringVar()
         self.typeEntrySel.set('')
@@ -561,8 +562,8 @@ class Window(object):
 
         val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(), "deloot": self.deLoot.get(),
                "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "mod": self.mod_text.get(),
-               "usage": self.getEditedListBox(self.usageListBox, xmlParser.usages),
-               "tier": self.getEditedListBox(self.tierListBox, xmlParser.tiers),
+               "usage": self.getEditedListBox(self.usageListBox, items.usages),
+               "tier": self.getEditedListBox(self.tierListBox, items.tiers),
                "cargo": self.cargo.get(), "hoarder": self.hoarder.get(),
                "map": self.map.get(), "player": self.player.get()}
 
@@ -609,15 +610,15 @@ class Window(object):
                 "usages": row[10:23], "tiers": row[23:27]}
 
     def createUsage(self, row):
-        usageNames = xmlParser.usages
+        usageNames = items.usages
         if sum(row) > 5:
-            usageNames = xmlParser.usagesAbr
+            usageNames = items.usagesAbr
         usage = ""
 
         if sum(row) == len(usageNames) - 1:
             usage = "everywhere except Coast"
         else:
-            for i in range(len(xmlParser.usages)):
+            for i in range(len(items.usages)):
                 if row[i] == 1:
                     usage += usageNames[i] + " "
             if usage != "":
@@ -627,9 +628,9 @@ class Window(object):
 
     def createTier(self, row):
         tier = ""
-        for i in range(len(xmlParser.tiers)):
+        for i in range(len(items.tiers)):
             if row[i] == 1:
-                tier += xmlParser.tiers[i] + ","
+                tier += items.tiers[i] + ","
         if tier != "":
             tier = tier[:-1]
         return tier
