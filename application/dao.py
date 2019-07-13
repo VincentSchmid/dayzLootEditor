@@ -308,6 +308,7 @@ def updateType(itemName, type):
 
 
 def updateRarity(itemName, rarity):
+	#todo clean this up
     rarities = distibutor.rarities9
     if rarity in rarities.values():
         for key, value in rarities.items():

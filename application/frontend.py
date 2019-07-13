@@ -682,7 +682,7 @@ class Window(object):
         dao.backupDatabase(open(windows.dataPath + "\\" + filename, "wb+"))
 
     def exportSpawnable(self):
-        windows.exportSpawnable()
+        xmlWriter.exportSpawnable()
 
     def openConnectionWindow(self):
         try:

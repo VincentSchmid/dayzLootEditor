@@ -32,3 +32,16 @@ def update(dir, includedMods):
                 if item[-1] in mod:
                     f.write(getXmlBlock(item))
     f.write("</types>\n")
+
+
+def exportSpawnable():
+    fname = windows.saveAsFile("xml", "w+")
+    if fname is not None:
+        spawnable = ""
+        items = xmlParser.itemFromRows(dao.getType("gun"))
+        for item in items:
+            if item.mod != "Vanilla":
+                if item.nominal != 0:
+                    spawnable += item.getSpawnableTypes()
+
+        fname.write(spawnable)
