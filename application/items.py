@@ -145,7 +145,7 @@ class Item:
         dict = {"name": self.name, "category": self.category, "type": self.type,
                 "lifetime": self.lifetime, "quantmin": self.quantmin,
                 "nominal": self.nominal, "cost": self.cost, "quantmax": self.quantmax,
-                "min": self.min, "restock": self.restock, "mod": self.mod}
+                "min": self.min, "restock": self.restock, "mods": self.mod}
 
         for u in usages:
             if u in self.usages:
