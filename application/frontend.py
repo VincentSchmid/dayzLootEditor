@@ -258,10 +258,15 @@ class Window(object):
         self.tree.grid(row=0, column=0, sticky='nsew')
         self.treeview = self.tree
 
-        sb1 = Scrollbar(self.treeFrame)
-        sb1.grid(row=0, column=1, sticky="ns")
-        self.tree.config(yscrollcommand=sb1.set)
-        sb1.config(command=self.tree.yview)
+        vert = ttk.Scrollbar(self.treeFrame, orient=VERTICAL)
+        hori = ttk.Scrollbar(self.treeFrame, orient=HORIZONTAL)
+
+        vert.grid(row=0, column=1, sticky="ns")
+        hori.grid(row=1, column=0, sticky="we")
+        self.tree.config(yscrollcommand=vert.set)
+        self.tree.config(xscrollcommand=hori.set)
+        vert.config(command=self.tree.yview)
+        hori.config(command=self.tree.xview)
 
     def createSideBar(self):
 
