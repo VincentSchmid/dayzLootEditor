@@ -69,7 +69,7 @@ All items of the game are loaded and found if searched but the sorting only work
 #### Distribution
 - [ ] choice if distributing by rarity or nominal
 - [ ] ability to distribute rarity across type/category or usage or tier
-- [ ] lock items from distribution (possibly rarity unassigned)
+- [x] lock items from distribution (possibly rarity unassigned)
 - [x] Ammo Distribution
 - [ ] Enter Hotkey in Rarity Distribution
 - [x] Optic Distribution
@@ -112,8 +112,7 @@ All items of the game are loaded and found if searched but the sorting only work
 
 ### Possible Features
 - [ ] Rewriting Common Database connection errors
-- [ ] drop percentages (not in types.xml)
-- [x] Where the heck is the 60round STANAG??
+- [x] drop percentages (not in types.xml)
 
 ### Crazy ideas:
 - [ ] creating an online database for all mods where people can add their items mods types.xml entries and a checkbox in-app for a specific mod to add to types XML.
