@@ -61,6 +61,8 @@ class itemLinker(object):
         self.createItemSelector(self.linkedFrame, "Linked Items", 3)
 
         self.listBoxes[0].bind('<<ListboxSelect>>', self.getLinks)
+        self.listBoxes[1].bind('<Double-Button>', self.addLink)
+        self.listBoxes[2].bind('<Double-Button>', self.removeLink)
 
         self.categoryEntries[-1][0].grid_forget()
         self.categoryEntries[-1][1].grid_forget()
@@ -125,11 +127,11 @@ class itemLinker(object):
         modSelector.current(0)
         self.modEntries.append((ml, modSelector))
 
-    def addLink(self):
+    def addLink(self, event=None):
         dao.createCombos([(self.listBoxes[0].get(ANCHOR), self.listBoxes[1].get(ANCHOR))])
         self.getLinks()
 
-    def removeLink(self):
+    def removeLink(self, event=None):
         dao.removeCombo((self.listBoxes[0].get(ANCHOR), self.listBoxes[2].get(ANCHOR)))
         self.getLinks()
 
