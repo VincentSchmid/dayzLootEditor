@@ -29,13 +29,52 @@ Set a Password. I recommend `rootroot`. Does not need to be safe. It will be sto
 Now download this app
 
 ### Developer install
-
 - pyodbc
 - pyinstaller
 
+## First Startup
+On startup you will see the connection window
+
+![connection Window](images/connectionWIndow.png)
+
+1. Set the password to the one you set during setup of the database Server
+2. Choose Create New, set a database Name eg. server name, choose a types xml to fill the databse for the first time
+2. If you allready created a databse choose Use Existing, enter the name of the database and click Create/Test to test the connection
+3. Click Create/Test it will create a new Database
+4. You will see connection Success if everything worked
+5. Click Set and now you're all set and can start editing your Loot
+
 ## Features
-Press Enter to search by name or update entries to database!
-![screenshot of application](images/2019-06-05_14-23-51.png)
+### Adding New Items
+Paste new Items or Items that changed Values
+Go to Database > Add Items...
+![add items Window](images/addItemsFilled.png)
+
+1. Paste in all new Items you want to add
+2. Enter the Name of the mod the new Items belong to
+3. If the Item allready exists in the Database but you changed the Values somewhere else choose Use Value of Dublicate Item and it will change the Value of the item in the Database to the Value of the Pasted Item.
+4. click OK
+
+### Creating Item Links
+To assosiated items with other items like ammo type to a gun 
+go to Database > Create item links...
+This is usefull for the spawning of the item with attachments and for distributing items that have a set rarity
+![item Linker](images/itemLinker.png)
+
+The left list is for the parent object like the weapon. 
+The list in the center is a list of all items here you can look for the item you want to link to the parent item.
+The list on the right shows all items that are linked to the selected parent object. The parent object will appear there too and this is fine.
+
+1. select a parent item in the left list
+2. find the item that is linked in the center list by entering the item name in the search bar below use filter setting to help narrow your search
+3. doubleclick the item to add it to the parent item as linked item
+4. when done simply close the window, it saves progress automatically
+
+### Mod Selector
+Ticking mod names in the "Mods in use" menu, will remove the items from that mod.
+Items that are in a mod that has been unticked will not export in the types.xml.
+The Items will not be deleted they're just hidden.
+![Mods in Use menu](images/ModsInUse.png)
 
 ### item searching
 ![search by name](images/searching.png)
