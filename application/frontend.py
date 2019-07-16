@@ -426,6 +426,7 @@ class Window(object):
         dao.deleteItem(self.getSelectedValues(self.tree.focus())["name"])
 
     def updateSel(self, multiplier=None):
+        print(self.tree.selection())
         for element in self.tree.selection():
             val = self.getEditedValues(element)
             val["name"] = self.tree.item(element)["text"]
@@ -644,17 +645,24 @@ class Window(object):
         self.targetNominal.set(str(dao.getNominalByType("gun")))
         self.targetMag.set(str(dao.getNominalByType("mag")))
 
-    def typeSelChange(self, *args):
-        selVal = self.getSelectedValues(self.tree.focus())["type"]
-        typeEntry = self.typeEntrySel.get()
-        if selVal != typeEntry:
-            dao.updateType(self.getSelectedValues(self.tree.focus())["name"], typeEntry)
-
     def raritySelChange(self, *args):
-        selVal = self.getSelectedValues(self.tree.focus())["rarity"]
-        rareEntry = self.raritySel.get()
-        if selVal != rareEntry:
-            dao.updateRarity(self.getSelectedValues(self.tree.focus())["name"], rareEntry)
+        self.dropSelChange("rarity", self.raritySel.get())
+
+    def typeSelChange(self, *args):
+        self.dropSelChange("type", self.typeEntrySel.get())
+
+    def valueChange(self, name, entryValue):
+        return not self.getSelectedValues(self.tree.selection()[0])[name] == entryValue
+
+    def dropSelChange(self, name, entryValue, *args):
+        if self.valueChange(name, entryValue):
+            for element in self.tree.selection():
+                selVal = self.getSelectedValues(element)[name]
+                rareEntry = self.raritySel.get()
+                if selVal != rareEntry:
+                    dao.updateDropValue(self.getSelectedValues(element)["name"], entryValue, name)
+
+            self.updateDisplay(dao.reExecuteLastQuery())
 
     def distribSelChange(self, *args):
         for i in range(len(itemTypes)):

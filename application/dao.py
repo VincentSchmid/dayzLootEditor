@@ -308,6 +308,11 @@ def updateType(itemName, type):
     cursor.execute("UPDATE items SET type = ? WHERE name = ?", type, itemName)
     conn.commit()
 
+def updateDropValue(itemName, newValue, valueType):
+    if valueType == "rarity":
+        updateRarity(itemName, newValue)
+    if valueType == "type":
+        updateType(itemName, newValue)
 
 def updateRarity(itemName, rarity):
 	#todo clean this up
