@@ -202,7 +202,7 @@ class Item:
     def getSpawnableTypes(self):
         linkedItems = dao.getLinekd(self.name, self.type)
 
-        magChance= "{:0.2f}".format(0.3)
+        magChance= "{:0.2f}".format(0.1)
         opticChance = "{:0.2f}".format(0.10, 2)
         attachmentChance = "{:0.2f}".format(0.20, 2)
 
