@@ -31,7 +31,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.75")
+        self.window.wm_title("Loot Editor v0.80")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
