@@ -45,6 +45,16 @@ On startup you will see the connection window
 5. Click Set and now you're all set and can start editing your Loot
 
 ## Features
+### Filtering Shown Items
+In the top right corner there is a drop down, select item type and press Show items.
+Click on an item and select view linked items. it will show all items you have linked to that item
+Enter a keyword in the Name entry top left and press enter.
+
+### Editing Items
+1. Select an item or multiple by clicking shift or ctrl
+2. change the Values you want
+3. Click Update (type and rarity update instantly)
+
 ### Adding New Items
 Paste new Items or Items that changed Values
 Go to Database > Add Items...
@@ -75,6 +85,38 @@ Ticking mod names in the "Mods in use" menu, will remove the items from that mod
 Items that are in a mod that has been unticked will not export in the types.xml.
 The Items will not be deleted they're just hidden.
 ![Mods in Use menu](images/ModsInUse.png)
+
+### Setting Rarity
+Nine Rarity types, if this is too many for you just use every second one.
+The Rarity types have multipliers assigned to them:
+#### Multipliers
+
+| Rarity             | Multiplier |
+| ------------------ | ---------- |
+| undefined          | NaN        | 
+| Legendary | 1 | 
+| Extremely Rare | 1.5 | 
+| Very Rare | 2 | 
+| Rare | 2.5 | 
+| Somewhat Rare | 3 | 
+| Uncommon | 5 | 
+| Common | 8 | 
+| Very Common | 12 | 
+| All Over The Place | 20 | 
+
+### Rarity Distribution
+This method isn't perfect it will only be a rough distribution to work with. You will have to adjust the loot after distribution
+1. Set the rarity for all items of the type you want to distribute (undefined items will be ignored)
+2. In the dropdown menu select the item type to distribute.
+3. set Target Nominal. it's the nominal amount of all items of this type (excluding the items with undefined as rarity).
+4. Only for guns: if Ammo or Mags is ticked the mags and ammo will also be distributed based on gun rarity. For example if many guns use STANAG it will spawn more often. Same for ammo types.
+5. Click Distribute. This will take a while (working on this), it will still be faster than you doing all of this by hand!
+6. Sometimes the nominals don't match what you set them to. Just select the items and edit them with the multiplier slider.
+
+### Loot Multiplier
+1. Select the items you want to increase or decrease with shift or ctrl.
+2. set the multiplier
+3. click Update
 
 ### item searching
 ![search by name](images/searching.png)
