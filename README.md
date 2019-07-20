@@ -10,6 +10,8 @@ Helps with Visualizing end editing Loot. Has some Automatic functions for Loot d
 - Set the appearance of linked items (example: if a gun is rare, the ammo is also rare)
 - Export back to types.xml
 
+![main window](images/frontend.png)
+
 Built upon a MySQL database that will be automatically generated and some manual editing of item links.
 written in python.
 
