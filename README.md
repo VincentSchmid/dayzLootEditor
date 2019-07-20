@@ -81,7 +81,7 @@ Go to Database > Add Items...
 
 1. Paste in all new items you want to add
 2. Enter the Name of the mod the new Items belong to
-3. If the item already exists in the Database but you changed the Values somewhere else choose Use Value of Duplicate Item and it will change the value of the item in the Database to the Value of the Pasted Item.
+3. If the item already exists in the Database but you want the values of the pasted item to be used, check "Use Value of Duplicate Item" and it will change the value of the item in the Database to the value of the pasted Item.
 4. click OK
 
 ### Creating Item Links
