@@ -144,6 +144,13 @@ class ConnectionWindow(object):
                                 self.port.get(),
                                 self.database.get(),
                                 self.HostName.get(),
+                                "8.0")
+
+        dao.setConnectionParams(self.username.get(),
+                                self.password.get(),
+                                self.port.get(),
+                                self.database.get(),
+                                self.HostName.get(),
                                 dao.getOdbcVersion())
 
 
