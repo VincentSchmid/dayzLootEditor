@@ -422,11 +422,9 @@ class Window(object):
         self.updateDisplay(rows)
 
     def deleteSel(self):
-        print(self.getSelectedValues(self.tree.focus())["name"])
         dao.deleteItem(self.getSelectedValues(self.tree.focus())["name"])
 
     def updateSel(self, multiplier=None):
-        print(self.tree.selection())
         for element in self.tree.selection():
             val = self.getEditedValues(element)
             val["name"] = self.tree.item(element)["text"]
