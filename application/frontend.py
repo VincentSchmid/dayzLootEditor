@@ -31,7 +31,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.80")
+        self.window.wm_title("Loot Editor v0.84")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
@@ -460,9 +460,12 @@ class Window(object):
 
     def fillModMenu(self):
         databaseMods = windows.getMods()
-        for mod in databaseMods:
-            if mod not in self.availableMods:
-                self.addModMenu(mod)
+        try:
+            for mod in databaseMods:
+                if mod not in self.availableMods:
+                    self.addModMenu(mod)
+        except AttributeError:
+            pass
 
     def _checkForNewMod(self):
         newMods = []
