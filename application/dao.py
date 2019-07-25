@@ -553,6 +553,22 @@ def backupDatabase(file):
     p1.kill()
 
 
+def dropDB():
+    global database
+    if database == "":
+        database = windows.readConfig()[3]
+
+    return drop_selected_DB(database)
+
+
+def drop_selected_DB(database):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute("DROP SCHEMA " + database)
+    conn.commit()
+    return database
+
+
 def loadDB():
     loadDB(windows.openFile("sql"))
 
