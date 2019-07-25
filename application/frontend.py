@@ -31,7 +31,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.84")
+        self.window.wm_title("Loot Editor v0.85")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
@@ -495,7 +495,6 @@ class Window(object):
 
     def multiplySel(self):
         self.updateSel(float(self.multiplier.get()))
-
 
 
     # Save dialog, copies source types to new document, then edits the values

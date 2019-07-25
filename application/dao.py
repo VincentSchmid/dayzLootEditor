@@ -546,7 +546,7 @@ def backupDatabase(file):
         server = c[4]
 
     path = getPath() + "bin\\"
-    cmdL1 = [path + "mysqldump", "--port=" + port, "-h " + server, "--force", "-u" + user, "-p" + pwd, database]
+    cmdL1 = [path + "mysqldump", "--port=" + port, "-h" + server, "--force", "-u" + user, "-p" + pwd, database]
     p1 = Popen(cmdL1, shell=True, stdout=PIPE)
     file.write(p1.communicate()[0])
     file.close()
@@ -574,10 +574,8 @@ def loadDB(fname):
 
     path = getPath() + "bin\\"
 
-    command = "\"" + path + "mysql\" -u " + user + " -p" + pwd + " -h " + server + " --port " + port + " --default-character-set=utf8 " + database
-    print(command)
     process = Popen(
-        "\"" + path + "mysql\" -u " + user + " -p" + pwd + " -h " + server + " --port " + port + " --default-character-set=utf8 " + database,
+        "\"" + path + "mysql\" -u " + user + " -p" + pwd + " -h" + server + " --port " + port + " --default-character-set=utf8 " + database,
         shell=True, stdin=PIPE)
     process.stdin.write(open(fname, "rb").read())
     process.stdin.close()
