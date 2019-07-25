@@ -191,9 +191,9 @@ class Item:
             .format(*self.flags)
         if not craftable:
             type += "    <category name=\"{}\"/>\n".format(self.category)
-            for usage in self.usages:
+            for usage in sorted(self.usages):
                 type += "    <usage name=\"{}\"/>\n".format(usage)
-            for tier in self.tiers:
+            for tier in sorted(self.tiers):
                 type += "    <value name=\"{}\"/>\n".format(tier)
         type += "  </type>\n"
 
