@@ -702,7 +702,7 @@ class Window(object):
         try:
             self.clearModMenu()
         except AttributeError:
-            pass
+            print("mod menu could not be cleared")
         connectionWindow.ConnectionWindow(self.window)
         self.fillModMenu()
 
