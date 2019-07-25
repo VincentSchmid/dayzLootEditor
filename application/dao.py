@@ -65,10 +65,26 @@ def connection():
 
 
 def getCoulumNames():
+    global user
+    global pwd
+    global port
+    global database
+    global server
+    global odbcV
+
+    if user == "":
+        c = windows.readConfig()
+        user = c[0]
+        pwd = c[1]
+        port = c[2]
+        database = c[3]
+        server = c[4]
+        odbcV = c[5]
+
     cursor = connection().cursor()
     cursor.execute("""SELECT COLUMN_NAME
                       FROM INFORMATION_SCHEMA.COLUMNS
-                      WHERE TABLE_SCHEMA= 'dayzitems'
+                      WHERE TABLE_SCHEMA= '""" + database + """'
                       AND TABLE_NAME= 'items'
                       ORDER BY ORDINAL_POSITION;""")
     return [row[0] for row in cursor.fetchall()]
