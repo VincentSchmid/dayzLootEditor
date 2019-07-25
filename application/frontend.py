@@ -10,6 +10,7 @@ import connectionWindow
 import windows
 import addItems
 import itemLinker
+from time import sleep
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -440,8 +441,8 @@ class Window(object):
     def updateModMenu(self):
         newMods = self._checkForNewMod()
         for mod in newMods:
-            self.availableMods.append(mod)
-            self.addModMenu(mod)
+            if mod not in self.availableMods:
+                self.addModMenu(mod)
 
     def addModMenu(self, mod):
         intVar = IntVar()
@@ -686,8 +687,13 @@ class Window(object):
         self.clearModMenu()
         fname = windows.openFile("sql")
         if fname != "":
+            dbName = dao.dropDB()
+            dao.createDB(dbName)
             dao.loadDB(fname)
-        self.fillModMenu()
+        try:
+            self.fillModMenu()
+        except Exception:
+            sleep(0.4)
 
     def saveDB(self):
         windows.saveDB()
