@@ -38,7 +38,7 @@ class addItems(object):
         self.window.wait_window()
 
     def confirm(self):
-        selectedMod = self.modSelector.get()
+        selectedMod = re.sub(r"[^a-zA-Z0-9]+", ' ', self.modSelector.get()).strip()
         if selectedMod == "":
             selectedMod = self.mods[0]
 
