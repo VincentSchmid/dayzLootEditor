@@ -16,40 +16,40 @@ clothingSubTypesDict = {
                     "Glasses": ["glasses", "goggles"],
                     "Armbands": ["armband"],
                     "Gloves": ["gloves"],
-                    "Hats & Caps": ["hat", "cap", "bandana", "hood"],
+                    "Hats Caps": ["hat", "cap", "bandana", "hood"],
                     "Helmets": ["helm"],
                     "Masks": ["mask", "balaclava"],
                     "Shirts": ["shirt", "blouse"],
-                    "Hoodies & Sweater": ["hoodie", "sweater"],
+                    "Hoodies Sweater": ["hoodie", "sweater"],
                     "Vests": ["vest"],
-                    "Jackets & Coats": ["coat", "jacket", "suit"],
-                    "Skirts & Dresses": ["skirt", "dress_"],
+                    "Jackets Coats": ["coat", "jacket", "suit"],
+                    "Skirts Dresses": ["skirt", "dress_"],
                     "Pants": ["pants", "breeches", "jeans"],
-                    "Shoes & Boots": ["shoes", "sneakers", "boots", "wellies"],
+                    "Shoes Boots": ["shoes", "sneakers", "boots", "wellies"],
                     "Ghillie": ["ghillie"],
-                    "Holster & Pouches": ["holster", "pouch"],
+                    "Holster Pouches": ["holster", "pouch"],
                     "Bags": ["bag"],
                     "Handmade": []
                     }
 
 foodSubTypesDict = {
-                "Vegetables": [],
+                "Vegetables": ["mushroom", "apple", "pear", "plum", "pumpkin"],
                 "Packaged Food": ["can", "cereal", "powdered"],
                 "Meat": ["meat", "lard"],
                 "Drinks": ["sodacan", "bottle", "canteen"],
-                "Medical Supplies": [],
-                "Medications": [],
+                "Medical Supplies": ["saline", "bandage", "firstaid", "kitiv", "bloodTe", "Thermom"],
+                "Medications": ["charcoal", "disinf", "vitamin", "tetracy", "painkil", "epine", "morph"],
                 "Money Exchange": []
                 }
 
 miscSubTypesDict = {
-                "Tools (small)": [],
-                "Tools (big)": [],
-                "Electronics": [],
-                "Fire & Lights": ["chemlight", "flare", "flashlight", "ablegas", "torch", "spotlight"],
-                "Cooking & Hunting Supplies": [],
+                "Tools (small)": ["screwdr", "wren", "sewingk", "pliers", "whetst", "saw", "cleaning", "chenkn", "anopen", "compas", "hatche", "machet", "lockpick", "binoc"],
+                "Tools (big)": ["lugwr", "crowb", "shov", "picka", "sledge", "woodAx", "ghterax"],
+                "Electronics": ["battery", "onalrad", "megaph", "cableree", "electronicrep"],
+                "Fire Lights": ["chemlight", "flare", "flashlight", "ablegas", "torch", "spotlight", "matchbox"],
+                "Cooking Hunting Supplies": ["pot", "purific", "tripo", "earTra"],
                 "Hardware Supplies": ["tent", "barrel", "canister", "handcuff", "netting", "seachest"],
-                "Seeds & Lime": ["seeds"]
+                "Seeds Lime": ["seeds"]
                 }
 
 weaponSubTypesDict = {
@@ -60,12 +60,16 @@ weaponSubTypesDict = {
                  "attachment": {}
                   }
 
+vehicleSubTypesDict = {
+                    "vehicle": {}
+                    }
+
 categoriesDict = {"weapons": weaponSubTypesDict,
                   "containers": clothingSubTypesDict,
                   "clothes": clothingSubTypesDict,
                   "food": foodSubTypesDict,
                   "tools": miscSubTypesDict,
-                  "vehicles": {},
+                  "vehicles": vehicleSubTypesDict,
                   "vehiclesparts": {}}
 
 weaponSubTypes = list(weaponSubTypesDict.keys())
