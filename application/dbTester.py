@@ -3,13 +3,15 @@ from os import getcwd
 from os.path import abspath
 from os.path import join
 
+import windows
 import dao
 import xmlParser
+import items as itm
 
 
 def createDB():
-    dao.setConnectionParams("root", "rootroot", "3306", "dayzitems2", "localhost")
-    dao.createDB("dayzitems2")
+    dao.setConnectionParams("root", "rootroot", "3306", "dayzitems5", "localhost", "5.3")
+    dao.createDB("dayzitems5")
     dao.loadDB(abspath(join(getcwd(), "..", "data", "GENESIS.sql")))
 
 
@@ -39,5 +41,11 @@ def testGetItems():
     print(dao.getWeaponAndCorresponding("AKM"))
     print(dao.getWeaponsFromAccessoire("AmmoBox_556x45Tracer_20Rnd"))
 
-print(len(dao.getType("gun")))
-print(len(xmlParser.itemFromRows(dao.getType("gun"))))
+def creating_subTypesTest(dirToTypes):
+    createDB()
+    windows.writeTypesToDatabase(dirToTypes)
+    dao.drop_selected_DB("dayzitems5")
+
+#creating_subTypesTest(r"C:\Users\puter\OneDrive\Desktop\typesWithClothing.xml")
+creating_subTypesTest(r"C:\Program Files (x86)\Steam\steamapps\common\DayZServer\mpmissions\empty.deerisle\db\types.xml")
+print(itm.Item.subTypeCount, itm.Item.itemCount)
