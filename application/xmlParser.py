@@ -1,14 +1,12 @@
 import xml.etree.ElementTree as ET
 
 import items as itm
+from categories import weaponSubTypes, categories
+from items import removeModPrefixes
 
 items = []
 
-itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
-
-categories = ["weapons", "containers", "clothes", "food", "tools", "vehiclesparts"]
-
-selection = itemTypes + categories
+selection = weaponSubTypes + categories
 selection.append("all items")
 
 
@@ -96,57 +94,6 @@ def findMatchingItem(name, items):
         if name in i.name and name != i.name:
             matches.append(i.name)
     return matches
-
-
-def removeModPrefixes(name):
-    modPrefixes = ["Mass", "GP_", "gp_", "FP4_"]
-
-    for prefix in modPrefixes:
-        if name.startswith(prefix):
-            name = name[len(prefix):]
-    return name
-
-
-# checks name if isGun
-def isGun(name):
-    isGun = True
-
-    name = removeModPrefixes(name)
-
-    paintKeyWords = ["camo", "black", "green", "desert"]
-    buttstockKeyWords = ["buttstock", "bttstck"]
-    handguardKeyWords = ["handguard", "hndgrd"]
-    notGunKeyWords = ["lrs", "ammo", "optic", "sawed", "suppressor", "goggles", "mag", "light", "rnd",
-                      "bayonet", "railatt", "compensator", "drum", "palm"] + buttstockKeyWords + handguardKeyWords
-
-    for keyword in notGunKeyWords:
-        if keyword in name.lower():
-            isGun = False
-            break
-
-    return isGun
-
-
-def isAmmo(name):
-    if "ammo" in name.lower():
-        return True
-    else:
-        return False
-
-
-def isOptic(name):
-    name = name.lower()
-    if "optic" in name or "lrs" in name:
-        return True
-    else:
-        return False
-
-
-def isMag(name):
-    if "mag" in name.lower():
-        return True
-    else:
-        return False
 
 
 def itemFromRows(rows):

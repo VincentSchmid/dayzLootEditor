@@ -2,6 +2,7 @@ from subprocess import Popen, PIPE
 
 import pyodbc
 
+import categories
 import items
 import distibutor
 import windows
@@ -358,12 +359,12 @@ def update(values):
     updateFlags(values)
 
     try:
-        updateListValues(values["usage"], values["name"], items.usages)
+        updateListValues(values["usage"], values["name"], categories.usages)
     except KeyError:
         pass
 
     try:
-        updateListValues(values["tier"], values["name"], items.tiers)
+        updateListValues(values["tier"], values["name"], categories.tiers)
     except KeyError:
         pass
 
@@ -489,13 +490,13 @@ def createDB(name):
 
 def getUsages(itemName):
     cursor = connection().cursor()
-    cursor.execute("select " + ", ".join(items.usages) + " from items where name = '" + itemName + "'")
+    cursor.execute("select " + ", ".join(categories.usages) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
 
 
 def getTiers(itemName):
     cursor = connection().cursor()
-    cursor.execute("select " + ", ".join(items.tiers) + " from items where name = '" + itemName + "'")
+    cursor.execute("select " + ", ".join(categories.tiers) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
 
 

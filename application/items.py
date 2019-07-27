@@ -1,45 +1,6 @@
 import dao
-import xmlParser
-from xmlParser import isGun, itemTypes, isMag, isAmmo, isOptic
+from categories import weaponSubTypes, usages, tiers, tags, flags
 
-usages = ["Military",
-          "Prison",
-          "School",
-          "Coast",
-          "Village",
-          "Industrial",
-          "Medic",
-          "Police",
-          "Hunting",
-          "Town",
-          "Farm",
-          "Firefighter",
-          "Office"]
-
-usagesAbr = ["Mil.",
-             "Pris.",
-             "School",
-             "Coast",
-             "Vil.",
-             "Ind.",
-             "Med.",
-             "Pol.",
-             "Hunt.",
-             "Town",
-             "Farm",
-             "Firef.",
-             "Office"]
-
-tiers = ["Tier1", "Tier2", "Tier3", "Tier4"]
-
-tags = ["shelves", "floor"]
-
-flags = ["count_in_cargo",
-         "count_in_hoarder",
-         "count_in_map",
-         "count_in_player",
-         "crafted",
-         "deloot"]
 
 class Item:
     def __init__(self):
@@ -258,21 +219,25 @@ def attachmentBlock(items, chance):
 def findType(name, category):
     if category == "weapons":
         if isGun(name):
-            return itemTypes[0]
+            return weaponSubTypes[0]
 
         if isMag(name):
-            return itemTypes[3]
+            return weaponSubTypes[3]
 
         if isAmmo(name):
-            return itemTypes[1]
+            return weaponSubTypes[1]
 
         if isOptic(name):
-            return itemTypes[2]
+            return weaponSubTypes[2]
 
-        return itemTypes[4]
+        return weaponSubTypes[4]
 
     else:
         return category
+
+
+def findSubTypes():
+
 
 
 def isHandguard(itemName):
@@ -287,3 +252,54 @@ def isBttStck(itemName):
     for kw in buttstockKeyWords:
         if kw in itemName.lower():
             return True
+
+
+def isGun(name):
+    isGun = True
+
+    name = removeModPrefixes(name)
+
+    paintKeyWords = ["camo", "black", "green", "desert"]
+    buttstockKeyWords = ["buttstock", "bttstck"]
+    handguardKeyWords = ["handguard", "hndgrd"]
+    notGunKeyWords = ["lrs", "ammo", "optic", "sawed", "suppressor", "goggles", "mag", "light", "rnd",
+                      "bayonet", "railatt", "compensator", "drum", "palm", "STANAG"] \
+                     + buttstockKeyWords + handguardKeyWords
+
+    for keyword in notGunKeyWords:
+        if keyword in name.lower():
+            isGun = False
+            break
+
+    return isGun
+
+
+def isAmmo(name):
+    if "ammo" in name.lower():
+        return True
+    else:
+        return False
+
+
+def isOptic(name):
+    name = name.lower()
+    if "optic" in name or "lrs" in name:
+        return True
+    else:
+        return False
+
+
+def isMag(name):
+    if "mag" in name.lower():
+        return True
+    else:
+        return False
+
+
+def removeModPrefixes(name):
+    modPrefixes = ["Mass", "GP_", "gp_", "FP4_"]
+
+    for prefix in modPrefixes:
+        if name.startswith(prefix):
+            name = name[len(prefix):]
+    return name
