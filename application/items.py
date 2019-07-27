@@ -3,6 +3,9 @@ import categories as cat
 
 
 class Item:
+    subTypeCount = 0
+    itemCount = 0
+
     def __init__(self):
         self.name = ""
         self.category = ""
@@ -22,6 +25,7 @@ class Item:
         self.parameters = {}
         self.rarity = ""
         self.mod = ""
+        Item.itemCount += 1
 
     # fills item values based on given type xml block
     def fill(self, xml, mod):
@@ -66,8 +70,10 @@ class Item:
 
         self.type = findType(self.name, self.category)
         self.subType = findSubType(self.name, self.category, self.type)
-        if self.category == "":
-            print(self.name, self.category, self.type, self.subType)
+        if self.subType is not "":
+            Item.subTypeCount += 1
+        else:
+            print(self.name)
         self.mod = mod
         self.createParams()
 
@@ -244,23 +250,29 @@ def findType(name, category):
 def findSubType(name, category, itemType):
     if category == "":
         for try_cat in cat.categories:
-            result = getSubTypeList(name, try_cat, cat.categoriesDict)
-            if len(result) is not 0:
-                subTypeDict = result
-    elif category == "weapon":
-        subTypeDict = getSubTypeList(name, itemType, cat.weaponSubTypesDict)
-    else:
-        subTypeDict = getSubTypeList(name, category, cat.categoriesDict)
-
-    if subTypeDict is not None:
-        for subType, keywords in subTypeDict.items():
-            if isSubtype(name, keywords) is not None:
+            result = getKeywordDict(name, try_cat, cat.categoriesDict)
+            subType = _subtypeFromDict(result, name)
+            if subType is not None:
                 return subType
+
+    elif category == "weapon":
+        subTypeDict = getKeywordDict(name, itemType, cat.weaponSubTypesDict)
+        return _subtypeFromDict(subTypeDict, name)
+    else:
+        subTypeDict = getKeywordDict(name, category, cat.categoriesDict)
+        return _subtypeFromDict(subTypeDict, name)
 
     return ""
 
 
-def getSubTypeList(name, superType, nextCat):
+def _subtypeFromDict(subTypeDict, name):
+    if subTypeDict is not None:
+        for subType, keywords in subTypeDict.items():
+            if isSubtype(name, keywords):
+                return subType
+
+
+def getKeywordDict(name, superType, nextCat):
     for catName, DictWithKeywords in nextCat.items():
         if catName == superType:
             return DictWithKeywords
@@ -269,8 +281,8 @@ def getSubTypeList(name, superType, nextCat):
 def isSubtype(name, keywords):
     for keyword in keywords:
         if keyword in name.lower():
-            return keyword
-    return None
+            return True
+    return False
 
 
 def isHandguard(itemName):
