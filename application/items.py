@@ -1,11 +1,13 @@
 import dao
-from categories import weaponSubTypes, usages, tiers, tags, flags
+import categories as cat
 
 
 class Item:
     def __init__(self):
         self.name = ""
         self.category = ""
+        self.type = ""
+        self.subType = ""
         self.lifetime = 0
         self.quantmin = -1
         self.quantmax = -1
@@ -63,6 +65,9 @@ class Item:
                     self.flags.append(attr[1])
 
         self.type = findType(self.name, self.category)
+        self.subType = findSubType(self.name, self.category, self.type)
+        if self.category == "":
+            print(self.name, self.category, self.type, self.subType)
         self.mod = mod
         self.createParams()
 
@@ -79,22 +84,22 @@ class Item:
         self.min = val[8]
         self.restock = val[9]
         p = 10
-        for i in range(len(usages)):
+        for i in range(len(cat.usages)):
             if val[p] == 1:
-                self.usages.add(usages[i])
+                self.usages.add(cat.usages[i])
             p += 1
 
-        for i in range(len(tiers)):
+        for i in range(len(cat.tiers)):
             if val[p] == 1:
-                self.tiers.add(tiers[i])
+                self.tiers.add(cat.tiers[i])
             p += 1
 
-        for i in range(len(tags)):
+        for i in range(len(cat.tags)):
             if val[p] == 1:
-                self.tags.add(tags[i])
+                self.tags.add(cat.tags[i])
             p += 1
 
-        for i in range(len(flags)):
+        for i in range(len(cat.flags)):
             self.flags.append(val[p])
             p += 1
 
@@ -108,26 +113,26 @@ class Item:
                 "nominal": self.nominal, "cost": self.cost, "quantmax": self.quantmax,
                 "min": self.min, "restock": self.restock, "mods": self.mod}
 
-        for u in usages:
+        for u in cat.usages:
             if u in self.usages:
                 dict[u] = 1
             else:
                 dict[u] = 0
 
-        for t in tiers:
+        for t in cat.tiers:
             if t in self.tiers:
                 dict[t] = 1
             else:
                 dict[t] = 0
 
-        for ta in tags:
+        for ta in cat.tags:
             if ta in self.tags:
                 dict[ta] = 1
             else:
                 dict[ta] = 0
 
         for i in range(len(self.flags)):
-            dict[flags[i]] = self.flags[i]
+            dict[cat.flags[i]] = self.flags[i]
 
         self.parameters = dict
 
@@ -219,25 +224,53 @@ def attachmentBlock(items, chance):
 def findType(name, category):
     if category == "weapons":
         if isGun(name):
-            return weaponSubTypes[0]
+            return cat.weaponSubTypes[0]
 
         if isMag(name):
-            return weaponSubTypes[3]
+            return cat.weaponSubTypes[3]
 
         if isAmmo(name):
-            return weaponSubTypes[1]
+            return cat.weaponSubTypes[1]
 
         if isOptic(name):
-            return weaponSubTypes[2]
+            return cat.weaponSubTypes[2]
 
-        return weaponSubTypes[4]
+        return cat.weaponSubTypes[4]
 
     else:
         return category
 
 
-def findSubTypes():
+def findSubType(name, category, itemType):
+    if category == "":
+        for try_cat in cat.categories:
+            result = getSubTypeList(name, try_cat, cat.categoriesDict)
+            if len(result) is not 0:
+                subTypeDict = result
+    elif category == "weapon":
+        subTypeDict = getSubTypeList(name, itemType, cat.weaponSubTypesDict)
+    else:
+        subTypeDict = getSubTypeList(name, category, cat.categoriesDict)
 
+    if subTypeDict is not None:
+        for subType, keywords in subTypeDict.items():
+            if isSubtype(name, keywords) is not None:
+                return subType
+
+    return ""
+
+
+def getSubTypeList(name, superType, nextCat):
+    for catName, DictWithKeywords in nextCat.items():
+        if catName == superType:
+            return DictWithKeywords
+
+
+def isSubtype(name, keywords):
+    for keyword in keywords:
+        if keyword in name.lower():
+            return keyword
+    return None
 
 
 def isHandguard(itemName):

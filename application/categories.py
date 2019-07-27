@@ -1,20 +1,75 @@
 from enum import Enum
 
-weaponSubTypes = ["gun", "ammo", "optic", "mag", "attachment"]
+gunSubTypesDict = {
+               "Sidearms": [],
+               "Pistols": [],
+               "Rifles": [],
+               "Shotguns": [],
+               "Submachine Guns": [],
+               "Assault Rifles": [],
+               "Light Machine Guns": [],
+               "Sniper Rifles": [],
+               "Anti Material Rifles": []
+                }
 
-gunSubTypes = {"Sidearms", "Pistols" "Rifles", "Shotguns", "Submachine Guns", "Assault Rifles", "Light Machine Guns",
-               "Sniper Rifles", "Anti Material Rifles"}
+clothingSubTypesDict = {
+                    "Glasses": ["glasses", "goggles"],
+                    "Armbands": ["armband"],
+                    "Gloves": ["gloves"],
+                    "Hats & Caps": ["hat", "cap", "bandana", "hood"],
+                    "Helmets": ["helm"],
+                    "Masks": ["mask", "balaclava"],
+                    "Shirts": ["shirt", "blouse"],
+                    "Hoodies & Sweater": ["hoodie", "sweater"],
+                    "Vests": ["vest"],
+                    "Jackets & Coats": ["coat", "jacket", "suit"],
+                    "Skirts & Dresses": ["skirt", "dress_"],
+                    "Pants": ["pants", "breeches", "jeans"],
+                    "Shoes & Boots": ["shoes", "sneakers", "boots", "wellies"],
+                    "Ghillie": ["ghillie"],
+                    "Holster & Pouches": ["holster", "pouch"],
+                    "Bags": ["bag"],
+                    "Handmade": []
+                    }
 
-clothingSubTypes = ["Glasses", "Armbands", "Gloves", "Hats & Caps", "Helmets", "Masks", "Shirts", "Hoodies & Sweater",
-                     "Vests", "Jackets & Coats", "Skirts & Dresses", "Pants", "Shoes & Boots", "Ghillie",
-                     "Holster & Pouches", "Bags", "Handmade"]
+foodSubTypesDict = {
+                "Vegetables": [],
+                "Packaged Food": ["can", "cereal", "powdered"],
+                "Meat": ["meat", "lard"],
+                "Drinks": ["sodacan", "bottle", "canteen"],
+                "Medical Supplies": [],
+                "Medications": [],
+                "Money Exchange": []
+                }
 
-foodSubTypes = ["Vegetables", "Packaged Food", "Meat", "Drinks", "Medical Supplies", "Medications", "Money Exchange"]
+miscSubTypesDict = {
+                "Tools (small)": [],
+                "Tools (big)": [],
+                "Electronics": [],
+                "Fire & Lights": ["chemlight", "flare", "flashlight", "ablegas", "torch", "spotlight"],
+                "Cooking & Hunting Supplies": [],
+                "Hardware Supplies": ["tent", "barrel", "canister", "handcuff", "netting", "seachest"],
+                "Seeds & Lime": ["seeds"]
+                }
 
-MiscSubTypes = ["Tools (small)", "Tools (big)", "Electronics", "Fire & Lights", "Cooking & Hunting Supplies",
-                "Hardware Supplies", "Seeds & Lime"]
+weaponSubTypesDict = {
+                 "gun": gunSubTypesDict,
+                 "ammo": {},
+                 "optic": {},
+                 "mag": {},
+                 "attachment": {}
+                  }
 
-categories = ["weapons", "containers", "clothes", "food", "tools", "vehicles", "vehiclesparts"]
+categoriesDict = {"weapons": weaponSubTypesDict,
+                  "containers": clothingSubTypesDict,
+                  "clothes": clothingSubTypesDict,
+                  "food": foodSubTypesDict,
+                  "tools": miscSubTypesDict,
+                  "vehicles": {},
+                  "vehiclesparts": {}}
+
+weaponSubTypes = list(weaponSubTypesDict.keys())
+categories = list(categoriesDict.keys())
 
 usages = ["Military",
           "Prison",
