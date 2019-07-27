@@ -1,16 +1,16 @@
+from time import sleep
 from tkinter import *
 from tkinter import ttk
 
-import items
-import xmlParser
-import xmlWriter
+import addItems
+import connectionWindow
 import dao
 import distibutor
-import connectionWindow
-import windows
-import addItems
 import itemLinker
-from time import sleep
+import items
+import windows
+import xmlParser
+import xmlWriter
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -143,7 +143,6 @@ class Window(object):
         self.restockEntry.bind("<FocusIn>", self.addEditedVal)
         self.restockEntry.val = self.min_text
 
-
         self.lifetime_text = StringVar()
         self.lifetimeEntry = Entry(self.EFValues, textvariable=self.lifetime_text, width=8)
         self.lifetimeEntry.grid(row=4, column=1, sticky="w")
@@ -168,7 +167,6 @@ class Window(object):
 
         self.typeOption = OptionMenu(self.EFValues, self.typeEntrySel, *xmlParser.selection[:-1])
         self.typeOption.grid(row=7, column=1, sticky="w", pady=5)
-
 
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
@@ -219,7 +217,7 @@ class Window(object):
         Button(self.entryFrame, text="Update", width=12, command=self.updateSel) \
             .grid(row=3, column=0, pady=9)
 
-        Button(self.entryFrame, text="Delete", width=12, command=self.deleteSel)\
+        Button(self.entryFrame, text="Delete", width=12, command=self.deleteSel) \
             .grid(row=4, column=0, pady=5)
 
     def createTreeview(self):
@@ -328,12 +326,11 @@ class Window(object):
         self.multiplier.set('0.00')
 
         ttk.Scale(self.multiplierFrame, from_=0, to_=5, length=150,
-          command=lambda s:self.multiplier.set('%0.2f' % float(s))).grid(column=0, row=2)
+                  command=lambda s: self.multiplier.set('%0.2f' % float(s))).grid(column=0, row=2)
 
         ttk.Label(self.multiplierFrame, textvariable=self.multiplier).grid(column=0, row=1)
 
         Button(self.multiplierFrame, text="Update", command=self.multiplySel).grid(row=3)
-
 
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
@@ -430,8 +427,8 @@ class Window(object):
             val = self.getEditedValues(element)
             val["name"] = self.tree.item(element)["text"]
             if multiplier is not None:
-                val["nominal"] = val["nominal"]*multiplier
-                val["min"] = val["min"]*multiplier
+                val["nominal"] = val["nominal"] * multiplier
+                val["min"] = val["min"] * multiplier
             dao.update(val)
         rows = dao.reExecuteLastQuery()
         self.updateDisplay(rows)
@@ -493,10 +490,8 @@ class Window(object):
         self.changed = True
         self.updateDisplay(dao.getType(self.distribSel.get()))
 
-
     def multiplySel(self):
         self.updateSel(float(self.multiplier.get()))
-
 
     # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):
