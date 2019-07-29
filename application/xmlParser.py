@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 
 import items as itm
 from categories import weaponSubTypes, categories
-from items import removeModPrefixes
 
 items = []
 
@@ -64,7 +63,7 @@ def createStringFromKeys(item):
 def findMatchingItem(name, items):
     matches = []
 
-    name = removeModPrefixes(name)
+    name = itm.removeModPrefixes(name)
 
     if "_ak" in name.lower() or "akm" in name.lower():
         name = "ak_"
