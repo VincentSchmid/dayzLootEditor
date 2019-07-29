@@ -83,11 +83,11 @@ def getCoulumNames():
         odbcV = c[5]
 
     cursor = connection().cursor()
-    cursor.execute("""SELECT COLUMN_NAME
-                      FROM INFORMATION_SCHEMA.COLUMNS
-                      WHERE TABLE_SCHEMA= '""" + database + """'
-                      AND TABLE_NAME= 'items'
-                      ORDER BY ORDINAL_POSITION;""")
+    cursor.execute("SELECT COLUMN_NAME \
+                      FROM INFORMATION_SCHEMA.COLUMNS \
+                      WHERE TABLE_SCHEMA= '" + database + "' \
+                      AND TABLE_NAME= 'items' \
+                      ORDER BY ORDINAL_POSITION;")
     return [row[0] for row in cursor.fetchall()]
 
 
@@ -295,7 +295,9 @@ def getNominalByType(type):
         from items \
         where type = ?", type
     )
-    setColumnNames()
+    global columns
+    if columns == "":
+        setColumnNames()
     return cursor.fetchval()
 
 
