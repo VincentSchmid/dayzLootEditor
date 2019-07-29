@@ -25,6 +25,9 @@ class Item:
         self.parameters = {}
         self.rarity = ""
         self.mod = ""
+        self.buyprice = -1
+        self.sellprice = -1
+        self.tradercat = "*"
         Item.itemCount += 1
 
     # fills item values based on given type xml block
@@ -73,7 +76,7 @@ class Item:
         if self.subType is not "":
             Item.subTypeCount += 1
         else:
-            print(self.name)
+            pass
         self.mod = mod
         self.createParams()
 
@@ -111,10 +114,14 @@ class Item:
 
         self.rarity = val[p+1]
         self.mod = val[p+2]
+        self.subType = val[p+3]
+        self.buyprice = val[p+4]
+        self.sellprice = val[p+5]
+        self.tradercat = val[p+6]
 
     # creates dictonary of item values and fills them
     def createParams(self):
-        dict = {"name": self.name, "category": self.category, "type": self.type,
+        dict = {"name": self.name, "category": self.category, "type": self.type, "subtype": self.subType,
                 "lifetime": self.lifetime, "quantmin": self.quantmin,
                 "nominal": self.nominal, "cost": self.cost, "quantmax": self.quantmax,
                 "min": self.min, "restock": self.restock, "mods": self.mod}
