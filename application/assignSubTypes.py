@@ -22,6 +22,7 @@ class newWindow(object):
 
         self.createSubTypes()
         self.createTraderEditor(self.window, 0, 1, [])
+        self.createTraderSetting(self.window, 1, 1)
         self.subTypeListbox.bind("<<ListboxSelect>>", self.fillTraderWindow)
 
         windows.center(self.window)
@@ -38,15 +39,15 @@ class newWindow(object):
             self.subTypeListbox.insert(END, subType)
 
     def createTraderEditor(self, root, row, column, rows):
-        self.frame = Frame(root, height=450, bg="#EBEBEB")
-        self.frame.grid(row=row, column=column, sticky="nw")
+        self.frame = Frame(root, height=480, bg="#EBEBEB")
+        self.frame.grid(row=row, column=column, sticky="nw", pady=20)
         self.frame.rowconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=1)
 
-        self.canv = Canvas(self.frame, height=450, bg="#EBEBEB")
+        self.canv = Canvas(self.frame, height=480, bg="#EBEBEB")
         self.canv.grid(row=0, column=0, sticky="nsew")
 
-        self.canvFrame = Frame(self.canv, height=450, bg="#EBEBEB")
+        self.canvFrame = Frame(self.canv, height=480, bg="#EBEBEB")
         self.canv.create_window(0, 0, window=self.canvFrame, anchor='nw')
 
         for item in rows:
@@ -62,10 +63,27 @@ class newWindow(object):
 
         self.canvFrame.bind("<Configure>", self.update_scrollregion)
 
+    def createTraderSetting(self, root, row, column):
+        frame = Frame(root)
+        frame.grid(row=row, column=column, sticky="w", pady=20)
+
+        buyPrice = LabelFrame(frame, text="BuyPrice")
+        buyPrice.grid(row=0, column=0, padx=10)
+
+        self.createLabel(buyPrice, "Minimal:", 0, 0, "w")
+        self.createLabel(buyPrice, "Maximal:", 1, 0, "w")
+        self.min = IntVar()
+        self.min.set(0)
+        Entry(buyPrice, textvariable=self.min).grid(row=0, column=1, padx=5, pady=5)
+        self.max = IntVar()
+        self.max.set(0)
+        Entry(buyPrice, textvariable=self.max).grid(row=1, column=1, padx=5, pady=5)
+
+
     def update_scrollregion(self, event):
         self.canv.configure(scrollregion=self.canv.bbox("all"))
 
-    def traderRow(self, parent, name, traderCat, buyPrice, sellPrice):
+    def traderRow(self, parent, name, traderCat, buyPrice, sellPrice, rarity):
         frame = Frame(parent)
         frame.grid(padx=10, pady=10, sticky="w")
 
@@ -107,6 +125,9 @@ class newWindow(object):
         itemsOfSubtype = dao.getSubtypeForTrader(selSubtype)
 
         self.createTraderEditor(self.window, 0, 1, itemsOfSubtype)
+
+    def createLabel(self, root, text, row, column, sticky="w", px=5, py=5):
+        Label(root, text=text).grid(row=row, column=column, sticky=sticky, padx=px, pady=py)
 
 
 def testWindow():
