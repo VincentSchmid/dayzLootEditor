@@ -122,9 +122,9 @@ class Item:
     # creates dictonary of item values and fills them
     def createParams(self):
         dict = {"name": self.name, "category": self.category, "type": self.type, "subtype": self.subType,
-                "lifetime": self.lifetime, "quantmin": self.quantmin,
-                "nominal": self.nominal, "cost": self.cost, "quantmax": self.quantmax,
-                "min": self.min, "restock": self.restock, "mods": self.mod}
+                "lifetime": self.lifetime, "quantmin": self.quantmin, "buyprice": self.buyprice,
+                "nominal": self.nominal, "cost": self.cost, "quantmax": self.quantmax, "sellprice": self.sellprice,
+                "min": self.min, "restock": self.restock, "mods": self.mod, "tradercat": self.tradercat}
 
         for u in cat.usages:
             if u in self.usages:
@@ -153,7 +153,7 @@ class Item:
         type = ""
         craftable = False
 
-        if self.flags[-2] == 1:
+        if self.flags[-2] == 1 or self.nominal == 0:
             craftable = True
 
         type += "  <type name=\"{}\">\n".format(self.name)
@@ -277,6 +277,7 @@ def _subtypeFromDict(subTypeDict, name):
         for subType, keywords in subTypeDict.items():
             if isSubtype(name, keywords):
                 return subType
+    return ""
 
 
 def getKeywordDict(name, superType, nextCat):

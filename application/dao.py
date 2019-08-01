@@ -98,6 +98,7 @@ lastQuery = "select * from items"
 def setColumnNames():
     global columns
     columns = ", ".join(getCoulumNames())
+    print(columns)
 
 
 def getDicts(items):
@@ -125,13 +126,13 @@ def getDict(item):
     return dict
 
 
-def insertItems(parameters, items):
+def insertItems(params, items):
     conn = connection()
     cursor = conn.cursor()
 
     cursor.fast_executemany = True
     cursor.executemany(
-        "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "insert into items(" + params + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         items)
     conn.commit()
 
@@ -142,7 +143,7 @@ def insertItem(parameters, item):
 
     try:
         cursor.execute(
-            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             item)
         conn.commit()
         return 0
@@ -184,6 +185,12 @@ def getType(type):
     return cursor.fetchall()
 
 
+def getSubtypes():
+    cursor = connection().cursor()
+    cursor.execute("SELECT subtype FROM items group by subtype")
+    return [row[0] for row in cursor.fetchall()]
+
+
 def getCategory(category):
     global lastQuery
     lastQuery = "select * \
@@ -194,6 +201,16 @@ def getCategory(category):
     cursor.execute(lastQuery)
     return cursor.fetchall()
 
+
+def getSubtypeForTrader(subtype):
+    global lastQuery
+    lastQuery = "select name, tradercat, buyprice, sellprice \
+                from items \
+                where subtype = '" + subtype + "';"
+
+    cursor = connection().cursor()
+    cursor.execute(lastQuery)
+    return cursor.fetchall()
 
 def getLinkedItems(item):
     items = set()

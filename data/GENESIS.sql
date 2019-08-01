@@ -82,8 +82,8 @@ CREATE TABLE `items` (
   `rarity` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
   `mods` varchar(25) NOT NULL DEFAULT 'Vanilla',
   `subtype` varchar(45) DEFAULT NULL,
-  `buy_price` int(11) DEFAULT NULL,
-  `sell_price` int(11) DEFAULT NULL,
+  `buyprice` int(11) DEFAULT NULL,
+  `sellprice` int(11) DEFAULT NULL,
   `traderCat` varchar(3) DEFAULT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -98,4 +98,4 @@ CREATE TABLE `items` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-29 19:21:19
+-- Dump completed on 2019-07-29 21:29:05
