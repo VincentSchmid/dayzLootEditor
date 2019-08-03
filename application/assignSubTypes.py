@@ -7,6 +7,7 @@ import windows
 import xmlWriter
 import dao
 import scrolledWindow
+from categories import traderCatSwitcher
 
 
 class newWindow(object):
@@ -39,6 +40,16 @@ class newWindow(object):
             self.subTypeListbox.insert(END, subType)
 
     def createTraderEditor(self, root, row, column, rows):
+        self.drawEditor(root, row, column, self.setTraderCat(rows))
+
+    def setTraderCat(self, rows):
+        for i in range(len(rows)):
+            if rows[i][1] == "":
+                rows[i][2] = traderCatSwitcher(rows[i][1])
+
+        return rows
+
+    def drawEditor(self, root, row, column, rows):
         self.frame = Frame(root, height=480, bg="#EBEBEB")
         self.frame.grid(row=row, column=column, sticky="nw", pady=20)
         self.frame.rowconfigure(0, weight=1)
@@ -83,9 +94,11 @@ class newWindow(object):
     def update_scrollregion(self, event):
         self.canv.configure(scrollregion=self.canv.bbox("all"))
 
-    def traderRow(self, parent, name, traderCat, buyPrice, sellPrice, rarity):
+    def traderRow(self, parent, name, subtype, traderCat, buyPrice, sellPrice, rarity, exclude):
         frame = Frame(parent)
         frame.grid(padx=10, pady=10, sticky="w")
+
+
 
         nameVar = StringVar()
         nameVar.set(name)
