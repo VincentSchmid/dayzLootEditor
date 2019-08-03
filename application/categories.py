@@ -57,7 +57,8 @@ miscSubTypesDict = {
                 "Cooking Hunting Supplies": ["pot", "purific", "tripo", "beartra"],
                 "Hardware Supplies": ["barrel", "canister", "handcuff", "netting", "seachest"],
                 "Tents": ["tent"],
-                "Seeds Lime": ["seeds"]
+                "Seeds Lime": ["seeds"],
+                "Melee": ["cattleprod", "BrassKnuckles", "NailedBaseba", "stunbat"]
                 }
 
 weaponSubTypesDict = {
@@ -69,7 +70,8 @@ weaponSubTypesDict = {
                   }
 
 vehicleSubTypesDict = {
-                    "vehicle": {}
+                    "Vehicle": ["OffroadHatchback", "CivilianSedan", "chassis"],
+                    "Vehicle Parts": {}
                     }
 
 categoriesDict = {"weapons": weaponSubTypesDict,
@@ -121,3 +123,25 @@ flags = ["count_in_cargo",
          "count_in_player",
          "crafted",
          "deloot"]
+
+weaponTraderCat = [word.lower() for word in gunSubTypesDict.keys()]
+weaponTraderCat.append("gun")
+weaponTraderCat.append("melee")
+
+
+def traderCatSwitcher(argument):
+    argument = argument.lower()
+
+    if "magazine" in argument or "barrel_" in argument:
+        return "M"
+
+    elif argument == "vehicle":
+        return "V"
+
+    elif argument in weaponTraderCat:
+        return "W"
+
+    elif "steakmeat" in argument:
+        return "S"
+
+    return "*"
