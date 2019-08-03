@@ -12,10 +12,6 @@ gunSubTypesDict = {
                "Anti Material Rifles": []
                 }
 
-magSubTypesDict = {"magazines": ["mag"]}
-
-opticSubTypesDict = {"optics":}
-
 clothingSubTypesDict = {
                     "Glasses": ["glasses", "goggles"],
                     "Armbands": ["armband"],
