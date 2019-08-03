@@ -12,6 +12,10 @@ gunSubTypesDict = {
                "Anti Material Rifles": []
                 }
 
+magSubTypesDict = {"magazines": ["mag"]}
+
+opticSubTypesDict = {"optics":}
+
 clothingSubTypesDict = {
                     "Glasses": ["glasses", "goggles"],
                     "Armbands": ["armband"],
@@ -63,11 +67,14 @@ miscSubTypesDict = {
 
 weaponSubTypesDict = {
                  "gun": gunSubTypesDict,
-                 "ammo": {},
-                 "optic": {},
-                 "mag": {},
-                 "attachment": {}
-                  }
+                 "ammo": {"Ammunition": ["ammo"]},
+                 "optic": {"Scopes": ["optic", "LRS", "scope"]},
+                 "mag": {"magazines": ["mag"]},
+                 "attachment": {"Attachments": [""],
+                                "Handguards": ["hndgrd", "handguard"],
+                                "Bayonets": ["bayonet"],
+                                "Buttstocks": ["bttstck", "buttstock"]}
+                                }
 
 vehicleSubTypesDict = {
                     "Vehicle": ["OffroadHatchback", "CivilianSedan", "chassis"],
