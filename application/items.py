@@ -262,7 +262,7 @@ def findSubType(name, category, itemType):
             if subType is not None:
                 return subType
 
-    elif category == "weapon":
+    elif category == "weapons":
         subTypeDict = getKeywordDict(name, itemType, cat.weaponSubTypesDict)
         return _subtypeFromDict(subTypeDict, name)
     else:
