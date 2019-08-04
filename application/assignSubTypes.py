@@ -226,5 +226,3 @@ def testWindow():
     window = Tk()
     TraderEditor(window)
     window.mainloop()
-
-testWindow()

@@ -172,7 +172,7 @@ class Window(object):
         self.typeOption = OptionMenu(self.EFValues, self.typeEntrySel, *xmlParser.selection[:-1])
         self.typeOption.grid(row=7, column=1, sticky="w", pady=5)
 
-        self.subtypeAutoComp = Combobox_Autocomplete(self.EFValues, allcats, highlightthickness=1)
+        self.subtypeAutoComp = Combobox_Autocomplete(self.EFValues, dao.getSubtypes(), highlightthickness=1)
         self.subtypeAutoComp.grid(row=8, column=1, sticky="w", pady=5)
         self.subtypeAutoComp.bind("<FocusIn>", self.addEditedVal)
 
@@ -445,6 +445,14 @@ class Window(object):
         self.updateDisplay(rows)
         self.changed = True
         self.activatedFields.clear()
+        self.refreshSubtypes()
+
+    def refreshSubtypes(self):
+        self.subtypeAutoComp.grid_forget()
+        self.subtypeAutoComp = Combobox_Autocomplete(self.EFValues, dao.getSubtypes(), highlightthickness=1)
+        self.subtypeAutoComp.grid(row=8, column=1, sticky="w", pady=5)
+        self.subtypeAutoComp.bind("<FocusIn>", self.addEditedVal)
+
 
     def updateModMenu(self):
         newMods = self._checkForNewMod()
