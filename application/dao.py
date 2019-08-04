@@ -212,6 +212,15 @@ def getSubtypeForTrader(subtype):
     cursor.execute(lastQuery)
     return cursor.fetchall()
 
+
+def setSubtypeForTrader(items):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.fast_executemany = True
+    cursor.executemany("UPDATE items SET traderCat = ?, buyprice = ?, \
+        sellprice= ?, traderExclude= ?, rarity= ? WHERE name = ?;", items)
+    conn.commit()
+
 def getLinkedItems(item):
     items = set()
     cursor = connection().cursor()

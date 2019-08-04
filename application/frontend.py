@@ -538,8 +538,7 @@ class Window(object):
             self.map.set(dict["map"])
             self.player.set(dict["player"])
 
-            self.window.clipboard_clear()
-            self.window.clipboard_append(dict["name"])
+            windows.addToClipboard(self.window, dict["name"])
             self.window.update()
 
         except IndexError:

@@ -8,6 +8,7 @@ import xmlWriter
 import dao
 import scrolledWindow
 from categories import traderCatSwitcher
+from exportTrader import createTrader
 
 
 class newWindow(object):
@@ -87,12 +88,16 @@ class newWindow(object):
         Radiobutton(radioFrame, text=MODES[0][0], variable=self.v, value=MODES[0][1]).grid(row=0, column=0)
         Radiobutton(radioFrame, text=MODES[1][0], variable=self.v, value=MODES[1][1]).grid(row=0, column=1)
 
-
         frame = Frame(root)
-        frame.grid(row=row+1, column=column, sticky="w", pady=20)
+        frame.grid(row=row+1, column=column, sticky="w", pady=5)
 
         self.createPriceBlock(frame, "Buy Price", 0, 0)
         self.createPriceBlock(frame, "Sell Price", 0, 1)
+        buttonFrame = Frame(root)
+        buttonFrame.grid(row=row+2, column=column, sticky="w", pady=5)
+
+        Button(buttonFrame, text="Update", command=self.update).grid(row=0, column=0)
+        Button(buttonFrame, text="Copy to Clipboard", command=self.createTrader).grid(row=0, column=1)
 
     def createPriceBlock(self, parent, name, row, column):
         buyPrice = LabelFrame(parent, text=name)
@@ -115,7 +120,7 @@ class newWindow(object):
         frame.grid(padx=10, pady=10, sticky="w")
 
         doExclude = IntVar()
-        doExclude.set(0)
+        doExclude.set(exclude)
 
         nameVar = StringVar()
         nameVar.set(name)
@@ -132,16 +137,16 @@ class newWindow(object):
         xpad = 10
 
         Checkbutton(frame, variable=doExclude).grid(row=0, column=0)
-        entry1 = Entry(frame, textvariable=nameVar, width=25)
-        entry1.grid(row=0, column=1, padx=xpad)
-        entry2 = Entry(frame, textvariable=traderCatVar, width=3)
-        entry2.grid(row=0, column=2, padx=xpad)
-        entry3 = Entry(frame, textvariable=buyPriceVar, width=8)
-        entry3.grid(row=0, column=3, padx=xpad)
-        entry4 = Entry(frame, textvariable=sellPriceVar, width=8)
-        entry4.grid(row=0, column=4, padx=xpad)
+        nameEntry = Entry(frame, textvariable=nameVar, width=25)
+        nameEntry.grid(row=0, column=1, padx=xpad)
+        traderCatEntry = Entry(frame, textvariable=traderCatVar, width=3)
+        traderCatEntry.grid(row=0, column=2, padx=xpad)
+        buyPriceEntry = Entry(frame, textvariable=buyPriceVar, width=8)
+        buyPriceEntry.grid(row=0, column=3, padx=xpad)
+        sellPriceEntry = Entry(frame, textvariable=sellPriceVar, width=8)
+        sellPriceEntry.grid(row=0, column=4, padx=xpad)
 
-        self.traderVal.append(([traderCatVar, buyPriceVar, sellPriceVar], [frame, entry1, entry2, entry3, entry4]))
+        self.traderVal.append(([traderCatEntry, buyPriceEntry, sellPriceEntry, doExclude], [rarity, name]))
 
     def clearTraderWindow(self):
         self.frame.grid_forget()
@@ -159,6 +164,32 @@ class newWindow(object):
 
     def createLabel(self, root, text, row, column, sticky="w", px=5, py=5):
         Label(root, text=text).grid(row=row, column=column, sticky=sticky, padx=px, pady=py)
+
+    # traderCat, buyprice, sellprice, traderExclude, rarity, name
+    def createValues(self):
+        values = []
+        for i in range(len(self.traderVal)):
+            item = []
+            for entry in self.traderVal[i][0]:
+                item.append(entry.get())
+            item.append(self.traderVal[i][1][-2])
+            item.append(self.traderVal[i][1][-1])
+            values.append(item)
+        return values
+
+    def update(self):
+        values = self.createValues()
+        dao.setSubtypeForTrader(values)
+
+    def createTrader(self):
+        subtype = self.subTypeListbox.get(ANCHOR)
+        items = self.createValues()
+        newItems = []
+        for item in items:
+            newItem = [item[5], item[0], item[1], item[2], item[3]]
+            newItems.append(newItem)
+        # name, traderCat, buyPrice, sellPrice
+        createTrader(self.window, subtype, newItems)
 
 
 def testWindow():

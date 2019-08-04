@@ -163,3 +163,8 @@ def center(toplevel):
     x = w / 2 - size[0] / 2
     y = h / 2 - size[1] / 2
     toplevel.geometry("%dx%d+%d+%d" % (size + (x, y)))
+
+
+def addToClipboard(root, string):
+    root.clipboard_clear()
+    root.clipboard_append(string)
