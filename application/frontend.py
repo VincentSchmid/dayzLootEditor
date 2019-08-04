@@ -4,16 +4,16 @@ from tkinter import ttk
 
 import addItems
 import categories
-from categories import allcats
 import connectionWindow
 import dao
 import distibutor
 import itemLinker
-import items
 import windows
 import xmlParser
 import xmlWriter
+from assignSubTypes import TraderEditor
 from autocompleteCombobox import Combobox_Autocomplete
+from categories import allcats
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -86,6 +86,7 @@ class Window(object):
         databasemenu.add_separator()
         databasemenu.add_command(label="Add items...", command=self.openAddItems)
         databasemenu.add_command(label="Create item links...", command=self.openitemLinker)
+        databasemenu.add_command(label="Trader Editor...", command=self.openTraderEditor)
         menubar.add_cascade(label="Database", menu=databasemenu)
 
         self.modsmenu = Menu(menubar, tearoff=0)
@@ -575,8 +576,6 @@ class Window(object):
                "cargo": self.cargo.get(), "hoarder": self.hoarder.get(), "subtype": self.subtypeAutoComp.get(),
                "map": self.map.get(), "player": self.player.get()}
 
-        print("here", val["subtype"])
-        print(self.activatedFields)
         for field in self.activatedFields:
             selected[field] = val[field]
 
@@ -722,6 +721,9 @@ class Window(object):
 
     def openitemLinker(self):
         itemLinker.itemLinker(self.window)
+
+    def openTraderEditor(self):
+        TraderEditor(self.window)
 
     def checkForDatabase(self):
         try:

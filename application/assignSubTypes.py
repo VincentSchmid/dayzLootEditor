@@ -1,17 +1,12 @@
 from tkinter import *
-from tkinter import ttk
 
-
-import xmlParser
-import windows
-import xmlWriter
 import dao
-import scrolledWindow
+import windows
 from categories import traderCatSwitcher
 from exportTrader import createTrader
 
 
-class newWindow(object):
+class TraderEditor(object):
     def __init__(self, root):
         self.window = Toplevel(root)
         self.window.wm_title("Trader")
@@ -96,8 +91,8 @@ class newWindow(object):
         buttonFrame = Frame(root)
         buttonFrame.grid(row=row+2, column=column, sticky="w", pady=5)
 
-        Button(buttonFrame, text="Update", command=self.update).grid(row=0, column=0)
-        Button(buttonFrame, text="Copy to Clipboard", command=self.createTrader).grid(row=0, column=1)
+        Button(buttonFrame, text="Update Changes", command=self.update).grid(row=0, column=0)
+        Button(buttonFrame, text="Copy to Clipboard", command=self.createTrader).grid(row=0, column=1, padx=5)
 
     def createPriceBlock(self, parent, name, row, column):
         buyPrice = LabelFrame(parent, text=name)
@@ -194,8 +189,5 @@ class newWindow(object):
 
 def testWindow():
     window = Tk()
-    newWindow(window)
+    TraderEditor(window)
     window.mainloop()
-
-
-testWindow()
