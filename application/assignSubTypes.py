@@ -3,7 +3,8 @@ from tkinter import *
 import dao
 import windows
 from categories import traderCatSwitcher
-from exportTrader import createTrader
+from exportTrader import createTrader, distribute
+from distibutor import rarityMultiplier
 
 
 class TraderEditor(object):
@@ -86,13 +87,14 @@ class TraderEditor(object):
         frame = Frame(root)
         frame.grid(row=row+1, column=column, sticky="w", pady=5)
 
-        self.createPriceBlock(frame, "Buy Price", 0, 0)
-        self.createPriceBlock(frame, "Sell Price", 0, 1)
+        self.buyEntires = self.createPriceBlock(frame, "Buy Price", 0, 0)
+        self.sellEntries = self.createPriceBlock(frame, "Sell Price", 0, 1)
         buttonFrame = Frame(root)
         buttonFrame.grid(row=row+2, column=column, sticky="w", pady=5)
 
         Button(buttonFrame, text="Update Changes", command=self.update).grid(row=0, column=0)
         Button(buttonFrame, text="Copy to Clipboard", command=self.createTrader).grid(row=0, column=1, padx=5)
+        Button(buttonFrame, text="Distribute Pricing", command=self.distributePricing).grid(row=0, column=2)
 
     def createPriceBlock(self, parent, name, row, column):
         buyPrice = LabelFrame(parent, text=name)
@@ -102,10 +104,15 @@ class TraderEditor(object):
         self.createLabel(buyPrice, "Maximal:", 1, 0, "w")
         self.min = IntVar()
         self.min.set(0)
-        Entry(buyPrice, textvariable=self.min).grid(row=0, column=1, padx=5, pady=5)
+        min = Entry(buyPrice, textvariable=self.min)
+        min.grid(row=0, column=1, padx=5, pady=5)
+
         self.max = IntVar()
         self.max.set(0)
-        Entry(buyPrice, textvariable=self.max).grid(row=1, column=1, padx=5, pady=5)
+        max = Entry(buyPrice, textvariable=self.max)
+        max.grid(row=1, column=1, padx=5, pady=5)
+
+        return (min, max)
 
     def update_scrollregion(self, event):
         self.canv.configure(scrollregion=self.canv.bbox("all"))
@@ -141,7 +148,7 @@ class TraderEditor(object):
         sellPriceEntry = Entry(frame, textvariable=sellPriceVar, width=8)
         sellPriceEntry.grid(row=0, column=4, padx=xpad)
 
-        self.traderVal.append(([traderCatEntry, buyPriceEntry, sellPriceEntry, doExclude], [rarity, name]))
+        self.traderVal.append(([traderCatEntry, buyPriceEntry, sellPriceEntry, doExclude], [rarity, name, nominal]))
 
     def clearTraderWindow(self):
         self.frame.grid_forget()
@@ -167,8 +174,8 @@ class TraderEditor(object):
             item = []
             for entry in self.traderVal[i][0]:
                 item.append(entry.get())
-            item.append(self.traderVal[i][1][-2])
-            item.append(self.traderVal[i][1][-1])
+            item.append(self.traderVal[i][1][0])
+            item.append(self.traderVal[i][1][1])
             values.append(item)
         return values
 
@@ -186,8 +193,38 @@ class TraderEditor(object):
         # name, traderCat, buyPrice, sellPrice
         createTrader(self.window, subtype, newItems)
 
+    def distributePricing(self):
+        rarity_is_set = True if self.v.get() == "rar" else False
+        selSubtype = self.subTypeListbox.get(ANCHOR)
+        selSubtype = "" if selSubtype == "UNASSIGNED" else selSubtype
+
+        itemsOfSubtype = dao.getSubtypeForTrader(selSubtype)
+        rarities = []
+        for item in itemsOfSubtype:
+            rarities.append((item[5], item[6]))
+
+        pricing = distribute(rarities, int(self.buyEntires[0].get()), int(self.buyEntires[1].get()),
+                             int(self.sellEntries[0].get()), int(self.sellEntries[1].get()), rarity_is_set)
+
+        buyPricing = pricing[0]
+        sellPricing = pricing[1]
+
+        for item in self.traderVal:
+            try:
+                keyValue = rarityMultiplier[item[1][0]] if rarity_is_set else item[1][2]
+            except KeyError:
+                keyValue = 0
+            self.setEntryVal(item[0][1], buyPricing[keyValue])
+            self.setEntryVal(item[0][2], sellPricing[keyValue])
+
+    def setEntryVal(self, entry, newVal):
+        entry.delete(0, END)
+        entry.insert(END, str(newVal))
+
 
 def testWindow():
     window = Tk()
     TraderEditor(window)
     window.mainloop()
+
+testWindow()
