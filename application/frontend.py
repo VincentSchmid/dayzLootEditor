@@ -14,6 +14,7 @@ import xmlWriter
 from assignSubTypes import TraderEditor
 from autocompleteCombobox import Combobox_Autocomplete
 from categories import allcats
+import upgradeDB
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -83,6 +84,7 @@ class Window(object):
 
         databasemenu = Menu(menubar, tearoff=0)
         databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
+        databasemenu.add_command(label="Upgrade Database", command=self.upgradeDB)
         databasemenu.add_separator()
         databasemenu.add_command(label="Add items...", command=self.openAddItems)
         databasemenu.add_command(label="Create item links...", command=self.openitemLinker)
@@ -741,6 +743,16 @@ class Window(object):
             self.window.withdraw()
             self.openConnectionWindow()
             self.window.deiconify()
+
+        try:
+            dao.getSubtypes()
+        except Exception:
+            windows.showUpgradeError(self.window)
+            if windows.askUser("Upgrade", "Do you want to upgrade your Database?"):
+                self.upgradeDB()
+
+    def upgradeDB(self):
+        upgradeDB.addColumns()
 
 
 window = Tk()

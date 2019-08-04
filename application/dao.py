@@ -597,6 +597,20 @@ def backupDatabase(file):
     p1.kill()
 
 
+def addColumns():
+    query = "ALTER TABLE `"+windows.readConfig()[3]+"`.`items` \
+ADD COLUMN `subtype` VARCHAR(45) NULL DEFAULT NULL AFTER `mods`, \
+ADD COLUMN `buyprice` INT(11) NULL DEFAULT NULL AFTER `subtype`,\
+ADD COLUMN `sellprice` INT(11) NULL DEFAULT NULL AFTER `buyprice`, \
+ADD COLUMN `traderCat` VARCHAR(3) NULL DEFAULT NULL AFTER `sellprice`,\
+ADD COLUMN `traderExclude` TINYINT(1) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' AFTER `traderCat`;"
+
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(query)
+    conn.commit()
+
+
 def dropDB():
     global database
     if database == "":

@@ -45,6 +45,12 @@ def showError(parent, title, message):
     messagebox.showinfo(parent=parent, title=title, message=message)
 
 
+def showUpgradeError(parent):
+    showError(parent, "Upgrade Your Database", "Your Database is not compatible with this version "
+                                                            "of the software.\n"
+                                                            "an upgrade is required")
+
+
 def askUser(title, question):
     MsgBox = messagebox.askquestion(title, question, icon='warning')
     return MsgBox == "yes"
