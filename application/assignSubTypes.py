@@ -34,7 +34,7 @@ class newWindow(object):
         self.subTypeListbox = Listbox(subtypesFrame, width=35, height=30, exportselection=False)
         self.subTypeListbox.grid(sticky="ns")
         subTypes = dao.getSubtypes()
-        for subType in subTypes:
+        for subType in sorted(subTypes):
             if subType == "":
                 subType = "UNASSIGNED"
             self.subTypeListbox.insert(END, subType)
@@ -44,21 +44,23 @@ class newWindow(object):
 
     def setTraderCat(self, rows):
         for i in range(len(rows)):
-            if rows[i][1] == "":
+            if rows[i][2] == "":
                 rows[i][2] = traderCatSwitcher(rows[i][1])
 
         return rows
 
     def drawEditor(self, root, row, column, rows):
-        self.frame = Frame(root, height=480, bg="#EBEBEB")
+        height = 480
+        width = 400
+        self.frame = Frame(root, height=height, width=width, bg="#EBEBEB")
         self.frame.grid(row=row, column=column, sticky="nw", pady=20)
         self.frame.rowconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=1)
 
-        self.canv = Canvas(self.frame, height=480, bg="#EBEBEB")
+        self.canv = Canvas(self.frame, height=height, width=width, bg="#EBEBEB")
         self.canv.grid(row=0, column=0, sticky="nsew")
 
-        self.canvFrame = Frame(self.canv, height=480, bg="#EBEBEB")
+        self.canvFrame = Frame(self.canv, height=height, width=width, bg="#EBEBEB")
         self.canv.create_window(0, 0, window=self.canvFrame, anchor='nw')
 
         for item in rows:
@@ -75,11 +77,26 @@ class newWindow(object):
         self.canvFrame.bind("<Configure>", self.update_scrollregion)
 
     def createTraderSetting(self, root, row, column):
-        frame = Frame(root)
-        frame.grid(row=row, column=column, sticky="w", pady=20)
+        radioFrame = Frame(root)
+        radioFrame.grid(row=row, column=column, sticky="w", pady=5)
 
-        buyPrice = LabelFrame(frame, text="BuyPrice")
-        buyPrice.grid(row=0, column=0, padx=10)
+        MODES = [("Use Rarity", "rar"), ("Use Nominal", "nom")]
+        self.v = StringVar()
+        self.v.set("rar")
+
+        Radiobutton(radioFrame, text=MODES[0][0], variable=self.v, value=MODES[0][1]).grid(row=0, column=0)
+        Radiobutton(radioFrame, text=MODES[1][0], variable=self.v, value=MODES[1][1]).grid(row=0, column=1)
+
+
+        frame = Frame(root)
+        frame.grid(row=row+1, column=column, sticky="w", pady=20)
+
+        self.createPriceBlock(frame, "Buy Price", 0, 0)
+        self.createPriceBlock(frame, "Sell Price", 0, 1)
+
+    def createPriceBlock(self, parent, name, row, column):
+        buyPrice = LabelFrame(parent, text=name)
+        buyPrice.grid(row=row, column=column, padx=10)
 
         self.createLabel(buyPrice, "Minimal:", 0, 0, "w")
         self.createLabel(buyPrice, "Maximal:", 1, 0, "w")
@@ -90,15 +107,15 @@ class newWindow(object):
         self.max.set(0)
         Entry(buyPrice, textvariable=self.max).grid(row=1, column=1, padx=5, pady=5)
 
-
     def update_scrollregion(self, event):
         self.canv.configure(scrollregion=self.canv.bbox("all"))
 
-    def traderRow(self, parent, name, subtype, traderCat, buyPrice, sellPrice, rarity, exclude):
+    def traderRow(self, parent, name, subtype, traderCat, buyPrice, sellPrice, rarity, nominal, exclude):
         frame = Frame(parent)
         frame.grid(padx=10, pady=10, sticky="w")
 
-
+        doExclude = IntVar()
+        doExclude.set(0)
 
         nameVar = StringVar()
         nameVar.set(name)
@@ -114,14 +131,15 @@ class newWindow(object):
 
         xpad = 10
 
+        Checkbutton(frame, variable=doExclude).grid(row=0, column=0)
         entry1 = Entry(frame, textvariable=nameVar, width=25)
-        entry1.grid(row=0, column=0, padx=xpad)
+        entry1.grid(row=0, column=1, padx=xpad)
         entry2 = Entry(frame, textvariable=traderCatVar, width=3)
-        entry2.grid(row=0, column=1, padx=xpad)
+        entry2.grid(row=0, column=2, padx=xpad)
         entry3 = Entry(frame, textvariable=buyPriceVar, width=8)
-        entry3.grid(row=0, column=2, padx=xpad)
+        entry3.grid(row=0, column=3, padx=xpad)
         entry4 = Entry(frame, textvariable=sellPriceVar, width=8)
-        entry4.grid(row=0, column=3, padx=xpad)
+        entry4.grid(row=0, column=4, padx=xpad)
 
         self.traderVal.append(([traderCatVar, buyPriceVar, sellPriceVar], [frame, entry1, entry2, entry3, entry4]))
 
@@ -133,7 +151,7 @@ class newWindow(object):
     def fillTraderWindow(self, event):
         self.clearTraderWindow()
         selSubtype = self.subTypeListbox.get(ANCHOR)
-        print(selSubtype)
+        selSubtype = "" if selSubtype == "UNASSIGNED" else selSubtype
 
         itemsOfSubtype = dao.getSubtypeForTrader(selSubtype)
 

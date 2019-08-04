@@ -204,7 +204,7 @@ def getCategory(category):
 
 def getSubtypeForTrader(subtype):
     global lastQuery
-    lastQuery = "select name, subtype, tradercat, buyprice, sellprice, rarity, traderexclude \
+    lastQuery = "select name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude \
                 from items \
                 where subtype = '" + subtype + "';"
 
