@@ -236,7 +236,7 @@ class Window(object):
 
         self.tree = ttk.Treeview(self.treeFrame,
                                  columns=(
-                                     'name', 'nominal', 'min', 'restock', 'lifetime', 'type', 'subtype', 'usage',
+                                     'nominal', 'min', 'restock', 'lifetime', 'type', 'subtype', 'usage',
                                      'tier', 'Dyn. Event', 'rarity', 'mod'), height=40)
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
@@ -399,7 +399,6 @@ class Window(object):
 
     def addEditedVal(self, event):
         widget = self.window.focus_get()
-        print(widget)
 
         switcher = {
             self.nominalEntry: "nominal",
@@ -538,6 +537,7 @@ class Window(object):
         windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
 
         self.typeEntrySel.set(dict["type"])
+        self.subtypeAutoComp.set_value(dict["subtype"])
         self.raritySel.set(dict["rarity"])
         self.mod_text.set(dict["mod"])
 
@@ -556,7 +556,7 @@ class Window(object):
         flags = dao.getFlags(dict["text"])
 
         val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
-               "deloot": dict["values"][7], "restock": dict["values"][2], "lifetime": dict["values"][3],
+               "deloot": dict["values"][8], "restock": dict["values"][2], "lifetime": dict["values"][3],
                "type": dict["values"][4], "subtype": dict["values"][5], "rarity": dict["values"][9],
                "mod": dict["values"][10], "cargo": flags[0], "hoarder": flags[1], "map": flags[2], "player": flags[3],
                "flags": flags}
@@ -575,8 +575,8 @@ class Window(object):
                "cargo": self.cargo.get(), "hoarder": self.hoarder.get(), "subtype": self.subtypeAutoComp.get(),
                "map": self.map.get(), "player": self.player.get()}
 
-        print(val["subtype"])
-
+        print("here", val["subtype"])
+        print(self.activatedFields)
         for field in self.activatedFields:
             selected[field] = val[field]
 

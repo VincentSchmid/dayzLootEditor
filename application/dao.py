@@ -374,7 +374,7 @@ def updateRarity(itemName, rarity):
 
 def update(values):
     query = "UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
-        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) \
+        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", subtype= '" + str(values["subtype"]) + "'" \
         + ", deloot= '" + str(values["deloot"]) + "', mods= '" + str(values["mod"]) + "' WHERE name = '" + str(
         values["name"] + "'")
 
