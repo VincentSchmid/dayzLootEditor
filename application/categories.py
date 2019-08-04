@@ -131,6 +131,18 @@ weaponTraderCat = [word.lower() for word in gunSubTypesDict.keys()]
 weaponTraderCat.append("gun")
 weaponTraderCat.append("melee")
 
+allcats = []
+
+def appendKeys(dict, tolist):
+    for cat in dict.keys():
+        tolist.append(cat)
+    return tolist
+
+allcats = appendKeys(gunSubTypesDict, allcats)
+allcats = appendKeys(clothingSubTypesDict, allcats)
+allcats = appendKeys(foodSubTypesDict, allcats)
+allcats = appendKeys(miscSubTypesDict, allcats)
+allcats = appendKeys(vehicleSubTypesDict, allcats)
 
 def traderCatSwitcher(argument):
     argument = argument.lower()
