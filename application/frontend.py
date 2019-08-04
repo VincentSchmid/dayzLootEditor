@@ -515,44 +515,39 @@ class Window(object):
             self.tree.delete(*self.tree.get_children())
 
     def fillEntryBoxes(self, event):
-        try:
-            dict = self.getSelectedValues(self.tree.focus())
-            self.nameEntry.delete(0, END)
-            self.nameEntry.insert(END, dict["name"])
+        dict = self.getSelectedValues(self.tree.focus())
+        self.nameEntry.delete(0, END)
+        self.nameEntry.insert(END, dict["name"])
 
-            self.nominalEntry.delete(0, END)
-            self.nominalEntry.insert(END, dict["nominal"])
+        self.nominalEntry.delete(0, END)
+        self.nominalEntry.insert(END, dict["nominal"])
 
-            self.minEntry.delete(0, END)
-            self.minEntry.insert(END, dict["min"])
+        self.minEntry.delete(0, END)
+        self.minEntry.insert(END, dict["min"])
 
-            self.restockEntry.delete(0, END)
-            self.restockEntry.insert(END, dict["restock"])
+        self.restockEntry.delete(0, END)
+        self.restockEntry.insert(END, dict["restock"])
 
-            self.lifetimeEntry.delete(0, END)
-            self.lifetimeEntry.insert(END, dict["lifetime"])
+        self.lifetimeEntry.delete(0, END)
+        self.lifetimeEntry.insert(END, dict["lifetime"])
 
-            self.usageListBox.selection_clear(0, END)
-            self.tierListBox.selection_clear(0, END)
+        self.usageListBox.selection_clear(0, END)
+        self.tierListBox.selection_clear(0, END)
 
-            windows.selectItemsFromLB(self.usageListBox, dao.getUsages(dict["name"]))
-            windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
+        windows.selectItemsFromLB(self.usageListBox, dao.getUsages(dict["name"]))
+        windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
 
-            self.typeEntrySel.set(dict["type"])
-            self.raritySel.set(dict["rarity"])
-            self.mod_text.set(dict["mod"])
+        self.typeEntrySel.set(dict["type"])
+        self.raritySel.set(dict["rarity"])
+        self.mod_text.set(dict["mod"])
 
-            self.deLoot.set(dict["deloot"])
-            self.cargo.set(dict["cargo"])
-            self.hoarder.set(dict["hoarder"])
-            self.map.set(dict["map"])
-            self.player.set(dict["player"])
+        self.deLoot.set(dict["deloot"])
+        self.cargo.set(dict["cargo"])
+        self.hoarder.set(dict["hoarder"])
+        self.map.set(dict["map"])
+        self.player.set(dict["player"])
 
-            windows.addToClipboard(self.window, dict["name"])
-            self.window.update()
-
-        except IndexError:
-            pass
+        windows.addToClipboard(self.window, dict["name"])
 
         self.activatedFields.clear()
 
@@ -562,8 +557,9 @@ class Window(object):
 
         val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
                "deloot": dict["values"][7], "restock": dict["values"][2], "lifetime": dict["values"][3],
-               "type": dict["values"][4], "rarity": dict["values"][8], "mod": dict["values"][9],
-               "cargo": flags[0], "hoarder": flags[1], "map": flags[2], "player": flags[3], "flags": flags}
+               "type": dict["values"][4], "subtype": dict["values"][5], "rarity": dict["values"][9],
+               "mod": dict["values"][10], "cargo": flags[0], "hoarder": flags[1], "map": flags[2], "player": flags[3],
+               "flags": flags}
 
         return val
 
@@ -576,8 +572,10 @@ class Window(object):
                "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "mod": self.mod_text.get(),
                "usage": self.getEditedListBox(self.usageListBox, categories.usages),
                "tier": self.getEditedListBox(self.tierListBox, categories.tiers),
-               "cargo": self.cargo.get(), "hoarder": self.hoarder.get(),
+               "cargo": self.cargo.get(), "hoarder": self.hoarder.get(), "subtype": self.subtypeAutoComp.get(),
                "map": self.map.get(), "player": self.player.get()}
+
+        print(val["subtype"])
 
         for field in self.activatedFields:
             selected[field] = val[field]

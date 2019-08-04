@@ -168,3 +168,4 @@ def center(toplevel):
 def addToClipboard(root, string):
     root.clipboard_clear()
     root.clipboard_append(string)
+    root.update()

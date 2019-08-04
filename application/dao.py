@@ -98,7 +98,6 @@ lastQuery = "select * from items"
 def setColumnNames():
     global columns
     columns = ", ".join(getCoulumNames())
-    print(columns)
 
 
 def getDicts(items):

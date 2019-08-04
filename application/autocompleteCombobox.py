@@ -256,20 +256,3 @@ class Combobox_Autocomplete(Entry, object):
                 self._listbox.selection_set(index)
                 self._listbox.activate(index)
         return "break"
-
-if __name__ == '__main__':
-    try:
-        from Tkinter import Tk
-    except ImportError:
-        from tkinter import Tk
-
-    list_of_items = ["Sidearms", "Pistols", "Rifles", "Shotguns", "Submachine Guns", "Assault Rifles", "Light Machine Guns", "Sniper Rifles", "Anti Material Rifles", "gun", "ammo", "optic", "mag", "attachment", "Glasses", "Armbands", "Gloves", "Hats", "Caps", "Bandanas", "Helmets", "Masks", "Balaclava", "Shirts", "Hoodies", "Sweaters", "Vests", "Jackets", "Coats", "Suits", "Skirts Dresses", "Pants", "Shoes Boots", "Ghillie", "Holsters", "Pouches", "Bags", "Handmade", "Glasses", "Armbands", "Gloves", "Hats", "Caps", "Bandanas", "Helmets", "Masks", "Balaclava", "Shirts", "Hoodies", "Sweaters", "Vests", "Jackets", "Coats", "Suits", "Skirts Dresses", "Pants", "Shoes Boots", "Ghillie", "Holsters", "Pouches", "Bags", "Handmade", "Vegetables", "Packaged Food", "Meat", "Drinks", "Medical Supplies", "Medications", "Money Exchange", "Tools (small)", "Tools (big)", "Electronics", "Fire Lights", "Cooking Hunting Supplies", "Hardware Supplies", "Seeds Lime", "vehicle"]
-
-    root = Tk()
-    root.geometry("300x200")
-
-    combobox_autocomplete = Combobox_Autocomplete(root, list_of_items, highlightthickness=1)
-    combobox_autocomplete.pack()
-
-
-    root.mainloop()
