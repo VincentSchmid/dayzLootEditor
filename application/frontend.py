@@ -31,12 +31,23 @@ rarities9 = {0: "undefined",
 
 rarities5 = {15: "Common", 20: "Uncommon", 30: "Rare", 40: "Very Rare", 50: "Legendary", 0: "undefined"}
 
+def treeview_sort_column(tv, col, reverse):
+    l = [(tv.set(k, col), k) for k in tv.get_children('')]
+    l.sort(reverse=reverse)
+
+    # rearrange items in sorted positions
+    for index, (val, k) in enumerate(l):
+        tv.move(k, '', index)
+
+    # reverse sort next time
+    tv.heading(col, command=lambda: treeview_sort_column(tv, col, not reverse))
+
 
 class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.89")
+        self.window.wm_title("Loot Editor v0.91")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
@@ -237,10 +248,11 @@ class Window(object):
         self.treeFrame.grid_rowconfigure(0, weight=1)
         self.treeFrame.grid_columnconfigure(0, weight=1)
 
+        columns = ('nominal', 'min', 'restock', 'lifetime', 'type', 'subtype', 'usage',
+                   'tier', 'Dyn. Event', 'rarity', 'mod')
+
         self.tree = ttk.Treeview(self.treeFrame,
-                                 columns=(
-                                     'nominal', 'min', 'restock', 'lifetime', 'type', 'subtype', 'usage',
-                                     'tier', 'Dyn. Event', 'rarity', 'mod'), height=40)
+                                 columns=columns, height=40)
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
@@ -265,6 +277,9 @@ class Window(object):
         self.tree.column('#9', width=80, stretch=YES)
         self.tree.column('#10', width=120, stretch=YES)
         self.tree.column('#11', width=120, stretch=YES)
+
+        for col in columns:
+            self.tree.heading(col, text=col, command=lambda _col=col: treeview_sort_column(self.tree, _col, False))
 
         self.tree.grid(row=0, column=0, sticky='nsew')
         self.treeview = self.tree
@@ -525,42 +540,45 @@ class Window(object):
             self.tree.delete(*self.tree.get_children())
 
     def fillEntryBoxes(self, event):
-        dict = self.getSelectedValues(self.tree.focus())
-        self.nameEntry.delete(0, END)
-        self.nameEntry.insert(END, dict["name"])
+        try:
+            dict = self.getSelectedValues(self.tree.focus())
+            self.nameEntry.delete(0, END)
+            self.nameEntry.insert(END, dict["name"])
 
-        self.nominalEntry.delete(0, END)
-        self.nominalEntry.insert(END, dict["nominal"])
+            self.nominalEntry.delete(0, END)
+            self.nominalEntry.insert(END, dict["nominal"])
 
-        self.minEntry.delete(0, END)
-        self.minEntry.insert(END, dict["min"])
+            self.minEntry.delete(0, END)
+            self.minEntry.insert(END, dict["min"])
 
-        self.restockEntry.delete(0, END)
-        self.restockEntry.insert(END, dict["restock"])
+            self.restockEntry.delete(0, END)
+            self.restockEntry.insert(END, dict["restock"])
 
-        self.lifetimeEntry.delete(0, END)
-        self.lifetimeEntry.insert(END, dict["lifetime"])
+            self.lifetimeEntry.delete(0, END)
+            self.lifetimeEntry.insert(END, dict["lifetime"])
 
-        self.usageListBox.selection_clear(0, END)
-        self.tierListBox.selection_clear(0, END)
+            self.usageListBox.selection_clear(0, END)
+            self.tierListBox.selection_clear(0, END)
 
-        windows.selectItemsFromLB(self.usageListBox, dao.getUsages(dict["name"]))
-        windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
+            windows.selectItemsFromLB(self.usageListBox, dao.getUsages(dict["name"]))
+            windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
 
-        self.typeEntrySel.set(dict["type"])
-        self.subtypeAutoComp.set_value(dict["subtype"])
-        self.raritySel.set(dict["rarity"])
-        self.mod_text.set(dict["mod"])
+            self.typeEntrySel.set(dict["type"])
+            self.subtypeAutoComp.set_value(dict["subtype"])
+            self.raritySel.set(dict["rarity"])
+            self.mod_text.set(dict["mod"])
 
-        self.deLoot.set(dict["deloot"])
-        self.cargo.set(dict["cargo"])
-        self.hoarder.set(dict["hoarder"])
-        self.map.set(dict["map"])
-        self.player.set(dict["player"])
+            self.deLoot.set(dict["deloot"])
+            self.cargo.set(dict["cargo"])
+            self.hoarder.set(dict["hoarder"])
+            self.map.set(dict["map"])
+            self.player.set(dict["player"])
 
-        windows.addToClipboard(self.window, dict["name"])
+            windows.addToClipboard(self.window, dict["name"])
 
-        self.activatedFields.clear()
+            self.activatedFields.clear()
+        except IndexError:
+            pass
 
     def getSelectedValues(self, element):
         dict = self.tree.item(element)
