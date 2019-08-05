@@ -1,79 +1,80 @@
 gunSubTypesDict = {
-               "Sidearms": [],
-               "Pistols": [],
-               "Rifles": [],
-               "Shotguns": [],
-               "Submachine Guns": [],
-               "Assault Rifles": [],
-               "Light Machine Guns": [],
-               "Sniper Rifles": [],
-               "Anti Material Rifles": []
-                }
+    "Sidearms": [],
+    "Pistols": [],
+    "Rifles": [],
+    "Shotguns": [],
+    "Submachine Guns": [],
+    "Assault Rifles": [],
+    "Light Machine Guns": [],
+    "Sniper Rifles": [],
+    "Anti Material Rifles": []
+}
 
 clothingSubTypesDict = {
-                    "Glasses": ["glasses", "goggles"],
-                    "Armbands": ["armband"],
-                    "Gloves": ["gloves"],
-                    "Hats": ["hat"],
-                    "Caps": ["cap"],
-                    "Bandanas": ["bandana"],
-                    "Helmets": ["helm"],
-                    "Masks": ["mask"],
-                    "Balaclava": ["balaclava"],
-                    "Shirts": ["shirt", "blouse"],
-                    "Hoodies": ["hoodie"],
-                    "Sweaters": ["sweater"],
-                    "Vests": ["vest"],
-                    "Jackets": ["jacket"],
-                    "Coats": ["coat"],
-                    "Suits": ["suit"],
-                    "Skirts Dresses": ["skirt", "dress_"],
-                    "Pants": ["pants", "breeches", "jeans"],
-                    "Shoes Boots": ["shoes", "sneakers", "boots", "wellies"],
-                    "Ghillie": ["ghillie"],
-                    "Holsters": ["holster"],
-                    "Pouches": ["pouch"],
-                    "Bags": ["bag"],
-                    "Handmade": []
-                    }
+    "Glasses": ["glasses", "goggles"],
+    "Armbands": ["armband"],
+    "Gloves": ["gloves"],
+    "Hats": ["hat"],
+    "Caps": ["cap"],
+    "Bandanas": ["bandana"],
+    "Helmets": ["helm"],
+    "Masks": ["mask"],
+    "Balaclava": ["balaclava"],
+    "Shirts": ["shirt", "blouse"],
+    "Hoodies": ["hoodie"],
+    "Sweaters": ["sweater"],
+    "Vests": ["vest"],
+    "Jackets": ["jacket"],
+    "Coats": ["coat"],
+    "Suits": ["suit"],
+    "Skirts Dresses": ["skirt", "dress_"],
+    "Pants": ["pants", "breeches", "jeans"],
+    "Shoes Boots": ["shoes", "sneakers", "boots", "wellies"],
+    "Ghillie": ["ghillie"],
+    "Holsters": ["holster"],
+    "Pouches": ["pouch"],
+    "Bags": ["bag"],
+    "Handmade": []
+}
 
 foodSubTypesDict = {
-                "Vegetables": ["mushroom", "apple", "pear", "plum", "pumpkin"],
-                "Packaged Food": ["can", "cereal", "powdered"],
-                "Meat": ["meat", "lard"],
-                "Drinks": ["sodacan", "bottle", "canteen"],
-                "Medical Supplies": ["saline", "bandage", "firstaid", "kitiv", "bloodTe", "Thermom"],
-                "Medications": ["charcoal", "disinf", "vitamin", "tetracy", "painkil", "epine", "morph"],
-                "Money Exchange": []
-                }
+    "Vegetables": ["mushroom", "apple", "pear", "plum", "pumpkin"],
+    "Packaged Food": ["can", "cereal", "powdered"],
+    "Meat": ["meat", "lard"],
+    "Drinks": ["sodacan", "bottle", "canteen"],
+    "Medical Supplies": ["saline", "bandage", "firstaid", "kitiv", "bloodTe", "Thermom"],
+    "Medications": ["charcoal", "disinf", "vitamin", "tetracy", "painkil", "epine", "morph"],
+    "Money Exchange": []
+}
 
 miscSubTypesDict = {
-                "Tools (small)": ["screwdr", "wren", "sewingk", "pliers", "whetst", "saw", "cleaning", "chenkn", "anopen", "compas", "hatche", "machet", "lockpick", "binoc"],
-                "Tools (big)": ["lugwr", "crowb", "shov", "picka", "sledge", "woodAx", "ghterax"],
-                "Electronics": ["battery", "onalrad", "megaph", "cableree", "electronicrep"],
-                "Fire Lights": ["chemlight", "flare", "flashlight", "ablegas", "torch", "spotlight", "matchbox"],
-                "Cooking Hunting Supplies": ["pot", "purific", "tripo", "beartra"],
-                "Hardware Supplies": ["barrel", "canister", "handcuff", "netting", "seachest"],
-                "Tents": ["tent"],
-                "Seeds Lime": ["seeds"],
-                "Melee": ["cattleprod", "BrassKnuckles", "NailedBaseba", "stunbat"]
-                }
+    "Tools (small)": ["screwdr", "wren", "sewingk", "pliers", "whetst", "saw", "cleaning", "chenkn", "anopen", "compas",
+                      "hatche", "machet", "lockpick", "binoc"],
+    "Tools (big)": ["lugwr", "crowb", "shov", "picka", "sledge", "woodAx", "ghterax"],
+    "Electronics": ["battery", "onalrad", "megaph", "cableree", "electronicrep"],
+    "Fire Lights": ["chemlight", "flare", "flashlight", "ablegas", "torch", "spotlight", "matchbox"],
+    "Cooking Hunting Supplies": ["pot", "purific", "tripo", "beartra"],
+    "Hardware Supplies": ["barrel", "canister", "handcuff", "netting", "seachest"],
+    "Tents": ["tent"],
+    "Seeds Lime": ["seeds"],
+    "Melee": ["cattleprod", "BrassKnuckles", "NailedBaseba", "stunbat"]
+}
 
 weaponSubTypesDict = {
-                 "gun": gunSubTypesDict,
-                 "ammo": {"Ammunition": ["ammo"]},
-                 "optic": {"Scopes": ["optic", "LRS", "scope"]},
-                 "mag": {"magazines": ["mag"]},
-                 "attachment": {"Attachments": [""],
-                                "Handguards": ["hndgrd", "handguard"],
-                                "Bayonets": ["bayonet"],
-                                "Buttstocks": ["bttstck", "buttstock"]}
-                                }
+    "gun": gunSubTypesDict,
+    "ammo": {"Ammunition": ["ammo"]},
+    "optic": {"Scopes": ["optic", "LRS", "scope"]},
+    "mag": {"magazines": ["mag"]},
+    "attachment": {"Attachments": [""],
+                   "Handguards": ["hndgrd", "handguard"],
+                   "Bayonets": ["bayonet"],
+                   "Buttstocks": ["bttstck", "buttstock"]}
+}
 
 vehicleSubTypesDict = {
-                    "Vehicle": ["OffroadHatchback", "CivilianSedan", "chassis"],
-                    "Vehicle Parts": {}
-                    }
+    "Vehicle": ["OffroadHatchback", "CivilianSedan", "chassis"],
+    "Vehicle Parts": {}
+}
 
 categoriesDict = {"weapons": weaponSubTypesDict,
                   "containers": clothingSubTypesDict,
@@ -131,16 +132,19 @@ weaponTraderCat.append("melee")
 
 allcats = []
 
+
 def appendKeys(dict, tolist):
     for cat in dict.keys():
         tolist.append(cat)
     return tolist
+
 
 allcats = appendKeys(gunSubTypesDict, allcats)
 allcats = appendKeys(clothingSubTypesDict, allcats)
 allcats = appendKeys(foodSubTypesDict, allcats)
 allcats = appendKeys(miscSubTypesDict, allcats)
 allcats = appendKeys(vehicleSubTypesDict, allcats)
+
 
 def traderCatSwitcher(argument):
     argument = argument.lower()

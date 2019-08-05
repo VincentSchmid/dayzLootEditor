@@ -119,7 +119,6 @@ def getDict(item):
 
         dict[key] = item[k]
 
-
     return dict
 
 
@@ -209,12 +208,14 @@ def getSubtypeForTrader(subtype):
     cursor.execute(lastQuery)
     return cursor.fetchall()
 
+
 def setSubtypesMany(items):
     conn = connection()
     cursor = conn.cursor()
     cursor.fast_executemany = True
     cursor.executemany("UPDATE items SET subtype = ? WHERE name = ?;", items)
     conn.commit()
+
 
 def setSubtypeForTrader(items):
     conn = connection()
@@ -223,6 +224,7 @@ def setSubtypeForTrader(items):
     cursor.executemany("UPDATE items SET traderCat = ?, buyprice = ?, \
         sellprice= ?, traderExclude= ?, rarity= ? WHERE name = ?;", items)
     conn.commit()
+
 
 def getLinkedItems(item):
     items = set()
@@ -356,14 +358,16 @@ def updateType(itemName, type):
     cursor.execute("UPDATE items SET type = ? WHERE name = ?", type, itemName)
     conn.commit()
 
+
 def updateDropValue(itemName, newValue, valueType):
     if valueType == "rarity":
         updateRarity(itemName, newValue)
     if valueType == "type":
         updateType(itemName, newValue)
 
+
 def updateRarity(itemName, rarity):
-	#todo clean this up
+    # todo clean this up
     rarities = distibutor.rarities9
     if rarity in rarities.values():
         for key, value in rarities.items():
@@ -378,8 +382,9 @@ def updateRarity(itemName, rarity):
 
 def update(values):
     query = "UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
-        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", subtype= '" + str(values["subtype"]) + "'" \
-        + ", deloot= '" + str(values["deloot"]) + "', mods= '" + str(values["mod"]) + "' WHERE name = '" + str(
+        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", subtype= '" + str(
+        values["subtype"]) + "'" \
+            + ", deloot= '" + str(values["deloot"]) + "', mods= '" + str(values["mod"]) + "' WHERE name = '" + str(
         values["name"] + "'")
 
     conn = connection()
@@ -602,7 +607,7 @@ def backupDatabase(file):
 
 
 def addColumns():
-    query = "ALTER TABLE `"+windows.readConfig()[3]+"`.`items` \
+    query = "ALTER TABLE `" + windows.readConfig()[3] + "`.`items` \
 ADD COLUMN `subtype` VARCHAR(45) NULL DEFAULT NULL AFTER `mods`, \
 ADD COLUMN `buyprice` INT(11) NULL DEFAULT NULL AFTER `subtype`,\
 ADD COLUMN `sellprice` INT(11) NULL DEFAULT NULL AFTER `buyprice`, \

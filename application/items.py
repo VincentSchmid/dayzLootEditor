@@ -113,13 +113,13 @@ class Item:
             self.flags.append(val[p])
             p += 1
 
-        self.rarity = val[p+1]
-        self.mod = val[p+2]
-        self.subType = val[p+3]
-        self.buyprice = val[p+4]
-        self.sellprice = val[p+5]
-        self.tradercat = val[p+6]
-        self.traderexclude = val[p+7]
+        self.rarity = val[p + 1]
+        self.mod = val[p + 2]
+        self.subType = val[p + 3]
+        self.buyprice = val[p + 4]
+        self.sellprice = val[p + 5]
+        self.tradercat = val[p + 6]
+        self.traderexclude = val[p + 7]
 
     # creates dictonary of item values and fills them
     def createParams(self):
@@ -183,7 +183,7 @@ class Item:
     def getSpawnableTypes(self):
         linkedItems = dao.getLinekd(self.name, self.type)
 
-        magChance= "{:0.2f}".format(0.3)
+        magChance = "{:0.2f}".format(0.3)
         opticChance = "{:0.2f}".format(0.10, 2)
         attachmentChance = "{:0.2f}".format(0.20, 2)
 

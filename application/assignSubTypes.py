@@ -86,12 +86,12 @@ class TraderEditor(object):
         Radiobutton(radioFrame, text=MODES[1][0], variable=self.v, value=MODES[1][1]).grid(row=0, column=1)
 
         frame = Frame(root)
-        frame.grid(row=row+1, column=column, sticky="w", pady=5)
+        frame.grid(row=row + 1, column=column, sticky="w", pady=5)
 
         self.buyEntires = self.createPriceBlock(frame, "Buy Price", 0, 0)
         self.sellEntries = self.createPriceBlock(frame, "Sell Price", 0, 1)
         buttonFrame = Frame(root)
-        buttonFrame.grid(row=row+2, column=column, sticky="w", pady=5)
+        buttonFrame.grid(row=row + 2, column=column, sticky="w", pady=5)
 
         Button(buttonFrame, text="Update Changes", command=self.update).grid(row=0, column=0)
         Button(buttonFrame, text="Copy to Clipboard", command=self.createTrader).grid(row=0, column=1, padx=5)

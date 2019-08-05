@@ -12,14 +12,15 @@ def createTrader(root, subtype, rows):
         sellPrice = row[3]
         excluded = True if row[4] == 1 else False
         if not excluded:
-            text += "		{},                 {},         {},         {}\n".format(name, traderCat, buyPrice, sellPrice)
+            text += "		{},                 {},         {},         {}\n".format(name, traderCat, buyPrice,
+                                                                                      sellPrice)
     text += "\n"
 
     addToClipboard(root, text)
 
-#(rarity, nominal)
-def distribute(rows, minBuy, maxBuy, minSell, maxSell, useRarity):
 
+# (rarity, nominal)
+def distribute(rows, minBuy, maxBuy, minSell, maxSell, useRarity):
     distribution = getDistribution(rows, useRarity)
 
     lowestValue = distribution[0]
@@ -41,8 +42,8 @@ def distribute(rows, minBuy, maxBuy, minSell, maxSell, useRarity):
 
     return buyPriceForDistrib, sellPriceForDistrib
 
-def getDistribution(rows, rarity_is_set):
 
+def getDistribution(rows, rarity_is_set):
     raritySet = set()
 
     if rarity_is_set:

@@ -1,7 +1,7 @@
-import items
-import xmlParser
 import dao
+import items
 import windows
+import xmlParser
 
 
 def orderModList(mods):

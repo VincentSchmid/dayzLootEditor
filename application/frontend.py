@@ -30,6 +30,7 @@ rarities9 = {0: "undefined",
 
 rarities5 = {15: "Common", 20: "Uncommon", 30: "Rare", 40: "Very Rare", 50: "Legendary", 0: "undefined"}
 
+
 def treeview_sort_column(tv, col, reverse):
     l = [(tv.set(k, col), k) for k in tv.get_children('')]
     l.sort(reverse=reverse)
@@ -468,7 +469,6 @@ class Window(object):
         self.subtypeAutoComp = Combobox_Autocomplete(self.EFValues, dao.getSubtypes(), highlightthickness=1)
         self.subtypeAutoComp.grid(row=8, column=1, sticky="w", pady=5)
         self.subtypeAutoComp.bind("<FocusIn>", self.addEditedVal)
-
 
     def updateModMenu(self):
         newMods = self._checkForNewMod()
