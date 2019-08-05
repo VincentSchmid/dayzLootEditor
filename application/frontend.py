@@ -84,7 +84,7 @@ class Window(object):
 
         databasemenu = Menu(menubar, tearoff=0)
         databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
-        databasemenu.add_command(label="Upgrade Database", command=self.upgradeDB)
+        databasemenu.add_command(label="Detect Subtypes", command=self.upgradeDB)
         databasemenu.add_separator()
         databasemenu.add_command(label="Add items...", command=self.openAddItems)
         databasemenu.add_command(label="Create item links...", command=self.openitemLinker)
@@ -752,7 +752,13 @@ class Window(object):
                 self.upgradeDB()
 
     def upgradeDB(self):
-        upgradeDB.addColumns()
+        try:
+            dao.addColumns()
+        except Exception:
+            pass
+        if windows.askUser("Change Subtypes", "Software will set default subtypes.\n"
+                                              "If you haven't set any subtypes yet it is save to click yes"):
+            upgradeDB.findSubTypes(dao.getAllItems())
 
 
 window = Tk()

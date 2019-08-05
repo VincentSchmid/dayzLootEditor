@@ -29,7 +29,7 @@ class TraderEditor(object):
         subtypesFrame = Frame(self.main)
         subtypesFrame.grid()
         self.subTypeListbox = Listbox(subtypesFrame, width=35, height=30, exportselection=False)
-        self.subTypeListbox.grid(sticky="ns")
+        self.subTypeListbox.grid(sticky="ns", padx=10)
         subTypes = dao.getSubtypes()
         for subType in sorted(subTypes):
             if subType == "":
@@ -41,7 +41,8 @@ class TraderEditor(object):
 
     def setTraderCat(self, rows):
         for i in range(len(rows)):
-            if rows[i][2] == "":
+            traderCat = rows[i][2]
+            if traderCat == "" or traderCat == None:
                 rows[i][2] = traderCatSwitcher(rows[i][1])
 
         return rows
@@ -119,7 +120,7 @@ class TraderEditor(object):
 
     def traderRow(self, parent, name, subtype, traderCat, buyPrice, sellPrice, rarity, nominal, exclude):
         frame = Frame(parent)
-        frame.grid(padx=10, pady=10, sticky="w")
+        frame.grid(padx=5, pady=5, sticky="w")
 
         doExclude = IntVar()
         doExclude.set(exclude)
@@ -202,9 +203,11 @@ class TraderEditor(object):
         rarities = []
         for item in itemsOfSubtype:
             rarities.append((item[5], item[6]))
-
-        pricing = distribute(rarities, int(self.buyEntires[0].get()), int(self.buyEntires[1].get()),
-                             int(self.sellEntries[0].get()), int(self.sellEntries[1].get()), rarity_is_set)
+        try:
+            pricing = distribute(rarities, int(self.buyEntires[0].get()), int(self.buyEntires[1].get()),
+                                 int(self.sellEntries[0].get()), int(self.sellEntries[1].get()), rarity_is_set)
+        except IndexError:
+            windows.showError(self.window, "No rarities", "Set the rarity for your items, or use nominals")
 
         buyPricing = pricing[0]
         sellPricing = pricing[1]

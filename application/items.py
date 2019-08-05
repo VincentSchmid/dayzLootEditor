@@ -28,6 +28,7 @@ class Item:
         self.buyprice = -1
         self.sellprice = -1
         self.tradercat = "*"
+        self.traderexclude = 0
         Item.itemCount += 1
 
     # fills item values based on given type xml block
@@ -118,6 +119,7 @@ class Item:
         self.buyprice = val[p+4]
         self.sellprice = val[p+5]
         self.tradercat = val[p+6]
+        self.traderexclude = val[p+7]
 
     # creates dictonary of item values and fills them
     def createParams(self):

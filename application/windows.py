@@ -48,7 +48,7 @@ def showError(parent, title, message):
 def showUpgradeError(parent):
     showError(parent, "Upgrade Your Database", "Your Database is not compatible with this version "
                                                             "of the software.\n"
-                                                            "an upgrade is required")
+                                                            "After Launch go to Database > Detect Subtypes")
 
 
 def askUser(title, question):
