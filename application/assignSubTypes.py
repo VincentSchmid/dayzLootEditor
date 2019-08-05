@@ -3,8 +3,8 @@ from tkinter import *
 import dao
 import windows
 from categories import traderCatSwitcher
-from exportTrader import createTrader, distribute
 from distibutor import rarityMultiplier
+from exportTrader import createTrader, distribute
 
 
 class TraderEditor(object):

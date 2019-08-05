@@ -1,5 +1,5 @@
-import dao
 import categories as cat
+import dao
 
 
 class Item:

@@ -1,6 +1,5 @@
 import dao
 import items as itms
-import xmlWriter
 
 
 def addColumns():

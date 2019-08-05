@@ -7,7 +7,6 @@ from time import sleep
 from tkinter import END
 from tkinter import messagebox
 
-
 import dao
 import xmlParser
 

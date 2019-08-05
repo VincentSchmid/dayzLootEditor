@@ -8,13 +8,12 @@ import connectionWindow
 import dao
 import distibutor
 import itemLinker
+import upgradeDB
 import windows
 import xmlParser
 import xmlWriter
 from assignSubTypes import TraderEditor
 from autocompleteCombobox import Combobox_Autocomplete
-from categories import allcats
-import upgradeDB
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 

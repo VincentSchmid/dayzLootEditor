@@ -1,11 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 
-
-import xmlParser
-import windows
-import xmlWriter
 import dao
+import windows
+import xmlParser
 
 
 class itemLinker(object):

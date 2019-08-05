@@ -3,10 +3,8 @@ from subprocess import Popen, PIPE
 import pyodbc
 
 import categories
-import items
 import distibutor
 import windows
-import xmlParser
 
 user = ""
 pwd = ""

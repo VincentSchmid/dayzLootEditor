@@ -1,10 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 
-
-import xmlParser
 import windows
-import xmlWriter
+import xmlParser
 
 
 class addItems(object):

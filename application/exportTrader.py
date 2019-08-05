@@ -1,5 +1,6 @@
-from windows import addToClipboard
 from distibutor import rarityMultiplier
+from windows import addToClipboard
+
 
 def createTrader(root, subtype, rows):
     text = "	<Category> {}\n".format(subtype)
