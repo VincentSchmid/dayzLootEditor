@@ -29,7 +29,6 @@ def update(dir, includedMods):
     f.write("<types>\n")
     for mod in includedMods:
         f.write("  <!--{}--> \n".format(mod))
-        print(items[0], items[0][37])
         for item in items:
             if item[37] in mod and item[0] not in written:
                 f.write(getXmlBlock(item))
