@@ -31,18 +31,6 @@ rarities9 = {0: "undefined",
 rarities5 = {15: "Common", 20: "Uncommon", 30: "Rare", 40: "Very Rare", 50: "Legendary", 0: "undefined"}
 
 
-def treeview_sort_column(tv, col, reverse):
-    l = [(tv.set(k, col), k) for k in tv.get_children('')]
-    l.sort(reverse=reverse)
-
-    # rearrange items in sorted positions
-    for index, (val, k) in enumerate(l):
-        tv.move(k, '', index)
-
-    # reverse sort next time
-    tv.heading(col, command=lambda: treeview_sort_column(tv, col, not reverse))
-
-
 class Window(object):
     def __init__(self, window):
         self.window = window
@@ -54,6 +42,8 @@ class Window(object):
         self.availableMods = windows.getMods()
         self.selectedMods = self.availableMods
         self.activatedFields = set()
+        self.sorted = ""
+        self.reverse = False
 
         self.createMenuBar()
         self.createEntryBar()
@@ -279,7 +269,7 @@ class Window(object):
         self.tree.column('#11', width=120, stretch=YES)
 
         for col in columns:
-            self.tree.heading(col, text=col, command=lambda _col=col: treeview_sort_column(self.tree, _col, False))
+            self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
 
         self.tree.grid(row=0, column=0, sticky='nsew')
         self.treeview = self.tree
@@ -636,6 +626,10 @@ class Window(object):
                                                                       row["rarity"], row["mod"]))
         self.updateNominalInfo()
         self.totalNomDisplayed.set(displayedNom)
+        try:
+            self.treeview_sort_column(self.tree, self.sorted, self.reverse)
+        except Exception:
+            pass
         self.updateDistribution()
         self.updateModMenu()
 
@@ -776,6 +770,19 @@ class Window(object):
         if windows.askUser("Change Subtypes", "Software will set default subtypes.\n"
                                               "If you haven't set any subtypes yet it is save to click yes"):
             upgradeDB.findSubTypes(dao.getAllItems())
+
+    def treeview_sort_column(self, tv, col, reverse):
+        self.sorted = col
+        l = [(tv.set(k, col), k) for k in tv.get_children('')]
+        l.sort(reverse=reverse)
+        self.reverse = reverse
+
+        # rearrange items in sorted positions
+        for index, (val, k) in enumerate(l):
+            tv.move(k, '', index)
+
+        # reverse sort next time
+        tv.heading(col, command=lambda: self.treeview_sort_column(tv, col, not reverse))
 
 
 window = Tk()
