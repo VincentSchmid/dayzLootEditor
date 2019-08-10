@@ -449,6 +449,10 @@ class Window(object):
             dao.update(val)
         rows = dao.reExecuteLastQuery()
         self.updateDisplay(rows)
+        try:
+            self.treeview_sort_column(self.tree, self.sorted, self.reverse)
+        except Exception:
+            pass
         self.changed = True
         self.activatedFields.clear()
         self.refreshSubtypes()
@@ -625,10 +629,6 @@ class Window(object):
                                                                       row["rarity"], row["mod"]))
         self.updateNominalInfo()
         self.totalNomDisplayed.set(displayedNom)
-        try:
-            self.treeview_sort_column(self.tree, self.sorted, self.reverse)
-        except Exception:
-            pass
         self.updateDistribution()
         self.updateModMenu()
 
@@ -687,6 +687,10 @@ class Window(object):
                     dao.updateDropValue(self.getSelectedValues(element)["name"], entryValue, name)
 
             self.updateDisplay(dao.reExecuteLastQuery())
+            try:
+                self.treeview_sort_column(self.tree, self.sorted, self.reverse)
+            except Exception:
+            pass
 
     def distribSelChange(self, *args):
         for i in range(len(itemTypes)):
