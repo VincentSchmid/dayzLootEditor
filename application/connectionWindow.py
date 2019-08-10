@@ -1,10 +1,6 @@
 from tkinter import *
 
-
-import xmlParser
-import xmlWriter
 import dao
-import distibutor
 import windows
 
 

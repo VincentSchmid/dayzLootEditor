@@ -7,7 +7,6 @@ from time import sleep
 from tkinter import END
 from tkinter import messagebox
 
-
 import dao
 import xmlParser
 
@@ -43,6 +42,12 @@ def copyFile(fromdir, todir):
 
 def showError(parent, title, message):
     messagebox.showinfo(parent=parent, title=title, message=message)
+
+
+def showUpgradeError(parent):
+    showError(parent, "Upgrade Your Database", "Your Database is not compatible with this version "
+                                               "of the software.\n"
+                                               "After Launch go to Database > Detect Subtypes")
 
 
 def askUser(title, question):
@@ -86,7 +91,10 @@ def writeTypesToDatabase(dir):
     dao.insertItems(params, itemVal)
     sleep(1)
     matches = xmlParser.gunsAndMatchingItem(items)
-    dao.createCombos(matches)
+    try:
+        dao.createCombos(matches)
+    except Exception:
+        print("An exception occured when trying to create item Links")
 
 
 def appendTypesToDatabase(xml, root, mod, useNew):
@@ -160,3 +168,9 @@ def center(toplevel):
     x = w / 2 - size[0] / 2
     y = h / 2 - size[1] / 2
     toplevel.geometry("%dx%d+%d+%d" % (size + (x, y)))
+
+
+def addToClipboard(root, string):
+    root.clipboard_clear()
+    root.clipboard_append(string)
+    root.update()

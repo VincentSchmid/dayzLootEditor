@@ -1,16 +1,19 @@
+from time import sleep
 from tkinter import *
 from tkinter import ttk
 
-import items
-import xmlParser
-import xmlWriter
+import addItems
+import categories
+import connectionWindow
 import dao
 import distibutor
-import connectionWindow
-import windows
-import addItems
 import itemLinker
-from time import sleep
+import upgradeDB
+import windows
+import xmlParser
+import xmlWriter
+from assignSubTypes import TraderEditor
+from autocompleteCombobox import Combobox_Autocomplete
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -32,13 +35,15 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.89")
+        self.window.wm_title("Loot Editor v0.92")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
         self.availableMods = windows.getMods()
         self.selectedMods = self.availableMods
         self.activatedFields = set()
+        self.sorted = ""
+        self.reverse = False
 
         self.createMenuBar()
         self.createEntryBar()
@@ -80,9 +85,11 @@ class Window(object):
 
         databasemenu = Menu(menubar, tearoff=0)
         databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
+        databasemenu.add_command(label="Detect Subtypes", command=self.upgradeDB)
         databasemenu.add_separator()
         databasemenu.add_command(label="Add items...", command=self.openAddItems)
         databasemenu.add_command(label="Create item links...", command=self.openitemLinker)
+        databasemenu.add_command(label="Trader Editor...", command=self.openTraderEditor)
         menubar.add_cascade(label="Database", menu=databasemenu)
 
         self.modsmenu = Menu(menubar, tearoff=0)
@@ -117,9 +124,10 @@ class Window(object):
         Label(self.EFValues, text="lifetime").grid(row=4, column=0, sticky="w", pady=5)
         Label(self.EFValues, text="Usages").grid(row=5, column=0, sticky="w", pady=5)
         Label(self.EFValues, text="Tiers").grid(row=6, column=0, sticky="w", pady=5)
-        Label(self.EFValues, text="type").grid(row=7, column=0, sticky="w", pady=5)
-        Label(self.EFValues, text="rarity").grid(row=8, column=0, sticky="w", pady=5)
-        Label(self.EFValues, text="mod").grid(row=9, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="Type").grid(row=7, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="Subtype").grid(row=8, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="rarity").grid(row=9, column=0, sticky="w", pady=5)
+        Label(self.EFValues, text="mod").grid(row=10, column=0, sticky="w", pady=5)
 
         self.name_text = StringVar()
         self.nameEntry = Entry(self.EFValues, textvariable=self.name_text)
@@ -143,14 +151,13 @@ class Window(object):
         self.restockEntry.bind("<FocusIn>", self.addEditedVal)
         self.restockEntry.val = self.min_text
 
-
         self.lifetime_text = StringVar()
         self.lifetimeEntry = Entry(self.EFValues, textvariable=self.lifetime_text, width=8)
         self.lifetimeEntry.grid(row=4, column=1, sticky="w")
         self.lifetimeEntry.bind("<FocusIn>", self.addEditedVal)
         self.lifetimeEntry.val = self.lifetime_text
 
-        self.usageListBox = Listbox(self.EFValues, height=len(items.usages), selectmode='multiple',
+        self.usageListBox = Listbox(self.EFValues, height=len(categories.usages), selectmode='multiple',
                                     exportselection=False)
         self.usageListBox.grid(row=5, column=1, pady=5, sticky="w")
         self.usageListBox.bind("<FocusIn>", self.addEditedVal)
@@ -159,27 +166,29 @@ class Window(object):
         self.tierListBox.grid(row=6, column=1, pady=5, sticky="w")
         self.tierListBox.bind("<FocusIn>", self.addEditedVal)
 
-        windows.updateListBox(self.usageListBox, items.usages)
-        windows.updateListBox(self.tierListBox, items.tiers)
+        windows.updateListBox(self.usageListBox, categories.usages)
+        windows.updateListBox(self.tierListBox, categories.tiers)
 
         self.typeEntrySel = StringVar()
         self.typeEntrySel.set('')
         self.typeEntrySel.trace("w", self.typeSelChange)
-
         self.typeOption = OptionMenu(self.EFValues, self.typeEntrySel, *xmlParser.selection[:-1])
         self.typeOption.grid(row=7, column=1, sticky="w", pady=5)
 
+        self.subtypeAutoComp = Combobox_Autocomplete(self.EFValues, dao.getSubtypes(), highlightthickness=1)
+        self.subtypeAutoComp.grid(row=8, column=1, sticky="w", pady=5)
+        self.subtypeAutoComp.bind("<FocusIn>", self.addEditedVal)
 
         self.raritySel = StringVar()
         self.raritySel.set('undefined')
         self.rarityTrace = self.raritySel.trace("w", self.raritySelChange)
 
         self.rarityOption = OptionMenu(self.EFValues, self.raritySel, *rarities9.values())
-        self.rarityOption.grid(row=8, column=1, sticky="w", pady=5)
+        self.rarityOption.grid(row=9, column=1, sticky="w", pady=5)
 
         self.mod_text = StringVar()
         self.modEntry = Entry(self.EFValues, textvariable=self.mod_text, width=14)
-        self.modEntry.grid(row=9, column=1, sticky="w", pady=5)
+        self.modEntry.grid(row=10, column=1, sticky="w", pady=5)
         self.modEntry.bind("<ButtonRelease-1>", self.addEditedVal)
         self.modEntry.val = self.mod_text
 
@@ -219,7 +228,7 @@ class Window(object):
         Button(self.entryFrame, text="Update", width=12, command=self.updateSel) \
             .grid(row=3, column=0, pady=9)
 
-        Button(self.entryFrame, text="Delete", width=12, command=self.deleteSel)\
+        Button(self.entryFrame, text="Delete", width=12, command=self.deleteSel) \
             .grid(row=4, column=0, pady=5)
 
     def createTreeview(self):
@@ -229,32 +238,38 @@ class Window(object):
         self.treeFrame.grid_rowconfigure(0, weight=1)
         self.treeFrame.grid_columnconfigure(0, weight=1)
 
+        columns = ('nominal', 'min', 'restock', 'lifetime', 'type', 'subtype', 'usage',
+                   'tier', 'Dyn. Event', 'rarity', 'mod')
+
         self.tree = ttk.Treeview(self.treeFrame,
-                                 columns=(
-                                     'name', 'nominal', 'min', 'restock', 'lifetime', 'usage', 'tier', 'Dyn. Event',
-                                     'rarity', 'mod'), height=40)
+                                 columns=columns, height=40)
         self.tree.heading('#0', text='Name')
         self.tree.heading('#1', text='Nominal')
         self.tree.heading('#2', text='Min')
         self.tree.heading('#3', text='Restock')
         self.tree.heading('#4', text='Lifetime')
         self.tree.heading('#5', text='Type')
-        self.tree.heading('#6', text='Usage')
-        self.tree.heading('#7', text='Tier')
-        self.tree.heading('#8', text='Dyn. Event')
-        self.tree.heading('#9', text='Rarity')
-        self.tree.heading('#10', text='Mod')
+        self.tree.heading('#6', text='Subtype')
+        self.tree.heading('#7', text='Usage')
+        self.tree.heading('#8', text='Tier')
+        self.tree.heading('#9', text='Dyn. Event')
+        self.tree.heading('#10', text='Rarity')
+        self.tree.heading('#11', text='Mod')
         self.tree.column('#0', stretch=NO)
         self.tree.column('#1', width=60, stretch=YES)
         self.tree.column('#2', width=60, minwidth=20, stretch=YES)
         self.tree.column('#3', width=80, stretch=YES)
         self.tree.column('#4', width=80, stretch=YES)
         self.tree.column('#5', width=60, stretch=YES)
-        self.tree.column('#6', width=270, stretch=NO)
-        self.tree.column('#7', width=130, stretch=YES)
-        self.tree.column('#8', width=80, stretch=YES)
-        self.tree.column('#9', width=120, stretch=YES)
+        self.tree.column('#6', width=60, stretch=YES)
+        self.tree.column('#7', width=270, stretch=NO)
+        self.tree.column('#8', width=130, stretch=YES)
+        self.tree.column('#9', width=80, stretch=YES)
         self.tree.column('#10', width=120, stretch=YES)
+        self.tree.column('#11', width=120, stretch=YES)
+
+        for col in columns:
+            self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
 
         self.tree.grid(row=0, column=0, sticky='nsew')
         self.treeview = self.tree
@@ -270,7 +285,6 @@ class Window(object):
         hori.config(command=self.tree.xview)
 
     def createSideBar(self):
-
         # todo get from backend
         self.choices = xmlParser.selection
 
@@ -328,12 +342,11 @@ class Window(object):
         self.multiplier.set('0.00')
 
         ttk.Scale(self.multiplierFrame, from_=0, to_=5, length=150,
-          command=lambda s:self.multiplier.set('%0.2f' % float(s))).grid(column=0, row=2)
+                  command=lambda s: self.multiplier.set('%0.2f' % float(s))).grid(column=0, row=2)
 
         ttk.Label(self.multiplierFrame, textvariable=self.multiplier).grid(column=0, row=1)
 
         Button(self.multiplierFrame, text="Update", command=self.multiplySel).grid(row=3)
-
 
     def createNominalInfo(self):
         self.infoFrame = Frame(self.window)
@@ -373,7 +386,7 @@ class Window(object):
 
     def viewCategroy(self):
         cat = self.typeSel.get()
-        if cat in xmlParser.categories:
+        if cat in categories.categories:
             rows = dao.getCategory(cat)
         elif cat in itemTypes:
             rows = dao.getType(cat)
@@ -401,6 +414,7 @@ class Window(object):
             self.lifetimeEntry: "lifetime",
             self.usageListBox: "usage",
             self.tierListBox: "tier",
+            self.subtypeAutoComp: "subtype",
             self.modEntry: "mod",
             self.deLootOption: "deloot",
             self.cargoOption: "cargo",
@@ -430,13 +444,24 @@ class Window(object):
             val = self.getEditedValues(element)
             val["name"] = self.tree.item(element)["text"]
             if multiplier is not None:
-                val["nominal"] = val["nominal"]*multiplier
-                val["min"] = val["min"]*multiplier
+                val["nominal"] = val["nominal"] * multiplier
+                val["min"] = val["min"] * multiplier
             dao.update(val)
         rows = dao.reExecuteLastQuery()
         self.updateDisplay(rows)
+        try:
+            self.treeview_sort_column(self.tree, self.sorted, self.reverse)
+        except Exception:
+            pass
         self.changed = True
         self.activatedFields.clear()
+        self.refreshSubtypes()
+
+    def refreshSubtypes(self):
+        self.subtypeAutoComp.grid_forget()
+        self.subtypeAutoComp = Combobox_Autocomplete(self.EFValues, dao.getSubtypes(), highlightthickness=1)
+        self.subtypeAutoComp.grid(row=8, column=1, sticky="w", pady=5)
+        self.subtypeAutoComp.bind("<FocusIn>", self.addEditedVal)
 
     def updateModMenu(self):
         newMods = self._checkForNewMod()
@@ -493,10 +518,8 @@ class Window(object):
         self.changed = True
         self.updateDisplay(dao.getType(self.distribSel.get()))
 
-
     def multiplySel(self):
         self.updateSel(float(self.multiplier.get()))
-
 
     # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):
@@ -533,6 +556,7 @@ class Window(object):
             windows.selectItemsFromLB(self.tierListBox, dao.getTiers(dict["name"]))
 
             self.typeEntrySel.set(dict["type"])
+            self.subtypeAutoComp.set_value(dict["subtype"])
             self.raritySel.set(dict["rarity"])
             self.mod_text.set(dict["mod"])
 
@@ -542,23 +566,21 @@ class Window(object):
             self.map.set(dict["map"])
             self.player.set(dict["player"])
 
-            self.window.clipboard_clear()
-            self.window.clipboard_append(dict["name"])
-            self.window.update()
+            windows.addToClipboard(self.window, dict["name"])
 
+            self.activatedFields.clear()
         except IndexError:
             pass
-
-        self.activatedFields.clear()
 
     def getSelectedValues(self, element):
         dict = self.tree.item(element)
         flags = dao.getFlags(dict["text"])
 
         val = {"name": dict["text"], "nominal": dict["values"][0], "min": dict["values"][1],
-               "deloot": dict["values"][7], "restock": dict["values"][2], "lifetime": dict["values"][3],
-               "type": dict["values"][4], "rarity": dict["values"][8], "mod": dict["values"][9],
-               "cargo": flags[0], "hoarder": flags[1], "map": flags[2], "player": flags[3], "flags": flags}
+               "deloot": dict["values"][8], "restock": dict["values"][2], "lifetime": dict["values"][3],
+               "type": dict["values"][4], "subtype": dict["values"][5], "rarity": dict["values"][9],
+               "mod": dict["values"][10], "cargo": flags[0], "hoarder": flags[1], "map": flags[2], "player": flags[3],
+               "flags": flags}
 
         return val
 
@@ -569,9 +591,9 @@ class Window(object):
 
         val = {"nominal": self.nominal_text.get(), "min": self.min_text.get(), "deloot": self.deLoot.get(),
                "restock": self.restock_text.get(), "lifetime": self.lifetime_text.get(), "mod": self.mod_text.get(),
-               "usage": self.getEditedListBox(self.usageListBox, items.usages),
-               "tier": self.getEditedListBox(self.tierListBox, items.tiers),
-               "cargo": self.cargo.get(), "hoarder": self.hoarder.get(),
+               "usage": self.getEditedListBox(self.usageListBox, categories.usages),
+               "tier": self.getEditedListBox(self.tierListBox, categories.tiers),
+               "cargo": self.cargo.get(), "hoarder": self.hoarder.get(), "subtype": self.subtypeAutoComp.get(),
                "map": self.map.get(), "player": self.player.get()}
 
         for field in self.activatedFields:
@@ -602,9 +624,9 @@ class Window(object):
             if row["mod"] in self.selectedMods:
                 displayedNom += row["nominal"]
                 self.tree.insert('', "end", text=row["name"], values=(row["nominal"], row["min"], row["restock"],
-                                                                      row["lifetime"], row["type"], row["usage"],
-                                                                      row["tier"], row["deloot"], row["rarity"],
-                                                                      row["mod"]))
+                                                                      row["lifetime"], row["type"], row["subtype"],
+                                                                      row["usage"], row["tier"], row["deloot"],
+                                                                      row["rarity"], row["mod"]))
         self.updateNominalInfo()
         self.totalNomDisplayed.set(displayedNom)
         self.updateDistribution()
@@ -613,19 +635,20 @@ class Window(object):
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
                 "type": row[2], "rarity": rarities9[row[36]], "deloot": row[34],
-                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27]), "mod": row[-1],
-                "usages": row[10:23], "tiers": row[23:27]}
+                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27]), "mod": row[37],
+                "usages": row[10:23], "tiers": row[23:27], "subtype": row[38], "buyprice": row[39],
+                "sellprice": row[40], "tradercat": row[41], "traderExcl": row[42]}
 
     def createUsage(self, row):
-        usageNames = items.usages
+        usageNames = categories.usages
         if sum(row) > 5:
-            usageNames = items.usagesAbr
+            usageNames = categories.usagesAbr
         usage = ""
 
         if sum(row) == len(usageNames) - 1:
             usage = "everywhere except Coast"
         else:
-            for i in range(len(items.usages)):
+            for i in range(len(categories.usages)):
                 if row[i] == 1:
                     usage += usageNames[i] + " "
             if usage != "":
@@ -635,9 +658,9 @@ class Window(object):
 
     def createTier(self, row):
         tier = ""
-        for i in range(len(items.tiers)):
+        for i in range(len(categories.tiers)):
             if row[i] == 1:
-                tier += items.tiers[i] + ","
+                tier += categories.tiers[i] + ","
         if tier != "":
             tier = tier[:-1]
         return tier
@@ -664,6 +687,10 @@ class Window(object):
                     dao.updateDropValue(self.getSelectedValues(element)["name"], entryValue, name)
 
             self.updateDisplay(dao.reExecuteLastQuery())
+            try:
+                self.treeview_sort_column(self.tree, self.sorted, self.reverse)
+            except Exception:
+            	pass
 
     def distribSelChange(self, *args):
         for i in range(len(itemTypes)):
@@ -719,6 +746,9 @@ class Window(object):
     def openitemLinker(self):
         itemLinker.itemLinker(self.window)
 
+    def openTraderEditor(self):
+        TraderEditor(self.window)
+
     def checkForDatabase(self):
         try:
             dao.getNominalByType("weapon")
@@ -727,6 +757,35 @@ class Window(object):
             self.window.withdraw()
             self.openConnectionWindow()
             self.window.deiconify()
+
+        try:
+            dao.getSubtypes()
+        except Exception:
+            windows.showUpgradeError(self.window)
+            if windows.askUser("Upgrade", "Do you want to upgrade your Database?"):
+                self.upgradeDB()
+
+    def upgradeDB(self):
+        try:
+            dao.addColumns()
+        except Exception:
+            pass
+        if windows.askUser("Change Subtypes", "Software will set default subtypes.\n"
+                                              "If you haven't set any subtypes yet it is save to click yes"):
+            upgradeDB.findSubTypes(dao.getAllItems())
+
+    def treeview_sort_column(self, tv, col, reverse):
+        self.sorted = col
+        l = [(tv.set(k, col), k) for k in tv.get_children('')]
+        l.sort(reverse=reverse)
+        self.reverse = reverse
+
+        # rearrange items in sorted positions
+        for index, (val, k) in enumerate(l):
+            tv.move(k, '', index)
+
+        # reverse sort next time
+        tv.heading(col, command=lambda: self.treeview_sort_column(tv, col, not reverse))
 
 
 window = Tk()

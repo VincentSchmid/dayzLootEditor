@@ -1,7 +1,7 @@
-import items
-import xmlParser
 import dao
+import items
 import windows
+import xmlParser
 
 
 def orderModList(mods):
@@ -30,7 +30,7 @@ def update(dir, includedMods):
     for mod in includedMods:
         f.write("  <!--{}--> \n".format(mod))
         for item in items:
-            if item[-1] in mod and item[0] not in written:
+            if item[37] in mod and item[0] not in written:
                 f.write(getXmlBlock(item))
                 written.append(item[0])
     f.write("</types>\n")

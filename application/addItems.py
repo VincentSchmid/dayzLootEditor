@@ -1,10 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 
-
-import xmlParser
 import windows
-import xmlWriter
+import xmlParser
 
 
 class addItems(object):
@@ -23,8 +21,8 @@ class addItems(object):
         self.useNewVal = IntVar()
         self.useNewVal.set(0)
 
-        Checkbutton(self.addInfoFrame, text="Use Values of Dublicate Items ", variable=self.useNewVal)\
-            .grid(row=0, column= 2, padx=10)
+        Checkbutton(self.addInfoFrame, text="Use Values of Dublicate Items ", variable=self.useNewVal) \
+            .grid(row=0, column=2, padx=10)
 
         self.text = Text(self.window)
         self.text.grid(row=1, padx=3, pady=3)
@@ -38,7 +36,7 @@ class addItems(object):
         self.window.wait_window()
 
     def confirm(self):
-        selectedMod = self.modSelector.get()
+        selectedMod = re.sub(r"[^a-zA-Z0-9]+", ' ', self.modSelector.get()).strip()
         if selectedMod == "":
             selectedMod = self.mods[0]
 

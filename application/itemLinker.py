@@ -1,11 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 
-
-import xmlParser
-import windows
-import xmlWriter
 import dao
+import windows
+import xmlParser
 
 
 class itemLinker(object):
@@ -78,13 +76,11 @@ class itemLinker(object):
         root.grid_rowconfigure(0, weight=1)
         root.grid_columnconfigure(0, weight=1)
 
-
         listboxFrame = Frame(lFrame)
         listboxFrame.grid(row=1, padx=5, sticky="ns")
 
         lFrame.grid_rowconfigure(1, weight=1)
         lFrame.grid_columnconfigure(0, weight=1)
-
 
         lb = Listbox(listboxFrame, width=35, height=30, exportselection=False)
         lb.grid(sticky="ns")
@@ -151,7 +147,6 @@ class itemLinker(object):
         rows = dao.getItemsFromCatMods(values[2], values[1], *all, values[0])
         windows.updateListBox(box[1], rows)
 
-
     def search(self, *args):
         all = [xmlParser.selection[-1], self.mods[0]]
         parentValues = [self.searchEntries[0][0].get(), self.modEntries[0][1].get(), self.categoryEntries[0][1].get()]
@@ -162,7 +157,6 @@ class itemLinker(object):
         if self.window.focus_get() == self.searchEntries[1][2]:
             values = allItemsValues
             box = self.listBoxes[1]
-
 
         rows = dao.getItemsFromCatMods(values[2], values[1], *all, values[0])
         windows.updateListBox(box, rows)
@@ -193,7 +187,6 @@ class itemLinker(object):
         self.listBoxes[2].delete(0, END)
         for item in dao.getLinkedItems(self.listBoxes[0].get(ANCHOR)):
             self.listBoxes[2].insert(END, item)
-
 
 
 def testWindow():

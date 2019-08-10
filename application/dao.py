@@ -2,10 +2,9 @@ from subprocess import Popen, PIPE
 
 import pyodbc
 
-import items
+import categories
 import distibutor
 import windows
-import xmlParser
 
 user = ""
 pwd = ""
@@ -82,11 +81,11 @@ def getCoulumNames():
         odbcV = c[5]
 
     cursor = connection().cursor()
-    cursor.execute("""SELECT COLUMN_NAME
-                      FROM INFORMATION_SCHEMA.COLUMNS
-                      WHERE TABLE_SCHEMA= '""" + database + """'
-                      AND TABLE_NAME= 'items'
-                      ORDER BY ORDINAL_POSITION;""")
+    cursor.execute("SELECT COLUMN_NAME \
+                      FROM INFORMATION_SCHEMA.COLUMNS \
+                      WHERE TABLE_SCHEMA= '" + database + "' \
+                      AND TABLE_NAME= 'items' \
+                      ORDER BY ORDINAL_POSITION;")
     return [row[0] for row in cursor.fetchall()]
 
 
@@ -120,17 +119,16 @@ def getDict(item):
 
         dict[key] = item[k]
 
-
     return dict
 
 
-def insertItems(parameters, items):
+def insertItems(params, items):
     conn = connection()
     cursor = conn.cursor()
 
     cursor.fast_executemany = True
     cursor.executemany(
-        "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "insert into items(" + params + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         items)
     conn.commit()
 
@@ -141,7 +139,7 @@ def insertItem(parameters, item):
 
     try:
         cursor.execute(
-            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             item)
         conn.commit()
         return 0
@@ -183,6 +181,12 @@ def getType(type):
     return cursor.fetchall()
 
 
+def getSubtypes():
+    cursor = connection().cursor()
+    cursor.execute("SELECT subtype FROM items group by subtype")
+    return [row[0] for row in cursor.fetchall()]
+
+
 def getCategory(category):
     global lastQuery
     lastQuery = "select * \
@@ -192,6 +196,34 @@ def getCategory(category):
     cursor = connection().cursor()
     cursor.execute(lastQuery)
     return cursor.fetchall()
+
+
+def getSubtypeForTrader(subtype):
+    global lastQuery
+    lastQuery = "select name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude \
+                from items \
+                where subtype = '" + subtype + "';"
+
+    cursor = connection().cursor()
+    cursor.execute(lastQuery)
+    return cursor.fetchall()
+
+
+def setSubtypesMany(items):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.fast_executemany = True
+    cursor.executemany("UPDATE items SET subtype = ? WHERE name = ?;", items)
+    conn.commit()
+
+
+def setSubtypeForTrader(items):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.fast_executemany = True
+    cursor.executemany("UPDATE items SET traderCat = ?, buyprice = ?, \
+        sellprice= ?, traderExclude= ?, rarity= ? WHERE name = ?;", items)
+    conn.commit()
 
 
 def getLinkedItems(item):
@@ -294,7 +326,9 @@ def getNominalByType(type):
         from items \
         where type = ?", type
     )
-    setColumnNames()
+    global columns
+    if columns == "":
+        setColumnNames()
     return cursor.fetchval()
 
 
@@ -324,14 +358,16 @@ def updateType(itemName, type):
     cursor.execute("UPDATE items SET type = ? WHERE name = ?", type, itemName)
     conn.commit()
 
+
 def updateDropValue(itemName, newValue, valueType):
     if valueType == "rarity":
         updateRarity(itemName, newValue)
     if valueType == "type":
         updateType(itemName, newValue)
 
+
 def updateRarity(itemName, rarity):
-	#todo clean this up
+    # todo clean this up
     rarities = distibutor.rarities9
     if rarity in rarities.values():
         for key, value in rarities.items():
@@ -346,8 +382,9 @@ def updateRarity(itemName, rarity):
 
 def update(values):
     query = "UPDATE items SET nominal = " + str(values["nominal"]) + ", min= " + str(values["min"]) + ", \
-        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) \
-        + ", deloot= '" + str(values["deloot"]) + "', mods= '" + str(values["mod"]) + "' WHERE name = '" + str(
+        restock= " + str(values["restock"]) + ", lifetime= " + str(values["lifetime"]) + ", subtype= '" + str(
+        values["subtype"]) + "'" \
+            + ", deloot= '" + str(values["deloot"]) + "', mods= '" + str(values["mod"]) + "' WHERE name = '" + str(
         values["name"] + "'")
 
     conn = connection()
@@ -358,12 +395,12 @@ def update(values):
     updateFlags(values)
 
     try:
-        updateListValues(values["usage"], values["name"], items.usages)
+        updateListValues(values["usage"], values["name"], categories.usages)
     except KeyError:
         pass
 
     try:
-        updateListValues(values["tier"], values["name"], items.tiers)
+        updateListValues(values["tier"], values["name"], categories.tiers)
     except KeyError:
         pass
 
@@ -489,13 +526,13 @@ def createDB(name):
 
 def getUsages(itemName):
     cursor = connection().cursor()
-    cursor.execute("select " + ", ".join(items.usages) + " from items where name = '" + itemName + "'")
+    cursor.execute("select " + ", ".join(categories.usages) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
 
 
 def getTiers(itemName):
     cursor = connection().cursor()
-    cursor.execute("select " + ", ".join(items.tiers) + " from items where name = '" + itemName + "'")
+    cursor.execute("select " + ", ".join(categories.tiers) + " from items where name = '" + itemName + "'")
     return cursor.fetchall()[0]
 
 
@@ -567,6 +604,20 @@ def backupDatabase(file):
     file.write(p1.communicate()[0])
     file.close()
     p1.kill()
+
+
+def addColumns():
+    query = "ALTER TABLE `" + windows.readConfig()[3] + "`.`items` \
+ADD COLUMN `subtype` VARCHAR(45) NULL DEFAULT NULL AFTER `mods`, \
+ADD COLUMN `buyprice` INT(11) NULL DEFAULT NULL AFTER `subtype`,\
+ADD COLUMN `sellprice` INT(11) NULL DEFAULT NULL AFTER `buyprice`, \
+ADD COLUMN `traderCat` VARCHAR(3) NULL DEFAULT NULL AFTER `sellprice`,\
+ADD COLUMN `traderExclude` TINYINT(1) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' AFTER `traderCat`;"
+
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(query)
+    conn.commit()
 
 
 def dropDB():

@@ -1,50 +1,16 @@
+import categories as cat
 import dao
-import xmlParser
-from xmlParser import isGun, itemTypes, isMag, isAmmo, isOptic
 
-usages = ["Military",
-          "Prison",
-          "School",
-          "Coast",
-          "Village",
-          "Industrial",
-          "Medic",
-          "Police",
-          "Hunting",
-          "Town",
-          "Farm",
-          "Firefighter",
-          "Office"]
-
-usagesAbr = ["Mil.",
-             "Pris.",
-             "School",
-             "Coast",
-             "Vil.",
-             "Ind.",
-             "Med.",
-             "Pol.",
-             "Hunt.",
-             "Town",
-             "Farm",
-             "Firef.",
-             "Office"]
-
-tiers = ["Tier1", "Tier2", "Tier3", "Tier4"]
-
-tags = ["shelves", "floor"]
-
-flags = ["count_in_cargo",
-         "count_in_hoarder",
-         "count_in_map",
-         "count_in_player",
-         "crafted",
-         "deloot"]
 
 class Item:
+    subTypeCount = 0
+    itemCount = 0
+
     def __init__(self):
         self.name = ""
         self.category = ""
+        self.type = ""
+        self.subType = ""
         self.lifetime = 0
         self.quantmin = -1
         self.quantmax = -1
@@ -59,6 +25,11 @@ class Item:
         self.parameters = {}
         self.rarity = ""
         self.mod = ""
+        self.buyprice = -1
+        self.sellprice = -1
+        self.tradercat = "*"
+        self.traderexclude = 0
+        Item.itemCount += 1
 
     # fills item values based on given type xml block
     def fill(self, xml, mod):
@@ -102,6 +73,11 @@ class Item:
                     self.flags.append(attr[1])
 
         self.type = findType(self.name, self.category)
+        self.subType = findSubType(self.name, self.category, self.type)
+        if self.subType is not "":
+            Item.subTypeCount += 1
+        else:
+            pass
         self.mod = mod
         self.createParams()
 
@@ -118,55 +94,60 @@ class Item:
         self.min = val[8]
         self.restock = val[9]
         p = 10
-        for i in range(len(usages)):
+        for i in range(len(cat.usages)):
             if val[p] == 1:
-                self.usages.add(usages[i])
+                self.usages.add(cat.usages[i])
             p += 1
 
-        for i in range(len(tiers)):
+        for i in range(len(cat.tiers)):
             if val[p] == 1:
-                self.tiers.add(tiers[i])
+                self.tiers.add(cat.tiers[i])
             p += 1
 
-        for i in range(len(tags)):
+        for i in range(len(cat.tags)):
             if val[p] == 1:
-                self.tags.add(tags[i])
+                self.tags.add(cat.tags[i])
             p += 1
 
-        for i in range(len(flags)):
+        for i in range(len(cat.flags)):
             self.flags.append(val[p])
             p += 1
 
-        self.rarity = val[p+1]
-        self.mod = val[p+2]
+        self.rarity = val[p + 1]
+        self.mod = val[p + 2]
+        self.subType = val[p + 3]
+        self.buyprice = val[p + 4]
+        self.sellprice = val[p + 5]
+        self.tradercat = val[p + 6]
+        self.traderexclude = val[p + 7]
 
     # creates dictonary of item values and fills them
     def createParams(self):
-        dict = {"name": self.name, "category": self.category, "type": self.type,
-                "lifetime": self.lifetime, "quantmin": self.quantmin,
-                "nominal": self.nominal, "cost": self.cost, "quantmax": self.quantmax,
-                "min": self.min, "restock": self.restock, "mods": self.mod}
+        dict = {"name": self.name, "category": self.category, "type": self.type, "subtype": self.subType,
+                "lifetime": self.lifetime, "quantmin": self.quantmin, "buyprice": self.buyprice,
+                "nominal": self.nominal, "cost": self.cost, "quantmax": self.quantmax, "sellprice": self.sellprice,
+                "min": self.min, "restock": self.restock, "mods": self.mod, "tradercat": self.tradercat}
 
-        for u in usages:
+        for u in cat.usages:
             if u in self.usages:
                 dict[u] = 1
             else:
                 dict[u] = 0
 
-        for t in tiers:
+        for t in cat.tiers:
             if t in self.tiers:
                 dict[t] = 1
             else:
                 dict[t] = 0
 
-        for ta in tags:
+        for ta in cat.tags:
             if ta in self.tags:
                 dict[ta] = 1
             else:
                 dict[ta] = 0
 
         for i in range(len(self.flags)):
-            dict[flags[i]] = self.flags[i]
+            dict[cat.flags[i]] = self.flags[i]
 
         self.parameters = dict
 
@@ -174,7 +155,7 @@ class Item:
         type = ""
         craftable = False
 
-        if self.flags[-2] == 1:
+        if self.flags[-2] == 1 or self.nominal == 0:
             craftable = True
 
         type += "  <type name=\"{}\">\n".format(self.name)
@@ -202,7 +183,7 @@ class Item:
     def getSpawnableTypes(self):
         linkedItems = dao.getLinekd(self.name, self.type)
 
-        magChance= "{:0.2f}".format(0.3)
+        magChance = "{:0.2f}".format(0.3)
         opticChance = "{:0.2f}".format(0.10, 2)
         attachmentChance = "{:0.2f}".format(0.20, 2)
 
@@ -258,21 +239,60 @@ def attachmentBlock(items, chance):
 def findType(name, category):
     if category == "weapons":
         if isGun(name):
-            return itemTypes[0]
+            return cat.weaponSubTypes[0]
 
         if isMag(name):
-            return itemTypes[3]
+            return cat.weaponSubTypes[3]
 
         if isAmmo(name):
-            return itemTypes[1]
+            return cat.weaponSubTypes[1]
 
         if isOptic(name):
-            return itemTypes[2]
+            return cat.weaponSubTypes[2]
 
-        return itemTypes[4]
+        return cat.weaponSubTypes[4]
 
     else:
         return category
+
+
+def findSubType(name, category, itemType):
+    if category == "":
+        for try_cat in cat.categories:
+            result = getKeywordDict(name, try_cat, cat.categoriesDict)
+            subType = _subtypeFromDict(result, name)
+            if subType is not None:
+                return subType
+
+    elif category == "weapons":
+        subTypeDict = getKeywordDict(name, itemType, cat.weaponSubTypesDict)
+        return _subtypeFromDict(subTypeDict, name)
+    else:
+        subTypeDict = getKeywordDict(name, category, cat.categoriesDict)
+        return _subtypeFromDict(subTypeDict, name)
+
+    return ""
+
+
+def _subtypeFromDict(subTypeDict, name):
+    if subTypeDict is not None:
+        for subType, keywords in subTypeDict.items():
+            if isSubtype(name, keywords):
+                return subType
+    return ""
+
+
+def getKeywordDict(name, superType, nextCat):
+    for catName, DictWithKeywords in nextCat.items():
+        if catName == superType:
+            return DictWithKeywords
+
+
+def isSubtype(name, keywords):
+    for keyword in keywords:
+        if keyword in name.lower():
+            return True
+    return False
 
 
 def isHandguard(itemName):
@@ -287,3 +307,54 @@ def isBttStck(itemName):
     for kw in buttstockKeyWords:
         if kw in itemName.lower():
             return True
+
+
+def isGun(name):
+    isGun = True
+
+    name = removeModPrefixes(name)
+
+    paintKeyWords = ["camo", "black", "green", "desert"]
+    buttstockKeyWords = ["buttstock", "bttstck"]
+    handguardKeyWords = ["handguard", "hndgrd"]
+    notGunKeyWords = ["lrs", "ammo", "optic", "sawed", "suppressor", "goggles", "mag", "light", "rnd",
+                      "bayonet", "railatt", "compensator", "drum", "palm", "STANAG"] \
+                     + buttstockKeyWords + handguardKeyWords
+
+    for keyword in notGunKeyWords:
+        if keyword in name.lower():
+            isGun = False
+            break
+
+    return isGun
+
+
+def isAmmo(name):
+    if "ammo" in name.lower():
+        return True
+    else:
+        return False
+
+
+def isOptic(name):
+    name = name.lower()
+    if "optic" in name or "lrs" in name:
+        return True
+    else:
+        return False
+
+
+def isMag(name):
+    if "mag" in name.lower():
+        return True
+    else:
+        return False
+
+
+def removeModPrefixes(name):
+    modPrefixes = ["Mass", "GP_", "gp_", "FP4_"]
+
+    for prefix in modPrefixes:
+        if name.startswith(prefix):
+            name = name[len(prefix):]
+    return name

@@ -1,6 +1,6 @@
+from math import ceil
 
 import dao
-from math import ceil
 
 # todo enum from rarities store at one place
 

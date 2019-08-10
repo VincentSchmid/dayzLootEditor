@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
--- Host: localhost    Database: dayzitems
+-- Host: localhost    Database: dayzitems7
 -- ------------------------------------------------------
 -- Server version	8.0.16
 
@@ -32,7 +32,7 @@ CREATE TABLE `itemcombos` (
   KEY `item2` (`item2`),
   CONSTRAINT `itemcombos_ibfk_1` FOREIGN KEY (`item1`) REFERENCES `items` (`name`),
   CONSTRAINT `itemcombos_ibfk_2` FOREIGN KEY (`item2`) REFERENCES `items` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=987 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2259 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,6 +81,11 @@ CREATE TABLE `items` (
   `ingameName` varchar(45) DEFAULT NULL,
   `rarity` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
   `mods` varchar(25) NOT NULL DEFAULT 'Vanilla',
+  `subtype` varchar(45) DEFAULT NULL,
+  `buyprice` int(11) DEFAULT NULL,
+  `sellprice` int(11) DEFAULT NULL,
+  `traderCat` varchar(3) DEFAULT NULL,
+  `traderExclude` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -94,4 +99,4 @@ CREATE TABLE `items` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-24 18:47:56
+-- Dump completed on 2019-08-03 15:54:36
