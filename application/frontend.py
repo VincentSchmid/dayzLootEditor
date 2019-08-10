@@ -285,7 +285,6 @@ class Window(object):
         hori.config(command=self.tree.xview)
 
     def createSideBar(self):
-
         # todo get from backend
         self.choices = xmlParser.selection
 

@@ -1,4 +1,5 @@
 from tkinter import *
+from exportTrader import rarityForTrader
 
 import dao
 import windows
@@ -189,9 +190,9 @@ class TraderEditor(object):
         items = self.createValues()
         newItems = []
         for item in items:
-            newItem = [item[5], item[0], item[1], item[2], item[3]]
+            newItem = [item[5], item[0], item[1], item[2], item[3], item[4]]
             newItems.append(newItem)
-        # name, traderCat, buyPrice, sellPrice
+        # name, traderCat, buyPrice, sellPrice, rarity
         createTrader(self.window, subtype, newItems)
 
     def distributePricing(self):
@@ -211,10 +212,13 @@ class TraderEditor(object):
 
         buyPricing = pricing[0]
         sellPricing = pricing[1]
-
+        print(buyPricing)
+        print(sellPricing)
+        print(self.traderVal[0][1][0])
+        print(self.traderVal[0][0][1])
         for item in self.traderVal:
             try:
-                keyValue = rarityMultiplier[item[1][0]] if rarity_is_set else item[1][2]
+                keyValue = rarityForTrader[item[1][0]] if rarity_is_set else item[1][2]
             except KeyError:
                 keyValue = 0
             self.setEntryVal(item[0][1], buyPricing[keyValue])
