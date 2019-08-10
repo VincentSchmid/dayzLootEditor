@@ -35,7 +35,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.91")
+        self.window.wm_title("Loot Editor v0.92")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
@@ -690,7 +690,7 @@ class Window(object):
             try:
                 self.treeview_sort_column(self.tree, self.sorted, self.reverse)
             except Exception:
-            pass
+            	pass
 
     def distribSelChange(self, *args):
         for i in range(len(itemTypes)):
