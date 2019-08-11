@@ -690,7 +690,7 @@ class Window(object):
             try:
                 self.treeview_sort_column(self.tree, self.sorted, self.reverse)
             except Exception:
-            	pass
+                pass
 
     def distribSelChange(self, *args):
         for i in range(len(itemTypes)):
