@@ -97,6 +97,44 @@ def writeTypesToDatabase(dir):
         print("An exception occured when trying to create item Links")
 
 
+def getItemsFromTraderFile(dir, root):
+    items = []
+    category = ""
+    count = 0
+    with open(dir) as the_file:
+
+        for line in the_file:
+            # remove all comments
+            line = line.partition('//')[0]
+            line = line.rstrip()
+
+            #set category
+            if "<Category>" in line:
+                category = line.partition(">")[2].strip()
+
+            if category != "" and "," in line:
+                try:
+                    values = line.split(",")
+                    name = values[0].strip()
+                    traderCat = values[1].strip()
+                    buyPrice = values[2].strip()
+                    sellPrice = values[3].strip()
+
+                    items.append([buyPrice, sellPrice, traderCat, category, name])
+                    count += 1
+                except IndexError:
+                    showError(root, "Error in File",
+                              "There might be an error in this line:\n" + " ".join(line.split()))
+
+    return items, count
+
+
+def writeToDBFromTrader(dir, root=None):
+    result = getItemsFromTraderFile(dir, root)
+    dao.setTraderValues(result[0])
+    showError(root, "Trader File Loaded", "Trader file was loaded successfully\n" + str(result[1]) + " Items have been changed")
+
+
 def appendTypesToDatabase(xml, root, mod, useNew):
     count = 0
     successes = []

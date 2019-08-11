@@ -99,4 +99,6 @@ def testColumnNames(database):
 
 #creating_subTypesTest(r"C:\Program Files (x86)\Steam\steamapps\common\DayZServer\mpmissions\empty.deerisle\db\types.xml")
 #testDaoGetItems("dayzitems5", r"C:\Program Files (x86)\Steam\steamapps\common\DayZServer\mpmissions\empty.deerisle\db\types.xml")
-testColumnNames("dayzitems5")
+#testColumnNames("dayzitems5")
+
+windows.writeToDBFromTrader(r"C:\Program Files (x86)\Steam\steamapps\common\DayZServer\profiles\Trader\TraderConfig.txt")

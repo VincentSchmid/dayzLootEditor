@@ -233,6 +233,15 @@ def setSubtypeForTrader(items):
     conn.commit()
 
 
+# buyprice, sellprice, tradercat, subtype, name
+def setTraderValues(items):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.fast_executemany = True
+    cursor.executemany("UPDATE IGNORE items SET buyprice = ?, sellprice = ?, traderCat = ?, subtype = ? WHERE name = ?;", items)
+    conn.commit()
+
+
 def getLinkedItems(item):
     items = set()
     cursor = connection().cursor()

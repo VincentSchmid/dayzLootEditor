@@ -35,7 +35,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.92")
+        self.window.wm_title("Loot Editor v0.93")
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
@@ -74,6 +74,7 @@ class Window(object):
 
         filemenu = Menu(menubar, tearoff=0)
         filemenu.add_command(label="Load types.xml...", command=self.loadTypesXML)
+        filemenu.add_command(label="Load Trader File...", command=self.loadTraderFile)
         filemenu.add_command(label="Load Database...", command=self.loadDB)
         filemenu.add_separator()
         filemenu.add_command(label="Export types.xml...", command=self.saveXML)
@@ -709,6 +710,13 @@ class Window(object):
             if windows.askOverwrite():
                 windows.writeTypesToDatabase(fname)
         self.fillModMenu()
+
+    def loadTraderFile(self):
+        fname = windows.openFile("txt")
+        if fname != "":
+            if windows.askOverwrite():
+                windows.writeToDBFromTrader(fname)
+                dao.reExecuteLastQuery()
 
     def loadDB(self):
         self.clearModMenu()
