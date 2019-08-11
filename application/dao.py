@@ -206,7 +206,14 @@ def getSubtypeForTrader(subtype):
 
     cursor = connection().cursor()
     cursor.execute(lastQuery)
-    return cursor.fetchall()
+    result = cursor.fetchall()
+    for i in range(len(result)):
+        if result[i][3] is None:
+            result[i][3] = -1
+        if result[i][4] is None:
+            result[i][4] = -1
+
+    return result
 
 
 def setSubtypesMany(items):

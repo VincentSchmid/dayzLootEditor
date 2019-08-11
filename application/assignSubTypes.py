@@ -212,10 +212,7 @@ class TraderEditor(object):
 
         buyPricing = pricing[0]
         sellPricing = pricing[1]
-        print(buyPricing)
-        print(sellPricing)
-        print(self.traderVal[0][1][0])
-        print(self.traderVal[0][0][1])
+
         for item in self.traderVal:
             try:
                 keyValue = rarityForTrader[item[1][0]] if rarity_is_set else item[1][2]
