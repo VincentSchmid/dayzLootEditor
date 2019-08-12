@@ -170,11 +170,14 @@ def removeCombo(items):
     conn.commit()
 
 
-def getType(type):
+def getType(type, subtype=None):
     global lastQuery
     lastQuery = "select * \
                 from items \
                 where type = '" + type + "';"
+
+    if subtype is not None:
+        lastQuery += " and subtype = '" + subtype + "';"
 
     cursor = connection().cursor()
     cursor.execute(lastQuery)
@@ -187,11 +190,14 @@ def getSubtypes():
     return [row[0] for row in cursor.fetchall()]
 
 
-def getCategory(category):
+def getCategory(category, subtype=None):
     global lastQuery
     lastQuery = "select * \
                 from items \
-                where category = '" + category + "';"
+                where category = '" + category + "'"
+
+    if subtype is not None:
+        lastQuery += " and subtype = '" + subtype + "';"
 
     cursor = connection().cursor()
     cursor.execute(lastQuery)

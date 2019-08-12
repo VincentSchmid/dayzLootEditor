@@ -292,12 +292,24 @@ class Window(object):
         self.buttons = Frame(self.window)
         self.buttons.grid(row=0, column=2, sticky="n")
 
+        filter = LabelFrame(self.buttons, text="Filter")
+        filter.grid(row=1, column=0, pady=5)
+
+        Label(filter, text="Type").grid(row=1, column=0, sticky="w")
+        Label(filter, text="Subtype").grid(row=2, column=0, sticky="w")
+
         self.typeSel = StringVar(window)
         self.typeSel.set('gun')
 
-        OptionMenu(self.buttons, self.typeSel, *self.choices).grid(row=1, column=0)
+        OptionMenu(filter, self.typeSel, *self.choices).grid(row=1, column=1, sticky="w", padx=5)
 
-        Button(self.buttons, text="Show items", width=12, command=self.viewCategroy).grid(row=2)
+        self.subtypeSel = Combobox_Autocomplete(filter, dao.getSubtypes(), highlightthickness=1, width=15)
+        self.subtypeSel.grid(row=2, column=1, sticky="w", pady=5, padx=5)
+
+        buttons = Frame(filter)
+        buttons.grid(row=3, columnspan=2)
+
+        Button(buttons, text="Filter", width=12, command=self.viewCategroy).grid(pady=5)
         Button(self.buttons, text="view linked items", width=12, command=self.viewLinked).grid(row=3)
         Button(self.buttons, text="search by name", width=12, command=self.searchByName).grid(row=4)
 
@@ -387,12 +399,16 @@ class Window(object):
 
     def viewCategroy(self):
         cat = self.typeSel.get()
-        if cat in categories.categories:
-            rows = dao.getCategory(cat)
-        elif cat in itemTypes:
-            rows = dao.getType(cat)
-        else:
-            rows = dao.getAllItems()
+        subtype = self.subtypeSel.get() if self.subtypeSel.get() != "" else None
+        try:
+            if cat in categories.categories:
+                rows = dao.getCategory(cat, subtype)
+            elif cat in itemTypes:
+                rows = dao.getType(cat, subtype)
+            else:
+                rows = dao.getAllItems()
+        except Exception:
+            rows = []
 
         self.updateDisplay(rows)
 
