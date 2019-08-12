@@ -14,6 +14,7 @@ import xmlParser
 import xmlWriter
 from assignSubTypes import TraderEditor
 from autocompleteCombobox import Combobox_Autocomplete
+from windows import is_number
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -801,6 +802,10 @@ class Window(object):
     def treeview_sort_column(self, tv, col, reverse):
         self.sorted = col
         l = [(tv.set(k, col), k) for k in tv.get_children('')]
+
+        if is_number(l[0][0]):
+            l = [(int(val[0]), val[1])for val in l]
+
         l.sort(reverse=reverse)
         self.reverse = reverse
 
