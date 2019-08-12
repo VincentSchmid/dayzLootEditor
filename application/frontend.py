@@ -15,6 +15,7 @@ import xmlWriter
 from assignSubTypes import TraderEditor
 from autocompleteCombobox import Combobox_Autocomplete
 from windows import is_number
+from windows import dataPath
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -37,6 +38,7 @@ class Window(object):
         self.window = window
         self.checkForDatabase()
         self.window.wm_title("Loot Editor v0.93")
+        self.window.wm_iconbitmap(dataPath + '\\miniLogo.ico')
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.changed = False
@@ -407,7 +409,7 @@ class Window(object):
             elif cat in itemTypes:
                 rows = dao.getType(cat, subtype)
             else:
-                rows = dao.getAllItems()
+                rows = dao.getAllItems(subtype)
         except Exception:
             rows = []
 
@@ -796,7 +798,7 @@ class Window(object):
         except Exception:
             pass
         if windows.askUser("Change Subtypes", "Software will set default subtypes.\n"
-                                              "If you haven't set any subtypes yet it is save to click yes"):
+                                              "Subtypes of most items will be changed"):
             upgradeDB.findSubTypes(dao.getAllItems())
 
     def treeview_sort_column(self, tv, col, reverse):

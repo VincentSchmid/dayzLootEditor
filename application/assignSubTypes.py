@@ -51,15 +51,15 @@ class TraderEditor(object):
     def drawEditor(self, root, row, column, rows):
         height = 480
         width = 400
-        self.frame = Frame(root, height=height, width=width, bg="#EBEBEB")
+        self.frame = Frame(root, height=height, width=width)
         self.frame.grid(row=row, column=column, sticky="nw", pady=20)
         self.frame.rowconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=1)
 
-        self.canv = Canvas(self.frame, height=height, width=width, bg="#EBEBEB")
+        self.canv = Canvas(self.frame, height=height, width=width)
         self.canv.grid(row=0, column=0, sticky="nsew")
 
-        self.canvFrame = Frame(self.canv, height=height, width=width, bg="#EBEBEB")
+        self.canvFrame = Frame(self.canv, height=height, width=width)
         self.canv.create_window(0, 0, window=self.canvFrame, anchor='nw')
 
         for item in rows:
@@ -121,7 +121,7 @@ class TraderEditor(object):
 
     def traderRow(self, parent, name, subtype, traderCat, buyPrice, sellPrice, rarity, nominal, exclude):
         frame = Frame(parent)
-        frame.grid(padx=5, pady=5, sticky="w")
+        frame.grid(padx=5, pady=2, sticky="w")
 
         doExclude = IntVar()
         doExclude.set(exclude)

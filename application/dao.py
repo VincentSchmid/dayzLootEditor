@@ -451,9 +451,12 @@ def getItemsToDistibute(type):
     return cursor.fetchall()
 
 
-def getAllItems():
+def getAllItems(subtype=None):
     global lastQuery
     lastQuery = "select * from items"
+
+    if subtype is not None:
+        lastQuery += " WHERE subtype = '"+subtype+"'"
 
     cursor = connection().cursor()
     cursor.execute(lastQuery)
