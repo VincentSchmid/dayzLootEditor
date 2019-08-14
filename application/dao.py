@@ -174,7 +174,7 @@ def getType(type, subtype=None):
     global lastQuery
     lastQuery = "select * \
                 from items \
-                where type = '" + type + "';"
+                where type = '" + type + "'"
 
     if subtype is not None:
         lastQuery += " and subtype = '" + subtype + "';"
