@@ -459,7 +459,9 @@ class Window(object):
         self.updateDisplay(rows)
 
     def deleteSel(self):
-        dao.deleteItem(self.getSelectedValues(self.tree.focus())["name"])
+        if windows.askUser("Delete Item", "Are you sure you want to delete selected Item?"):
+            dao.deleteItem(self.getSelectedValues(self.tree.focus())["name"])
+            self.updateDisplay(dao.reExecuteLastQuery())
 
     def updateSel(self, multiplier=None):
         for element in self.tree.selection():
