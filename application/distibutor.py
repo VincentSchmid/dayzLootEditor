@@ -21,8 +21,7 @@ rarityMultiplier = {50: 1, 45: 1.5, 40: 2, 35: 2.5, 30: 3, 25: 5, 20: 8, 15: 12,
 # todo formula is not clear results are not as expected
 
 # input: type to distribute, target nominal, List of include flags
-def distribute(type, targetNominal, targetMag, targetAmmo, flags):
-    itemsToDistribute = getItems(type)
+def distribute(itemsToDistribute, targetNominal, targetMag, targetAmmo, flags):
     numElements = calculateNumElements(itemsToDistribute)
     nominalPerElement = targetNominal / numElements if numElements != 0 else 0
     setValues(nominalPerElement, itemsToDistribute)
@@ -35,12 +34,6 @@ def distribute(type, targetNominal, targetMag, targetAmmo, flags):
 
     if flags[1] == 1:
         distributeLinkedItem(itemsToDistribute, targetMag, "mag")
-
-
-def getItems(type):
-    global itemsToDistribute
-    itemsToDistribute = dao.getItemsToDistibute(type)
-    return dao.getDicts(itemsToDistribute)
 
 
 def calculateNumElements(itemsToDistribute):

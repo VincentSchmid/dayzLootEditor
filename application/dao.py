@@ -222,6 +222,13 @@ def getSubtypeForTrader(subtype):
     return result
 
 
+def getItemsByName(items):
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM items WHERE name in ({0})".format(', '.join('?' for _ in items)), items)
+    return cursor.fetchall()
+
+
 def setSubtypesMany(items):
     conn = connection()
     cursor = conn.cursor()

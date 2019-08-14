@@ -67,8 +67,7 @@ class Window(object):
         self.nomVars = []
         self.deltaNom = []
         self.startNominals = []
-        self.totalNomDisplayed = StringVar()
-        self.totalNomDisplayed.set(0)
+
         self.createNominalInfo()
         self.viewCategroy()
 
@@ -320,17 +319,12 @@ class Window(object):
         self.distribution = LabelFrame(self.buttons, text="Rarity Distribution")
         self.distribution.grid(row=5, column=0, padx=20, pady=20)
 
-        self.distribSel = StringVar(window)
-        self.distribSel.set('gun')
-        self.distribSel.trace("w", self.distribSelChange)
+        Label(self.distribution, text="By Displayed Items").grid(row=0, columnspan=2)
 
-        typeDrop = OptionMenu(self.distribution, self.distribSel, *xmlParser.selection) \
-            .grid(row=0)
+        Label(self.distribution, text="Target Nominal").grid(row=1, columnspan=2)
 
-        Label(self.distribution, text="Target Nominal").grid(row=1, sticky=W)
-        self.targetNominal = StringVar()
-        self.targetNominal.set(str(dao.getNominalByType("gun")))
-        self.desiredNomEntry = Entry(self.distribution, textvariable=self.targetNominal, width=14).grid(row=2, sticky=W)
+        self.desiredNomEntry = Entry(self.distribution, textvariable=self.totalNomDisplayed, width=14)\
+            .grid(row=2, columnspan=2, pady=7)
 
         self.inclAmmo = IntVar()
         Checkbutton(self.distribution, text='Ammo', variable=self.inclAmmo).grid(row=3, sticky=W)
@@ -533,10 +527,11 @@ class Window(object):
     def distribute(self):
         self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get()]
-        distibutor.distribute(self.distribSel.get(), int(self.targetNominal.get()), int(self.targetMag.get()),
+        displayedItems = [self.tree.item(child)["text"] for child in self.tree.get_children()]
+        distibutor.distribute(dao.getItemsByName(displayedItems), int(self.totalNomDisplayed.get()), int(self.targetMag.get()),
                               int(self.targetAmmo.get()), flags)
         self.changed = True
-        self.updateDisplay(dao.getType(self.distribSel.get()))
+        self.updateDisplay(dao.getType(self.distribType.get()))
 
     def multiplySel(self):
         self.updateSel(float(self.multiplier.get()))
@@ -686,7 +681,6 @@ class Window(object):
         return tier
 
     def updateDistribution(self):
-        self.targetNominal.set(str(dao.getNominalByType("gun")))
         self.targetMag.set(str(dao.getNominalByType("mag")))
 
     def raritySelChange(self, *args):
@@ -712,10 +706,6 @@ class Window(object):
             except Exception:
                 pass
 
-    def distribSelChange(self, *args):
-        for i in range(len(itemTypes)):
-            if self.distribSel.get() == itemTypes[i]:
-                self.targetNominal.set(self.nomVars[i].get())
 
     def on_close(self):
         if self.changed:
