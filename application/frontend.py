@@ -43,10 +43,15 @@ class Window(object):
 
         self.changed = False
         self.availableMods = windows.getMods()
+        if "removed" not in self.availableMods:
+            self.availableMods.append("removed")
         self.selectedMods = self.availableMods
         self.activatedFields = set()
         self.sorted = ""
         self.reverse = False
+
+        self.totalNomDisplayed = StringVar()
+        self.totalNomDisplayed.set(0)
 
         self.createMenuBar()
         self.createEntryBar()
@@ -100,7 +105,10 @@ class Window(object):
 
         for mod in self.availableMods:
             intVar = IntVar()
-            intVar.set(1)
+            if mod == "removed":
+                intVar.set(0)
+            else:
+                intVar.set(1)
             intVar.trace("w", self.updateModSelection)
             self.modSelectionVars.append(intVar)
             self.modsmenu.add_checkbutton(label=mod, variable=intVar)
