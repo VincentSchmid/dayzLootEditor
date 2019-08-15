@@ -615,7 +615,7 @@ def reExecuteLastQuery():
     return cursor.fetchall()
 
 
-def backupDatabase(file):
+def backupDatabase(file=None):
     global user
     global pwd
     global port
@@ -633,9 +633,12 @@ def backupDatabase(file):
     path = getPath() + "bin\\"
     cmdL1 = [path + "mysqldump", "--port=" + port, "-h" + server, "--force", "-u" + user, "-p" + pwd, database]
     p1 = Popen(cmdL1, shell=True, stdout=PIPE)
-    file.write(p1.communicate()[0])
-    file.close()
-    p1.kill()
+    if file is not None:
+        file.write(p1.communicate()[0])
+        file.close()
+
+    if file is None:
+        return p1.communicate()[0]
 
 
 def addColumns():
@@ -651,6 +654,25 @@ ADD COLUMN `traderExclude` TINYINT(1) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' AFT
     cursor.execute(query)
     conn.commit()
 
+
+def addNewConstraints():
+    query = "ALTER TABLE `itemcombo`\
+    DROP FOREIGN KEY `itemcombos_ibfk_1`;\
+ALTER TABLE `itemcombo`\
+DROP FOREIGN KEY `itemcombos_ibfk_2`;\
+ALTER TABLE `itemcombos`\
+ADD CONSTRAINT `itemcombos_ibfk_3` \
+    FOREIGN KEY (`item1`) REFERENCES `items` (`name`) \
+    ON DELETE CASCADE; \
+ALTER TABLE `itemcombos` \
+    ADD CONSTRAINT `itemcombos_ibfk_4` \
+    FOREIGN KEY (`item2`) REFERENCES `items` (`name`) \
+    ON DELETE CASCADE;"
+
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(query)
+    conn.commit()
 
 def dropDB():
     global database
@@ -669,10 +691,10 @@ def drop_selected_DB(database):
 
 
 def loadDB():
-    loadDB(windows.openFile("sql"))
+    loadDB(windows.getContent(windows.openFile("sql")))
 
 
-def loadDB(fname):
+def loadDB(content):
     global user
     global pwd
     global port
@@ -692,7 +714,7 @@ def loadDB(fname):
     process = Popen(
         "\"" + path + "mysql\" -u " + user + " -p" + pwd + " -h" + server + " --port " + port + " --default-character-set=utf8 " + database,
         shell=True, stdin=PIPE)
-    process.stdin.write(open(fname, "rb").read())
+    process.stdin.write(content)
     process.stdin.close()
     process.kill()
 

@@ -16,6 +16,7 @@ from assignSubTypes import TraderEditor
 from autocompleteCombobox import Combobox_Autocomplete
 from windows import is_number
 from windows import dataPath
+from windows import getContent
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -93,7 +94,8 @@ class Window(object):
 
         databasemenu = Menu(menubar, tearoff=0)
         databasemenu.add_command(label="Connect...", command=self.openConnectionWindow)
-        databasemenu.add_command(label="Detect Subtypes", command=self.upgradeDB)
+        databasemenu.add_command(label="Upgrade Database", command=self.upgradeDB)
+        databasemenu.add_command(label="Detect Subtypes", command=self.detectSubtypes)
         databasemenu.add_separator()
         databasemenu.add_command(label="Add items...", command=self.openAddItems)
         databasemenu.add_command(label="Create item links...", command=self.openitemLinker)
@@ -743,7 +745,7 @@ class Window(object):
         if fname != "":
             dbName = dao.dropDB()
             dao.createDB(dbName)
-            dao.loadDB(fname)
+            dao.loadDB(getContent(fname))
         try:
             self.fillModMenu()
         except Exception:
@@ -797,6 +799,14 @@ class Window(object):
             dao.addColumns()
         except Exception:
             pass
+        self.window.withdraw()
+        upgradeDB.upgrade()
+        self.window.deiconify()
+
+        windows.showError(self.window, "Upgrade", "Your Database has been updated")
+
+
+    def detectSubtypes(self):
         if windows.askUser("Change Subtypes", "Software will set default subtypes.\n"
                                               "Subtypes of most items will be changed"):
             upgradeDB.findSubTypes(dao.getAllItems())

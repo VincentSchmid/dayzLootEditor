@@ -26,7 +26,7 @@ def connection(database):
 def createDB(database):
     dao.setConnectionParams("root", "rootroot", "3306", database, "localhost", "5.3")
     dao.createDB("dayzitems5")
-    dao.loadDB(abspath(join(getcwd(), "..", "data", "GENESIS.sql")))
+    dao.loadDB(windows.getContent(abspath(join(getcwd(), "..", "data", "GENESIS.sql"))))
 
 
 def fillDB():

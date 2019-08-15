@@ -214,6 +214,10 @@ def addToClipboard(root, string):
     root.update()
 
 
+def getContent(file):
+    return open(file, "rb").read()
+
+
 def is_number(s):
     try:
         float(s)

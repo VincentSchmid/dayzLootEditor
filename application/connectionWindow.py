@@ -115,7 +115,7 @@ class ConnectionWindow(object):
     def createDatabase(self):
         try:
             dao.createDB(self.database.get())
-            dao.loadDB(windows.dataPath + "\\GENESIS.sql")
+            dao.loadDB(windows.getContent(windows.dataPath + "\\GENESIS.sql"))
         except Exception as e:
             windows.showError(self.window, "Error", "Failed to connect:\n" + str(e))
             windows.deleteParams()
