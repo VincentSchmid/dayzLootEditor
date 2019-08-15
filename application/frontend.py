@@ -38,7 +38,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.93")
+        self.window.wm_title("Loot Editor v0.95")
         self.window.wm_iconbitmap(dataPath + '\\miniLogo.ico')
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -543,7 +543,7 @@ class Window(object):
         distibutor.distribute(dao.getItemsByName(displayedItems), int(self.totalNomDisplayed.get()), int(self.targetMag.get()),
                               int(self.targetAmmo.get()), flags)
         self.changed = True
-        self.updateDisplay(dao.getType(self.distribType.get()))
+        self.updateDisplay(dao.reExecuteLastQuery())
 
     def multiplySel(self):
         self.updateSel(float(self.multiplier.get()))

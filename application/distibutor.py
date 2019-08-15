@@ -22,6 +22,7 @@ rarityMultiplier = {50: 1, 45: 1.5, 40: 2, 35: 2.5, 30: 3, 25: 5, 20: 8, 15: 12,
 
 # input: type to distribute, target nominal, List of include flags
 def distribute(itemsToDistribute, targetNominal, targetMag, targetAmmo, flags):
+    itemsToDistribute = dao.getDicts(itemsToDistribute)
     numElements = calculateNumElements(itemsToDistribute)
     nominalPerElement = targetNominal / numElements if numElements != 0 else 0
     setValues(nominalPerElement, itemsToDistribute)
@@ -52,7 +53,7 @@ def setValues(nominalPerElement, itemsToDistribute):
 
 
 def distributeLinkedItem(guns, targetCount, type):
-    zeroAllItems(type)
+    zeroAllItems(guns, type)
     elementCount = 0
     allItems = dao.getDicts(dao.getType(type))
     for gun in guns:
@@ -88,8 +89,8 @@ def get_digits(string):
     return int(''.join(filter(lambda x: x.isdigit(), string)))
 
 
-def zeroAllItems(type):
-    for item in dao.getDicts(dao.getType(type)):
+def zeroAllItems(items, type):
+    for item in dao.getDicts(dao.getItemsToZero([item["name"] for item in items], type)):
         item["nominal"] = 0
         item["min"] = 0
 

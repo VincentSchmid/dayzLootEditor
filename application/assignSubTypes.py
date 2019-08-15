@@ -32,6 +32,7 @@ class TraderEditor(object):
         self.subTypeListbox = Listbox(subtypesFrame, width=35, height=30, exportselection=False)
         self.subTypeListbox.grid(sticky="ns", padx=10)
         subTypes = dao.getSubtypes()
+
         for subType in sorted(subTypes):
             if subType == "":
                 subType = "UNASSIGNED"

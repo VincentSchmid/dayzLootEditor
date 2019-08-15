@@ -170,6 +170,18 @@ def removeCombo(items):
     conn.commit()
 
 
+def getItemsToZero(names, itemType):
+    global lastQuery
+    lastQuery = "select * \
+                from items \
+                where type = '" + itemType + "' \
+                and name in ({0})".format(', '.join('?' for _ in names))
+
+    cursor = connection().cursor()
+    cursor.execute(lastQuery, names)
+    return cursor.fetchall()
+
+
 def getType(type, subtype=None):
     global lastQuery
     lastQuery = "select * \
@@ -187,7 +199,7 @@ def getType(type, subtype=None):
 def getSubtypes():
     cursor = connection().cursor()
     cursor.execute("SELECT subtype FROM items group by subtype")
-    return [row[0] for row in cursor.fetchall()]
+    return [row[0] if row[0] is not None else "" for row in cursor.fetchall()]
 
 
 def getCategory(category, subtype=None):
