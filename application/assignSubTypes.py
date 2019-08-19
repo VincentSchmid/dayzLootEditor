@@ -180,6 +180,7 @@ class TraderEditor(object):
             item.append(self.traderVal[i][1][0])
             item.append(self.traderVal[i][1][1])
             values.append(item)
+
         return values
 
     def update(self):
@@ -201,15 +202,17 @@ class TraderEditor(object):
         selSubtype = self.subTypeListbox.get(ANCHOR)
         selSubtype = "" if selSubtype == "UNASSIGNED" else selSubtype
 
+        # name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude
         itemsOfSubtype = dao.getSubtypeForTrader(selSubtype)
         rarities = []
+
+        # rarity, nominal
         for item in itemsOfSubtype:
             rarities.append((item[5], item[6]))
-        try:
-            pricing = distribute(rarities, int(self.buyEntires[0].get()), int(self.buyEntires[1].get()),
-                                 int(self.sellEntries[0].get()), int(self.sellEntries[1].get()), rarity_is_set)
-        except IndexError:
-            windows.showError(self.window, "No rarities", "Set the rarity for your items, or use nominals")
+
+        pricing = distribute(rarities, int(self.buyEntires[0].get()), int(self.buyEntires[1].get()),
+                             int(self.sellEntries[0].get()), int(self.sellEntries[1].get()), rarity_is_set)
+
 
         buyPricing = pricing[0]
         sellPricing = pricing[1]

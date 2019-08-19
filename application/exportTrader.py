@@ -27,6 +27,10 @@ def createTrader(root, subtype, rows):
 # (rarity, nominal)
 def distribute(rows, minBuy, maxBuy, minSell, maxSell, useRarity):
     distribution = getDistribution(rows, useRarity)
+
+    if len(distribution) <= 1:
+        return [(minBuy, minSell) for _ in rows]
+
     newDist = stretch(distribution)
     buyPrices = distributePricing(newDist, maxBuy, minBuy)
     sellPrices = distributePricing(newDist, maxSell, minSell)
@@ -39,8 +43,6 @@ def distribute(rows, minBuy, maxBuy, minSell, maxSell, useRarity):
 
     buyPriceForDistrib[0] = -1
     sellPriceForDistrib[0] = -1
-
-    print(buyPriceForDistrib)
 
     return buyPriceForDistrib, sellPriceForDistrib
 
@@ -58,10 +60,8 @@ def getDistribution(rows, rarity_is_set):
             raritySet.add(item[1])
 
     raritySet = sorted(raritySet)
-    if 0 in raritySet:
+    if 0 in raritySet and len(raritySet) > 1:
         raritySet.pop(0)
-
-    print(raritySet)
 
     return raritySet
 
@@ -77,7 +77,11 @@ def scale(maxP, minP, newMax, newMin, todistribute):
     newPoints = []
 
     for point in todistribute:
-        newPoint = (point - minP)*((newMax - newMin) / (maxP - minP)) + newMin
+        if ((maxP - minP) + newMin) != 0:
+            newPoint = (point - minP)*((newMax - newMin) / (maxP - minP)) + newMin
+        else:
+            newPoint = 0
+
         newPoints.append(newPoint)
 
     return newPoints
