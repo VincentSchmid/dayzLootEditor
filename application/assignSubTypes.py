@@ -209,10 +209,11 @@ class TraderEditor(object):
         # rarity, nominal
         for item in itemsOfSubtype:
             rarities.append((item[5], item[6]))
-
-        pricing = distribute(rarities, int(self.buyEntires[0].get()), int(self.buyEntires[1].get()),
-                             int(self.sellEntries[0].get()), int(self.sellEntries[1].get()), rarity_is_set)
-
+        try:
+            pricing = distribute(rarities, int(self.buyEntires[0].get()), int(self.buyEntires[1].get()),
+                                 int(self.sellEntries[0].get()), int(self.sellEntries[1].get()), rarity_is_set)
+        except IndexError:
+            windows.showError(self.window, "No rarities", "Set the rarity for your items, or use nominals")
 
         buyPricing = pricing[0]
         sellPricing = pricing[1]
