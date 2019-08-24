@@ -237,7 +237,8 @@ def getSubtypeForTrader(subtype):
 def getItemsByName(items):
     conn = connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM items WHERE name in ({0})".format(', '.join('?' for _ in items)), items)
+    cursor.execute("SELECT * FROM items WHERE name in ({0})\
+            AND rarity <> 0".format(', '.join('?' for _ in items)), items)
     return cursor.fetchall()
 
 
