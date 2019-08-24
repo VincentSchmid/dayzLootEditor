@@ -206,7 +206,7 @@ def getCategory(category, subtype=None):
     global lastQuery
     lastQuery = "select * \
                 from items \
-                where category = '" + category + "'"
+                where type = '" + category + "'"
 
     if subtype is not None:
         lastQuery += " and subtype = '" + subtype + "';"
