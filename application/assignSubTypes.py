@@ -1,11 +1,10 @@
 from tkinter import *
-from exportTrader import rarityForTrader
 
 import dao
 import windows
 from categories import traderCatSwitcher
-from distibutor import rarityMultiplier
 from exportTrader import createTrader, distribute
+from exportTrader import rarityForTrader
 
 
 class TraderEditor(object):

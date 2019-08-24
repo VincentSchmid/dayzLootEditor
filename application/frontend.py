@@ -14,9 +14,9 @@ import xmlParser
 import xmlWriter
 from assignSubTypes import TraderEditor
 from autocompleteCombobox import Combobox_Autocomplete
-from windows import is_number
 from windows import dataPath
 from windows import getContent
+from windows import is_number
 
 itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
 
@@ -333,7 +333,7 @@ class Window(object):
 
         Label(self.distribution, text="Target Nominal").grid(row=1, columnspan=2)
 
-        self.desiredNomEntry = Entry(self.distribution, textvariable=self.totalNomDisplayed, width=14)\
+        self.desiredNomEntry = Entry(self.distribution, textvariable=self.totalNomDisplayed, width=14) \
             .grid(row=2, columnspan=2, pady=7)
 
         self.inclAmmo = IntVar()
@@ -540,7 +540,8 @@ class Window(object):
         self.backupDB("dayzitems_before_Distribute.sql")
         flags = [self.inclAmmo.get(), self.inclMags.get()]
         displayedItems = [self.tree.item(child)["text"] for child in self.tree.get_children()]
-        distibutor.distribute(dao.getItemsByName(displayedItems), int(self.totalNomDisplayed.get()), int(self.targetMag.get()),
+        distibutor.distribute(dao.getItemsByName(displayedItems), int(self.totalNomDisplayed.get()),
+                              int(self.targetMag.get()),
                               int(self.targetAmmo.get()), flags)
         self.changed = True
         self.updateDisplay(dao.reExecuteLastQuery())
@@ -718,7 +719,6 @@ class Window(object):
             except Exception:
                 pass
 
-
     def on_close(self):
         if self.changed:
             self.backupDB("dayzitems.sql")
@@ -805,7 +805,6 @@ class Window(object):
 
         windows.showError(self.window, "Upgrade", "Your Database has been updated")
 
-
     def detectSubtypes(self):
         if windows.askUser("Change Subtypes", "Software will set default subtypes.\n"
                                               "Subtypes of most items will be changed"):
@@ -816,7 +815,7 @@ class Window(object):
         l = [(tv.set(k, col), k) for k in tv.get_children('')]
 
         if is_number(l[0][0]):
-            l = [(int(val[0]), val[1])for val in l]
+            l = [(int(val[0]), val[1]) for val in l]
 
         l.sort(reverse=reverse)
         self.reverse = reverse

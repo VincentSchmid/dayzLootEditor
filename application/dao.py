@@ -264,7 +264,8 @@ def setTraderValues(items):
     conn = connection()
     cursor = conn.cursor()
     cursor.fast_executemany = True
-    cursor.executemany("UPDATE IGNORE items SET buyprice = ?, sellprice = ?, traderCat = ?, subtype = ? WHERE name = ?;", items)
+    cursor.executemany(
+        "UPDATE IGNORE items SET buyprice = ?, sellprice = ?, traderCat = ?, subtype = ? WHERE name = ?;", items)
     conn.commit()
 
 
@@ -476,7 +477,7 @@ def getAllItems(subtype=None):
     lastQuery = "select * from items"
 
     if subtype is not None:
-        lastQuery += " WHERE subtype = '"+subtype+"'"
+        lastQuery += " WHERE subtype = '" + subtype + "'"
 
     cursor = connection().cursor()
     cursor.execute(lastQuery)
@@ -686,6 +687,7 @@ ALTER TABLE `itemcombos` \
     cursor = conn.cursor()
     cursor.execute(query)
     conn.commit()
+
 
 def dropDB():
     global database
