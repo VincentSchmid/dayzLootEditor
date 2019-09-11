@@ -21,7 +21,7 @@ class addItems(object):
         self.useNewVal = IntVar()
         self.useNewVal.set(0)
 
-        Checkbutton(self.addInfoFrame, text="Use Values of Dublicate Items ", variable=self.useNewVal) \
+        Checkbutton(self.addInfoFrame, text="Use Values of Duplicate Items", variable=self.useNewVal) \
             .grid(row=0, column=2, padx=10)
 
         self.text = Text(self.window)

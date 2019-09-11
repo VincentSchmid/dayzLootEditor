@@ -134,7 +134,7 @@ def writeToDBFromTrader(dir, root=None):
     dao.setTraderValues(result[0])
     showError(root, "Trader File Loaded", "Trader file was loaded successfully\n" + str(result[1]) + " Items have been changed")
 
-
+# itemVal ordering can be gotten from params
 def appendTypesToDatabase(xml, root, mod, useNew):
     count = 0
     successes = []
@@ -147,20 +147,28 @@ def appendTypesToDatabase(xml, root, mod, useNew):
     if len(itemVal) > 100:
         sleep(1)
 
-    for item in itemVal:
-        err = dao.insertItem(params, item)
+    i = 0
+    for item in items:
+        item = item.parameters
+        name = item["name"]
+
+        err = dao.insertItem(params, list(item.values()))
         if err == 1:
-            message += item[0] + "\n"
+            message += name + "\n"
             if useNew:
-                itemDict = dao.getDict(item)
-                itemDict["rarity"] = dao.getRarity(item[0])
-                itemDict["mod"] = mod
-                itemDict["usage"] = item[11:24]
-                itemDict["tier"] = item[24:28]
-                dao.update(itemDict)
+                item["rarity"] = dao.getRarity(name)
+                item["mod"] = mod
+                item["usage"] = itemVal[i][15:28]
+                item["tier"] = itemVal[i][28:32]
+                item["subtype"] = dao.getSubtype(name)
+
+                dao.update(item)
+
         else:
             count += 1
             successes.append(item[0])
+
+        i += 1
 
     if len(itemVal) > 100:
         sleep(1)

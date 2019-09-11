@@ -454,6 +454,15 @@ def updateFlags(values):
 
     conn = connection()
     cursor = conn.cursor()
+    try:
+        x = values["cargo"]
+
+    except KeyError:
+        values["cargo"] = values["count_in_cargo"]
+        values["hoarder"] = values["count_in_hoarder"]
+        values["map"] = values["count_in_map"]
+        values["player"] = values["count_in_player"]
+
     cursor.execute(query, values["cargo"], values["hoarder"], values["map"], values["player"], values["name"])
     conn.commit()
 
@@ -586,6 +595,12 @@ def getRarity(itemName):
     cursor = connection().cursor()
     cursor.execute("select rarity from items where name = ?", itemName)
     return cursor.fetchall()[0][0]
+
+
+def getSubtype(itemName):
+    cursor = connection().cursor()
+    cursor.execute("select subtype from items where name = ?", itemName)
+    return cursor.fetchval()
 
 
 def getFlags(itemName):
