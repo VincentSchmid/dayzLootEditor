@@ -166,7 +166,7 @@ def appendTypesToDatabase(xml, root, mod, useNew):
 
         else:
             count += 1
-            successes.append(item[0])
+            successes.append(item["name"])
 
         i += 1
 
