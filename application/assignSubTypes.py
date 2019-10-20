@@ -94,9 +94,11 @@ class TraderEditor(object):
         buttonFrame = Frame(root)
         buttonFrame.grid(row=row + 2, column=column, sticky="w", pady=5)
 
-        Button(buttonFrame, text="Update Changes", command=self.update).grid(row=0, column=0)
-        Button(buttonFrame, text="Copy to Clipboard", command=self.createTrader).grid(row=0, column=1, padx=5)
-        Button(buttonFrame, text="Distribute Pricing", command=self.distributePricing).grid(row=0, column=2)
+        Button(buttonFrame, text="Distribute Pricing", command=self.distributePricing).grid(row=0, column=0)
+        Button(buttonFrame, text="Apply Fractions", command=self.applyFractions).grid(row=0, column=1)
+        Button(buttonFrame, text="Save Changes", command=self.update).grid(row=0, column=2)
+        Button(buttonFrame, text="Copy to Clipboard", command=self.createTrader).grid(row=0, column=3, padx=5)
+
 
     def createPriceBlock(self, parent, name, row, column):
         buyPrice = LabelFrame(parent, text=name)
@@ -113,6 +115,12 @@ class TraderEditor(object):
         self.max.set(0)
         max = Entry(buyPrice, textvariable=self.max)
         max.grid(row=1, column=1, padx=5, pady=5)
+
+        if "sell" in name.lower():
+            self.createLabel(buyPrice, "fraction:", 2, 0, "w")
+            self.frac = Entry(buyPrice)
+            self.frac.insert(END, '1.0')
+            self.frac.grid(row=2, column=1, padx=5, pady=5)
 
         return (min, max)
 
@@ -195,6 +203,18 @@ class TraderEditor(object):
             newItems.append(newItem)
         # name, traderCat, buyPrice, sellPrice, rarity
         createTrader(self.window, subtype, newItems)
+
+    def applyFractions(self):
+        selSubtype = self.subTypeListbox.get(ANCHOR)
+        selSubtype = "" if selSubtype == "UNASSIGNED" else selSubtype
+        # name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude
+        itms = dao.getSubtypeForTrader(selSubtype)
+
+        # buyprice, sellprice, tradercat, subtype, name
+        for item in self.traderVal:
+            sellprice = int(float(item[0][1].get()) * float(self.frac.get())) if item[0][1].get() != "-1" else -1
+            self.setEntryVal(item[0][2], sellprice)
+
 
     def distributePricing(self):
         rarity_is_set = True if self.v.get() == "rar" else False

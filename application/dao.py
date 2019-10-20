@@ -215,7 +215,7 @@ def getCategory(category, subtype=None):
     cursor.execute(lastQuery)
     return cursor.fetchall()
 
-
+# name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude
 def getSubtypeForTrader(subtype):
     global lastQuery
     lastQuery = "select name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude \
