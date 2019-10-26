@@ -38,7 +38,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.98.2")
+        self.window.wm_title("Loot Editor v0.98.3")
         self.window.wm_iconbitmap(dataPath + '\\miniLogo.ico')
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -105,6 +105,11 @@ class Window(object):
         self.modsmenu = Menu(menubar, tearoff=0)
         self.modSelectionVars = []
 
+        self.modsmenu.add_command(label="Deselect All", command=self.deselectAllMods)
+        self.modsmenu.add_command(label="Select All", command=self.selectAllMods)
+        self.modsmenu.add_separator()
+
+
         for mod in self.availableMods:
             intVar = IntVar()
             if mod == "removed":
@@ -118,7 +123,7 @@ class Window(object):
         menubar.add_cascade(label="Mods In Use", menu=self.modsmenu)
 
         helpmenu = Menu(menubar, tearoff=0)
-        helpmenu.add_command(label="You're on your own...")
+        helpmenu.add_command(label="visit the loot editor github for ")
         menubar.add_cascade(label="Help", menu=helpmenu)
 
         self.window.config(menu=menubar)
@@ -489,6 +494,18 @@ class Window(object):
         self.subtypeAutoComp.grid(row=8, column=1, sticky="w", pady=5)
         self.subtypeAutoComp.bind("<FocusIn>", self.addEditedVal)
 
+    def deselectAllMods(self):
+        for i in range(len(self.availableMods)):
+            self.modSelectionVars[i].set(0)
+        self.selectedMods = []
+        self.updateModMenu()
+
+    def selectAllMods(self):
+        for i in range(len(self.availableMods)):
+            self.modSelectionVars[i].set(1)
+        self.selectedMods = self.availableMods
+        self.updateModMenu()
+
     def updateModMenu(self):
         newMods = self._checkForNewMod()
         for mod in newMods:
@@ -506,7 +523,7 @@ class Window(object):
 
     def clearModMenu(self):
         for mod in self.availableMods:
-            self.modsmenu.delete(0)
+            self.modsmenu.delete(3)
         self.availableMods = []
         self.modSelectionVars = []
 
