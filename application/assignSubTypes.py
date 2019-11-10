@@ -8,10 +8,11 @@ from exportTrader import rarityForTrader
 
 
 class TraderEditor(object):
-    def __init__(self, root):
+    def __init__(self, root, selectedMods):
         self.window = Toplevel(root)
         self.window.wm_title("Trader")
         self.window.grab_set()
+        self.selectedMods = selectedMods
 
         self.traderVal = []
 
@@ -30,11 +31,16 @@ class TraderEditor(object):
         subtypesFrame.grid()
         self.subTypeListbox = Listbox(subtypesFrame, width=35, height=30, exportselection=False)
         self.subTypeListbox.grid(sticky="ns", padx=10)
-        subTypes = dao.getSubtypes()
+        subTypes = set()
+
+        for mod in self.selectedMods:
+            for subtype_in_mod in dao.getSubtypesMods(mod):
+                subTypes.add(subtype_in_mod)
 
         for subType in sorted(subTypes):
             if subType == "":
                 subType = "UNASSIGNED"
+
             self.subTypeListbox.insert(END, subType)
 
     def createTraderEditor(self, root, row, column, rows):
@@ -171,8 +177,13 @@ class TraderEditor(object):
         selSubtype = "" if selSubtype == "UNASSIGNED" else selSubtype
 
         itemsOfSubtype = dao.getSubtypeForTrader(selSubtype)
+        itemsOfSubtypeOfSelectedMods = []
 
-        self.createTraderEditor(self.window, 0, 1, itemsOfSubtype)
+        for item in itemsOfSubtype:
+            if item[-1] in self.selectedMods:
+                itemsOfSubtypeOfSelectedMods.append(item[:-1])
+
+        self.createTraderEditor(self.window, 0, 1, itemsOfSubtypeOfSelectedMods)
 
     def createLabel(self, root, text, row, column, sticky="w", px=5, py=5):
         Label(root, text=text).grid(row=row, column=column, sticky=sticky, padx=px, pady=py)

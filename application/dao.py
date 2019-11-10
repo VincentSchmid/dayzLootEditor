@@ -202,6 +202,12 @@ def getSubtypes():
     return [row[0] if row[0] is not None else "" for row in cursor.fetchall()]
 
 
+def getSubtypesMods(mod):
+    cursor = connection().cursor()
+    cursor.execute("SELECT subtype, mods FROM items WHERE mods = ? group by subtype", mod)
+    return [_[0] for _ in cursor.fetchall()]
+
+
 def getCategory(category, subtype=None):
     global lastQuery
     lastQuery = "select * \
@@ -215,21 +221,22 @@ def getCategory(category, subtype=None):
     cursor.execute(lastQuery)
     return cursor.fetchall()
 
-# name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude
+# name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude, mods
 def getSubtypeForTrader(subtype):
-    global lastQuery
-    lastQuery = "select name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude \
+    query = "select name, subtype, tradercat, buyprice, sellprice, rarity, nominal, traderexclude, mods \
                 from items \
                 where subtype = '" + subtype + "';"
 
     cursor = connection().cursor()
-    cursor.execute(lastQuery)
+    cursor.execute(query)
     result = cursor.fetchall()
     for i in range(len(result)):
         if result[i][3] is None:
             result[i][3] = -1
         if result[i][4] is None:
             result[i][4] = -1
+
+        result[i] = list(result[i])
 
     return result
 

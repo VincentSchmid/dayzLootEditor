@@ -38,7 +38,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.98.3")
+        self.window.wm_title("Loot Editor v0.98.35")
         self.window.wm_iconbitmap(dataPath + '\\miniLogo.ico')
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -793,7 +793,7 @@ class Window(object):
         itemLinker.itemLinker(self.window)
 
     def openTraderEditor(self):
-        TraderEditor(self.window)
+        TraderEditor(self.window, self.selectedMods)
 
     def checkForDatabase(self):
         try:
