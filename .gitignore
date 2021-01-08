@@ -2,7 +2,6 @@
 *.7z
 application/__pycache__
 config.txt
-*.sql
 compiled/
 testCode/
 logo/

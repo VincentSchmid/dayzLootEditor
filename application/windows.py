@@ -91,10 +91,14 @@ def writeTypesToDatabase(dir):
     dao.insertItems(params, itemVal)
     sleep(1)
     matches = xmlParser.gunsAndMatchingItem(items)
+
+    dao.createCombos(matches)
+    """
     try:
         dao.createCombos(matches)
     except Exception:
         print("An exception occured when trying to create item Links")
+    """
 
 
 def getItemsFromTraderFile(dir, root):

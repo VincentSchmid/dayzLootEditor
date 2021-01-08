@@ -679,10 +679,10 @@ class Window(object):
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
-                "type": row[2], "rarity": rarities9[row[36]], "deloot": row[34],
-                "usage": self.createUsage(row[10:23]), "tier": self.createTier(row[23:27]), "mod": row[37],
-                "usages": row[10:23], "tiers": row[23:27], "subtype": row[38], "buyprice": row[39],
-                "sellprice": row[40], "tradercat": row[41], "traderExcl": row[42]}
+                "type": row[2], "rarity": rarities9[row[39]], "deloot": row[37],
+                "usage": self.createUsage(row[10:26]), "tier": self.createTier(row[26:30]), "mod": row[40],
+                "usages": row[10:26], "tiers": row[26:30], "subtype": row[41], "buyprice": row[42],
+                "sellprice": row[43], "tradercat": row[44], "traderExcl": row[45]}
 
     def createUsage(self, row):
         usageNames = categories.usages

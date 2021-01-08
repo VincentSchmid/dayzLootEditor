@@ -3,6 +3,7 @@ from tkinter import ttk
 
 import windows
 import xmlParser
+import re
 
 
 class addItems(object):

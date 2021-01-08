@@ -74,7 +74,7 @@ class Item:
 
         self.type = findType(self.name, self.category)
         self.subType = findSubType(self.name, self.category, self.type)
-        if self.subType is not "":
+        if self.subType != "":
             Item.subTypeCount += 1
         else:
             pass
@@ -261,7 +261,7 @@ def findSubType(name, category, itemType):
         for try_cat in cat.categories:
             result = getKeywordDict(name, try_cat, cat.categoriesDict)
             subType = _subtypeFromDict(result, name)
-            if subType is not None:
+            if subType != None:
                 return subType
 
     elif category == "weapons":
@@ -275,7 +275,7 @@ def findSubType(name, category, itemType):
 
 
 def _subtypeFromDict(subTypeDict, name):
-    if subTypeDict is not None:
+    if subTypeDict != None:
         for subType, keywords in subTypeDict.items():
             if isSubtype(name, keywords):
                 return subType
