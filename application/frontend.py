@@ -18,7 +18,7 @@ from windows import dataPath
 from windows import getContent
 from windows import is_number
 
-itemTypes = ["gun", "ammo", "optic", "mag", "attachment"]
+itemTypes = ["rifles", "pistols", "ammo", "optic", "mag", "attachment"]
 
 rarities9 = {0: "undefined",
              50: "Legendary",
@@ -316,7 +316,9 @@ class Window(object):
         Label(filter, text="Subtype").grid(row=2, column=0, sticky="w")
 
         self.typeSel = StringVar(window)
-        self.typeSel.set('gun')
+        #self.typeSel.set('gun')
+        self.typeSel.set('rifles')
+        self.typeSel.set('pistols')
 
         OptionMenu(filter, self.typeSel, *self.choices).grid(row=1, column=1, sticky="w", padx=5)
 

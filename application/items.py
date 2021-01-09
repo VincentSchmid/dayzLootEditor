@@ -72,6 +72,11 @@ class Item:
                 for attr in col.items():
                     self.flags.append(attr[1])
 
+        #Merge Tags into Usages
+        if self.tags:
+            for t in self.tags:
+                self.usages.add(t)
+
         self.type = findType(self.name, self.category)
         self.subType = findSubType(self.name, self.category, self.type)
         if self.subType != "":
@@ -209,7 +214,7 @@ class Item:
 
         type = ""
 
-        if self.type == "gun":
+        if self.type in ["gun","pistols","rifles"]:
             type += "  <type name=\"{}\">\n".format(self.name)
 
         type += attachmentBlock(mags, magChance)

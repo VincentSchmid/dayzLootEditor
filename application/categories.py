@@ -1,6 +1,11 @@
-gunSubTypesDict = {
+pistolsSubTypesDict = {
     "Sidearms": [],
     "Pistols": [],
+    "Shotguns": [],
+    "Submachine Guns": []
+}
+
+riflesSubTypesDict = {
     "Rifles": [],
     "Shotguns": [],
     "Submachine Guns": [],
@@ -9,6 +14,7 @@ gunSubTypesDict = {
     "Sniper Rifles": [],
     "Anti Material Rifles": []
 }
+
 
 clothingSubTypesDict = {
     "Glasses": ["glasses", "goggles"],
@@ -61,7 +67,8 @@ miscSubTypesDict = {
 }
 
 weaponSubTypesDict = {
-    "gun": gunSubTypesDict,
+    "pistols": pistolsSubTypesDict,
+    "rifles": riflesSubTypesDict,
     "ammo": {"Ammunition": ["ammo"]},
     "optic": {"Scopes": ["optic", "LRS", "scope"]},
     "mag": {"magazines": ["mag"]},
@@ -132,8 +139,11 @@ flags = ["count_in_cargo",
          "crafted",
          "deloot"]
 
-weaponTraderCat = [word.lower() for word in gunSubTypesDict.keys()]
-weaponTraderCat.append("gun")
+weaponTraderCat = [word.lower() for word in pistolsSubTypesDict.keys()]
+weaponTraderCat += [word.lower() for word in riflesSubTypesDict.keys()]
+
+weaponTraderCat.append("rifles")
+weaponTraderCat.append("pistols")
 weaponTraderCat.append("melee")
 
 allcats = []
@@ -145,7 +155,8 @@ def appendKeys(dict, tolist):
     return tolist
 
 
-allcats = appendKeys(gunSubTypesDict, allcats)
+allcats = appendKeys(pistolsSubTypesDict, allcats)
+allcats = appendKeys(riflesSubTypesDict, allcats)
 allcats = appendKeys(clothingSubTypesDict, allcats)
 allcats = appendKeys(foodSubTypesDict, allcats)
 allcats = appendKeys(miscSubTypesDict, allcats)
