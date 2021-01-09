@@ -21,7 +21,7 @@ class Item:
         self.usages = set()
         self.tiers = set()
         self.tags = set()
-        self.flags = []
+        self.flags = [0, 0, 0, 0, 0, 0]
         self.parameters = {}
         self.rarity = ""
         self.mod = ""
@@ -70,7 +70,19 @@ class Item:
 
             if col.tag == "flags":
                 for attr in col.items():
-                    self.flags.append(attr[1])
+                    if attr[0] == "count_in_cargo":
+                        self.flags[0] = attr[1]
+                    if attr[0] == "count_in_hoarder":
+                        self.flags[1] = attr[1]
+                    if attr[0] == "count_in_map":
+                        self.flags[2] = attr[1]
+                    if attr[0] == "count_in_player":
+                        self.flags[3] = attr[1]
+                    if attr[0] == "crafted":
+                        self.flags[4] = attr[1]
+                    if attr[0] == "deloot":
+                        self.flags[5] = attr[1]
+
 
         self.type = findType(self.name, self.category)
         self.subType = findSubType(self.name, self.category, self.type)
