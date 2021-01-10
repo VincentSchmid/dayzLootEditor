@@ -1,8 +1,16 @@
 # DayZ LootEditor
-latest releases and readme available here https://github.com/VincentSchmid/LootEditor  
-
 DayZ Loot Editor for types.xml.
 Helps with Visualizing end editing Loot. Has some Automatic functions for Loot distribution
+
+## Running the code
+Requires pyodbc  
+main file to run is frontent.py  
+works best with python 3.9  
+mysql odbc 5.3 required  
+aswell as a mysql database somewhere  
+
+# Info
+latest releases and readme available here https://github.com/VincentSchmid/LootEditor  
 
 - Visualize loot as a list from database
 - Automatically creates Sub-types for weapon items and links items that are used together (guns, ammo, mags,...)
@@ -16,13 +24,6 @@ Helps with Visualizing end editing Loot. Has some Automatic functions for Loot d
 
 Built upon a MySQL database that will be automatically generated and some manual editing of item links.
 written in python.
-
-## Running the code
-Requires pyodbc  
-main file to run is frontent.py  
-works best with python 3.9  
-mysql odbc 5.3 required  
-aswell as a mysql database somewhere  
 
 ## Install
 first off you need MYSQL x64 Server and ODBC Driver 8.0 x64  
