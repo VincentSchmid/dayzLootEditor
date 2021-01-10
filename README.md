@@ -11,6 +11,7 @@ aswell as a mysql database somewhere
 
 # Info
 latest releases and readme available here https://github.com/VincentSchmid/LootEditor  
+code is currently beeing rewritten to only use litesql, but does not support all the features of this code base.
 
 - Visualize loot as a list from database
 - Automatically creates Sub-types for weapon items and links items that are used together (guns, ammo, mags,...)
