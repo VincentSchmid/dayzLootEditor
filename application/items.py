@@ -105,6 +105,9 @@ class Item:
         self.quantmax = val[7]
         self.min = val[8]
         self.restock = val[9]
+        # The flag array was 0 initialzied which is not desired here.
+        self.flags = []
+
         p = 10
         for i in range(len(cat.usages)):
             if val[p] == 1:
