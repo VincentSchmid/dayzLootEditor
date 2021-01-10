@@ -1,6 +1,6 @@
 # DayZ LootEditor
 DayZ Loot Editor for types.xml.
-Helps with Visualizing end editing Loot. Has some Automatic functions for Loot distribution
+Helps with Visualizing and editing Loot. Has some Automatic functions for Loot distribution
 
 ## Running the code
 Requires pyodbc  
