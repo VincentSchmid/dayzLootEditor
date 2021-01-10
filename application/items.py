@@ -66,7 +66,12 @@ class Item:
                 self.tiers.add(col.items()[0][1])
 
             if col.tag == "tag":
-                self.tags.add(col.items()[0][1])
+                tag_value = col.items()[0][1]
+
+                if tag_value == "shelf" or tag_value == "floor":
+                    self.tags.add(col.items()[0][1])
+                else:
+                    self.usages.add(col.items()[0][1].capitalize())
 
             if col.tag == "flags":
                 for attr in col.items():
@@ -166,7 +171,9 @@ class Item:
 
         self.parameters = dict
 
-    def getXML(self):
+    def getXML(self, namalsk=False):
+        usage_name = "usage" if not namalsk else "tag"
+
         type = ""
         craftable = False
 
@@ -188,7 +195,9 @@ class Item:
         if not craftable:
             type += "    <category name=\"{}\"/>\n".format(self.category)
             for usage in sorted(self.usages):
-                type += "    <usage name=\"{}\"/>\n".format(usage.lower())
+                type += f"    <{usage_name} name=\"{usage.lower() if namalsk else usage}\"/>\n"
+            for tag in sorted(self.tags):
+                type += f"    <tag name=\"{tag}\"/>\n"
             for tier in sorted(self.tiers):
                 type += "    <value name=\"{}\"/>\n".format(tier)
         type += "  </type>\n"

@@ -568,9 +568,12 @@ class Window(object):
 
     # Save dialog, copies source types to new document, then edits the values
     def saveXML(self):
+        for_namalsk = False
+        if windows.askUser("Export Types.xml", "Are you exporting for namalsk map?"):
+            for_namalsk = True
         xmlPath = windows.saveAsFile("xml", "w+")
         if xmlPath is not None:
-            xmlWriter.update(xmlPath, self.selectedMods)
+            xmlWriter.update(xmlPath, self.selectedMods, namalsk=for_namalsk)
 
     def clearTree(self):
         if self.tree.get_children() != ():

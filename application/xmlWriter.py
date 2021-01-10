@@ -14,13 +14,13 @@ def orderModList(mods):
     return mods
 
 
-def getXmlBlock(row):
+def getXmlBlock(row, namalsk):
     item = items.Item()
     item.fillFromVal(row)
-    return item.getXML()
+    return item.getXML(namalsk)
 
 
-def update(dir, includedMods):
+def update(dir, includedMods, namalsk=False):
     #fix this so it does not need written anymore
     written = []
     includedMods = orderModList(includedMods)
@@ -31,7 +31,7 @@ def update(dir, includedMods):
         f.write("  <!--{}--> \n".format(mod))
         for item in items:
             if item[40] in mod and item[0] not in written:
-                f.write(getXmlBlock(item))
+                f.write(getXmlBlock(item, namalsk))
                 written.append(item[0])
     f.write("</types>\n")
 
