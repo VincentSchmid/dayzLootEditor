@@ -206,18 +206,17 @@ class Item:
         otherAttachments = []
 
         for linkedItem in linkedItems:
-            if linkedItem.nominal != 0:
-                if linkedItem.type == "mag":
-                    mags.append(linkedItem)
-                if linkedItem.type == "optic":
-                    optics.append(linkedItem)
-                if linkedItem.type == "attachment":
-                    if linkedItem.subtype.lower() == "handguard":
-                        handguards.append(linkedItem)
-                    elif linkedItem.subtype.lower() == "buttstock":
-                        buttstocks.append(linkedItem)
-                    else:
-                        otherAttachments.append(linkedItem)
+            if linkedItem.type == "mag":
+                mags.append(linkedItem)
+            if linkedItem.type == "optic":
+                optics.append(linkedItem)
+            if linkedItem.type == "attachment":
+                if linkedItem.subtype.lower() == "handguard":
+                    handguards.append(linkedItem)
+                elif linkedItem.subtype.lower() == "buttstock":
+                    buttstocks.append(linkedItem)
+                else:
+                    otherAttachments.append(linkedItem)
 
         type = ""
         type += "  <type name=\"{}\">\n".format(self.name)
