@@ -21,7 +21,8 @@ written in python.
 Requires pyodbc  
 main file to run is frontent.py  
 works best with python 3.9  
-
+mysql odbc 5.3 required  
+aswell as a mysql database somewhere  
 
 ## Install
 first off you need MYSQL x64 Server and ODBC Driver 8.0 x64  
