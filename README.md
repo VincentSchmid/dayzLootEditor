@@ -1,5 +1,10 @@
 # DayZ LootEditor
 
+## Running the code
+Requires pyodbc
+main file to run is frontent.py
+works best with python 3.9
+
 latest releases and readme available here https://github.com/VincentSchmid/LootEditor  
 
 DayZ Loot Editor for types.xml.
