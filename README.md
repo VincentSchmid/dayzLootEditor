@@ -18,9 +18,9 @@ Built upon a MySQL database that will be automatically generated and some manual
 written in python.
 
 ## Running the code
-Requires pyodbc
-main file to run is frontent.py
-works best with python 3.9
+Requires pyodbc  
+main file to run is frontent.py  
+works best with python 3.9  
 
 
 ## Install
