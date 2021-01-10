@@ -40,7 +40,11 @@ def exportSpawnable():
     fname = windows.saveAsFile("xml", "w+")
     if fname is not None:
         spawnable = ""
-        items = xmlParser.itemFromRows(dao.getType("gun"))
+        rifles = xmlParser.itemFromRows(dao.getType("rifles"))
+        pistols = xmlParser.itemFromRows(dao.getType("pistols"))
+        gun = xmlParser.itemFromRows(dao.getType("gun"))
+
+        items = gun + rifles + pistols
         for item in items:
             if item.mod != "Vanilla":
                 if item.nominal != 0:

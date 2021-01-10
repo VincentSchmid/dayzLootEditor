@@ -38,7 +38,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.98.5")
+        self.window.wm_title("Loot Editor v0.98.7")
         self.window.wm_iconbitmap(dataPath + '\\miniLogo.ico')
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 

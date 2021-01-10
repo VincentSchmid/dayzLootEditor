@@ -302,7 +302,7 @@ def getLinkedItems(item):
 
 
 def getLinekd(name, type):
-    if type == "gun":
+    if type == "gun" or type == "rifles" or type == "pistols":
         return getWeaponAndCorresponding(name)
     else:
         return getWeaponsFromAccessoire(name)

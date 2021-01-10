@@ -185,7 +185,7 @@ class Item:
         if not craftable:
             type += "    <category name=\"{}\"/>\n".format(self.category)
             for usage in sorted(self.usages):
-                type += "    <usage name=\"{}\"/>\n".format(usage)
+                type += "    <usage name=\"{}\"/>\n".format(usage.lower())
             for tier in sorted(self.tiers):
                 type += "    <value name=\"{}\"/>\n".format(tier)
         type += "  </type>\n"
@@ -195,9 +195,9 @@ class Item:
     def getSpawnableTypes(self):
         linkedItems = dao.getLinekd(self.name, self.type)
 
-        magChance = "{:0.2f}".format(0.3)
-        opticChance = "{:0.2f}".format(0.10, 2)
-        attachmentChance = "{:0.2f}".format(0.20, 2)
+        magChance = "0.30"
+        opticChance = "0.10"
+        attachmentChance = "0.20"
 
         mags = []
         optics = []
@@ -212,18 +212,15 @@ class Item:
                 if linkedItem.type == "optic":
                     optics.append(linkedItem)
                 if linkedItem.type == "attachment":
-                    if isHandguard(linkedItem.name):
+                    if linkedItem.subtype.lower() == "handguard":
                         handguards.append(linkedItem)
-                    elif isBttStck(linkedItem.name):
+                    elif linkedItem.subtype.lower() == "buttstock":
                         buttstocks.append(linkedItem)
                     else:
                         otherAttachments.append(linkedItem)
 
         type = ""
-
-        if self.type == "gun":
-            type += "  <type name=\"{}\">\n".format(self.name)
-
+        type += "  <type name=\"{}\">\n".format(self.name)
         type += attachmentBlock(mags, magChance)
         type += attachmentBlock(optics, opticChance)
         type += attachmentBlock(handguards, float(1.0))
