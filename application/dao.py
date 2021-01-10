@@ -1,91 +1,33 @@
+from shutil import copyfile
+from pathlib import Path
 from subprocess import Popen, PIPE
 
-import pyodbc
+import sqlite3
 
 import categories
 import distibutor
 import windows
 
-user = ""
-pwd = ""
-port = ""
-database = ""
-server = ""
-odbcV = ""
-
-
-def setConnectionParams(username, password, p, dbname, host, odbcVersion):
-    windows.writeConfig(username, password, p, dbname, host, odbcVersion)
-    global user
-    global pwd
-    global port
-    global database
-    global server
-    global odbcV
-
-    user = username
-    pwd = password
-    port = p
-    database = dbname
-    server = host
-    odbcV = odbcVersion
+database = "test.db"
+databasename = ""
 
 
 def connection():
-    global user
-    global pwd
-    global port
     global database
-    global server
-    global odbcV
-
-    if user == "":
-        c = windows.readConfig()
-        user = c[0]
-        pwd = c[1]
-        port = c[2]
-        database = c[3]
-        server = c[4]
-        odbcV = c[5]
-
-    with pyodbc.connect(
-            r'DRIVER={MySQL ODBC '+odbcV+' Unicode Driver};'
-            r'UID=' + user + ';'
-            r'PWD=' + pwd + ';'
-            r'PORT=' + port + ';'
-            r'DATABASE=' + database + ';'
-            r'SERVER=' + server + ';'
-            r'OPTION=3;'
-    ) as connection:
-        # Setting Encoding
-        connection.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
-        connection.setencoding(encoding='utf-8')
-        return connection
+    return sqlite3.connect(database)
 
 
 def getCoulumNames():
-    global user
-    global pwd
-    global port
     global database
-    global server
-    global odbcV
 
     if user == "":
         c = windows.readConfig()
-        user = c[0]
-        pwd = c[1]
-        port = c[2]
-        database = c[3]
-        server = c[4]
-        odbcV = c[5]
+        database = c[0]
 
     cursor = connection().cursor()
-    cursor.execute("SELECT COLUMN_NAME \
-                      FROM INFORMATION_SCHEMA.COLUMNS \
-                      WHERE TABLE_SCHEMA= '" + database + "' \
-                      AND TABLE_NAME= 'items' \
-                      ORDER BY ORDINAL_POSITION;")
+    query = "SELECT c.name FROM pragma_table_info('items') c;"
+    cursor.execute(query)
+
     return [row[0] for row in cursor.fetchall()]
 
 
@@ -542,56 +484,69 @@ def getItemsFromCatMods(category, mod, allItems, allMods, search=None):
 
 
 def createDB(name):
-    global user
-    global pwd
-    global port
     global database
-    global server
-    global odbcV
+    database = name + ".db"
 
-    if user == "":
-        c = windows.readConfig()
-        user = c[0]
-        pwd = c[1]
-        port = c[2]
-        database = c[3]
-        server = c[4]
-        odbcV = c[5]
+    conn = connection()
 
-    try:
-        pyodbc.connect(
-            r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
-            r'UID=' + user + ';'
-            r'PWD=' + pwd + ';'
-            r'PORT=' + port + ';'
-            r'SERVER=' + server + ';'
-            r'OPTION=3;'
-        )
-    except pyodbc.Error:
-        pyodbc.connect(
-            r'DRIVER={MySQL ODBC 8.0 Unicode Driver};'
-            r'UID=' + user + ';'
-            r'PWD=' + pwd + ';'
-            r'PORT=' + port + ';'
-            r'SERVER=' + server + ';'
-            r'OPTION=3;'
-        )
-        windows.writeConfig(user, pwd, port, database,server, "8.0")
+    create_items_table = '''CREATE TABLE items
+                            (name text NOT NULL PRIMARY KEY,
+                            category text NOT NULL,
+                            type text NOT NULL,
+                            lifetime int NOT NULL,
+                            quantmin int NOT NULL,
+                            nominal int NOT NULL,
+                            cost int NOT NULL,
+                            quantmax int NOT NULL,
+                            min int NOT NULL,
+                            restock int NOT NULL,
+                            
+                            Military int NOT NULL,
+                            Prison int NOT NULL,
+                            School int NOT NULL,
+                            Coast int NOT NULL,
+                            Village int NOT NULL,
+                            Industrial int NOT NULL,
+                            Medic int NOT NULL,
+                            Police int NOT NULL,
+                            Hunting int NOT NULL,
+                            Town int NOT NULL,
+                            Farm int NOT NULL,
+                            Firefighter int NOT NULL,
+                            Office int NOT NULL,
+                            Civilian int NOT NULL,
+                            Fishing int NOT NULL,
+                            Medical int NOT NULL,
 
-    with pyodbc.connect(
-            r'DRIVER={MySQL ODBC '+odbcV+' Unicode Driver};'
-            r'UID=' + user + ';'
-            r'PWD=' + pwd + ';'
-            r'PORT=' + port + ';'
-            r'SERVER=' + server + ';'
-            r'OPTION=3;'
-    ) as connection:
-        # Setting Encoding
-        connection.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
-        connection.setencoding(encoding='utf-8')
+                            Tier1 int NOT NULL,
+                            Tier2 int NOT NULL,
+                            Tier3 int NOT NULL,
+                            Tier4 int NOT NULL,
 
-        cursor = connection.cursor()
-        cursor.execute("CREATE DATABASE " + name + ";")
+                            shelves int NOT NULL,
+                            floor int NOT NULL,
+
+                            count_in_cargo int NOT NULL,
+                            count_in_hoarder int NOT NULL,
+                            count_in_map int NOT NULL,
+                            count_in_player int NOT NULL,
+                            crafted int NOT NULL,
+                            deloot int NOT NULL,
+
+                            ingameName text NOT NULL,
+                            rarity int mods text NOT NULL,
+                            subtype text NOT NULL,
+                            buyprice int NOT NULL,
+                            sellprice int NOT NULL,
+                            traderCat text NOT NULL,
+                            traderExclude int)'''
+    
+    conn.execute(create_items_table)
+
+    query = """CREATE TABLE itemcombos
+                (item1 text, item2 text)"""
+    
+    conn.execute(query)
 
 
 def getUsages(itemName):
@@ -647,9 +602,8 @@ def updateListValues(newValues, name, listItems):
 
 
 def getPath():
-    cursor = connection().cursor()
-    cursor.execute("select @@basedir")
-    return cursor.fetchval()
+    global database
+    return str(Path(database).absolute().parent.resolve())
 
 
 def reExecuteLastQuery():
@@ -660,128 +614,5 @@ def reExecuteLastQuery():
 
 
 def backupDatabase(file=None):
-    global user
-    global pwd
-    global port
     global database
-    global server
-
-    if user == "":
-        c = windows.readConfig()
-        user = c[0]
-        pwd = c[1]
-        port = c[2]
-        database = c[3]
-        server = c[4]
-
-    path = getPath() + "bin\\"
-    cmdL1 = [path + "mysqldump", "--port=" + port, "-h" + server, "--force", "-u" + user, "-p" + pwd, database]
-    p1 = Popen(cmdL1, shell=True, stdout=PIPE)
-    if file is not None:
-        file.write(p1.communicate()[0])
-        file.close()
-
-    if file is None:
-        return p1.communicate()[0]
-
-
-def addColumns():
-    query = "ALTER TABLE `" + windows.readConfig()[3] + "`.`items` \
-ADD COLUMN `subtype` VARCHAR(45) NULL DEFAULT NULL AFTER `mods`, \
-ADD COLUMN `buyprice` INT(11) NULL DEFAULT NULL AFTER `subtype`,\
-ADD COLUMN `sellprice` INT(11) NULL DEFAULT NULL AFTER `buyprice`, \
-ADD COLUMN `traderCat` VARCHAR(3) NULL DEFAULT NULL AFTER `sellprice`,\
-ADD COLUMN `traderExclude` TINYINT(1) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' AFTER `traderCat`;"
-
-    conn = connection()
-    cursor = conn.cursor()
-    cursor.execute(query)
-    conn.commit()
-
-
-def addNewConstraints():
-    query = "ALTER TABLE `itemcombo`\
-    DROP FOREIGN KEY `itemcombos_ibfk_1`;\
-ALTER TABLE `itemcombo`\
-DROP FOREIGN KEY `itemcombos_ibfk_2`;\
-ALTER TABLE `itemcombos`\
-ADD CONSTRAINT `itemcombos_ibfk_3` \
-    FOREIGN KEY (`item1`) REFERENCES `items` (`name`) \
-    ON DELETE CASCADE; \
-ALTER TABLE `itemcombos` \
-    ADD CONSTRAINT `itemcombos_ibfk_4` \
-    FOREIGN KEY (`item2`) REFERENCES `items` (`name`) \
-    ON DELETE CASCADE;"
-
-    conn = connection()
-    cursor = conn.cursor()
-    cursor.execute(query)
-    conn.commit()
-
-
-def dropDB():
-    global database
-    if database == "":
-        database = windows.readConfig()[3]
-
-    return drop_selected_DB(database)
-
-
-def drop_selected_DB(database):
-    conn = connection()
-    cursor = conn.cursor()
-    cursor.execute("DROP SCHEMA " + database)
-    conn.commit()
-    return database
-
-
-def loadDB():
-    loadDB(windows.getContent(windows.openFile("sql")))
-
-
-def loadDB(content):
-    global user
-    global pwd
-    global port
-    global database
-    global server
-
-    if user == "":
-        c = windows.readConfig()
-        user = c[0]
-        pwd = c[1]
-        p = c[2]
-        database = c[3]
-        server = c[4]
-
-    path = getPath() + "bin\\"
-
-    process = Popen(
-        "\"" + path + "mysql\" -u " + user + " -p" + pwd + " -h" + server + " --port " + port + " --default-character-set=utf8 " + database,
-        shell=True, stdin=PIPE)
-    process.stdin.write(content)
-    process.stdin.close()
-    process.kill()
-
-def getOdbcVersion():
-    try:
-        pyodbc.connect(
-            r'DRIVER={MySQL ODBC 5.3 Unicode Driver};'
-            r'UID=' + user + ';'
-            r'PWD=' + pwd + ';'
-            r'PORT=' + port + ';'
-            r'SERVER=' + server + ';'
-            r'OPTION=3;'
-        )
-        return "5.3"
-    except pyodbc.Error:
-        pyodbc.connect(
-            r'DRIVER={MySQL ODBC 8.0 Unicode Driver};'
-            r'UID=' + user + ';'
-            r'PWD=' + pwd + ';'
-            r'PORT=' + port + ';'
-            r'SERVER=' + server + ';'
-            r'OPTION=3;'
-        )
-        windows.writeConfig(user, pwd, port, database,server, "8.0")
-        return "8.0"
+    copyfile(database, database.split(".")[0] + "_backup.db")

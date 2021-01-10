@@ -9,21 +9,11 @@ class ConnectionWindow(object):
         self.window = Toplevel(root)
         self.window.grab_set()
 
-        self.user = "root"
-        self.pwd = "rootroot"
-        self.prt = "3306"
         self.dbName = "dayzitems"
-        self.server = "localhost"
-        self.odbcV = "8.0"
 
         try:
             c = windows.readConfig()
-            self.user = c[0]
-            self.pwd = c[1]
-            self.prt = c[2]
-            self.dbName = c[3]
-            self.server = c[4]
-            self.odbcV = c[5]
+            self.dnName = c[0]
 
         except FileNotFoundError:
             pass
@@ -31,40 +21,7 @@ class ConnectionWindow(object):
         self.entryFrame = Frame(self.window)
         self.entryFrame.grid(row=1, column=0, sticky="n,w,e", padx=30)
 
-        # Host
-        Label(self.entryFrame, text="Host:").grid(row=1, column=0, sticky="w")
-
-        self.HostName = StringVar()
-        self.HostName.set(self.server)
-        self.nameEntry = Entry(self.entryFrame, textvariable=self.HostName)
-        self.nameEntry.grid(row=1, column=1, sticky="e", pady=5)
-
-        # Port
-        Label(self.entryFrame, text="Port:").grid(row=2, column=0, sticky="w")
-
-        self.port = StringVar()
-        self.port.set(self.prt)
-        self.nameEntry = Entry(self.entryFrame, textvariable=self.port)
-        self.nameEntry.grid(row=2, column=1, sticky="e", pady=5)
-
-        # Username
-        Label(self.entryFrame, text="Username:").grid(row=4, column=0, sticky="w")
-
-        self.username = StringVar()
-        self.username.set(self.user)
-        self.DBEntry = Entry(self.entryFrame, textvariable=self.username)
-        self.DBEntry.grid(row=4, column=1, sticky="e", pady=5)
-
-        # Password
-        Label(self.entryFrame, text="Password:").grid(row=5, column=0, sticky="w")
-
-        self.password = StringVar()
-        self.password.set(self.pwd)
-        self.DBEntry = Entry(self.entryFrame, textvariable=self.password)
-        self.DBEntry.grid(row=5, column=1, sticky="e", pady=5)
-
         # Database
-
         MODES = [("New Database", "create"), ("Use Existing", "use")]
         self.v = StringVar()
         self.v.set("use")
@@ -135,19 +92,7 @@ class ConnectionWindow(object):
         dao.setColumnNames()
 
     def passParams(self):
-        dao.setConnectionParams(self.username.get(),
-                                self.password.get(),
-                                self.port.get(),
-                                self.database.get(),
-                                self.HostName.get(),
-                                "8.0")
-
-        dao.setConnectionParams(self.username.get(),
-                                self.password.get(),
-                                self.port.get(),
-                                self.database.get(),
-                                self.HostName.get(),
-                                dao.getOdbcVersion())
+        dao.databasename = self.database.get()
 
 
 def testWindow():
