@@ -1,4 +1,7 @@
 # DayZ LootEditor
+
+latest releases and readme available here https://github.com/VincentSchmid/LootEditor  
+
 DayZ Loot Editor for types.xml.
 Helps with Visualizing end editing Loot. Has some Automatic functions for Loot distribution
 
