@@ -318,7 +318,7 @@ def getWeaponAndCorresponding(name):
                     FROM (select name, item2 \
                             from items \
                                     join itemcombos i on items.name = i.item1 \
-                            where name LIKE '%" + name + "%') as accessoire \
+                            where name LIKE '" + name + "') as accessoire \
                     ) as item2 on name = item2.item2 \
                     group by name;"
 
