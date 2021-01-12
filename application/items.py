@@ -172,6 +172,7 @@ class Item:
         self.parameters = dict
 
     def getXML(self, namalsk=False):
+        rifle_pistol = ["rifles", "pistols"]
         usage_name = "usage" if not namalsk else "tag"
 
         type = ""
@@ -193,7 +194,8 @@ class Item:
         type += """    <flags count_in_cargo=\"{}\" count_in_hoarder=\"{}\" count_in_map=\"{}\" count_in_player=\"{}\" crafted=\"{}\" deloot=\"{}\" />\n""" \
             .format(*self.flags)
         if not craftable:
-            type += "    <category name=\"{}\"/>\n".format(self.category)
+            type += "    <category name=\"{}\"/>\n".format(self.type if self.type in rifle_pistol else self.category)
+            print(type)
             for usage in sorted(self.usages):
                 type += f"    <{usage_name} name=\"{usage.lower() if namalsk else usage}\"/>\n"
             for tag in sorted(self.tags):
