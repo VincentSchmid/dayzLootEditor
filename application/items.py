@@ -195,7 +195,6 @@ class Item:
             .format(*self.flags)
         if not craftable:
             type += "    <category name=\"{}\"/>\n".format(self.type if self.type in rifle_pistol else self.category)
-            print(type)
             for usage in sorted(self.usages):
                 type += f"    <{usage_name} name=\"{usage.lower() if namalsk else usage}\"/>\n"
             for tag in sorted(self.tags):
