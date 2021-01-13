@@ -194,7 +194,7 @@ class Item:
         type += """    <flags count_in_cargo=\"{}\" count_in_hoarder=\"{}\" count_in_map=\"{}\" count_in_player=\"{}\" crafted=\"{}\" deloot=\"{}\" />\n""" \
             .format(*self.flags)
         if not craftable:
-            type += "    <category name=\"{}\"/>\n".format(self.type.lower() if self.type.lower() in rifle_pistol else self.category)
+            type += "    <category name=\"{}\"/>\n".format(self.subType.lower() if self.subType.lower() in rifle_pistol else self.category)
             for usage in sorted(self.usages):
                 type += f"    <{usage_name} name=\"{usage.lower() if namalsk else usage}\"/>\n"
             for tag in sorted(self.tags):
