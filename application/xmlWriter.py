@@ -26,6 +26,7 @@ def update(dir, includedMods, namalsk=False):
     includedMods = orderModList(includedMods)
     f = dir
     items = dao.getAllItems()
+    f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n")
     f.write("<types>\n")
     for mod in includedMods:
         f.write("  <!--{}--> \n".format(mod))
