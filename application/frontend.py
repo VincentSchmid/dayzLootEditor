@@ -38,7 +38,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.checkForDatabase()
-        self.window.wm_title("Loot Editor v0.98.9")
+        self.window.wm_title("Loot Editor v0.99.0")
         self.window.wm_iconbitmap(dataPath + '\\miniLogo.ico')
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -682,10 +682,10 @@ class Window(object):
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
-                "type": row[2], "rarity": rarities9[row[39]], "deloot": row[37],
-                "usage": self.createUsage(row[10:26]), "tier": self.createTier(row[26:30]), "mod": row[40],
-                "usages": row[10:26], "tiers": row[26:30], "subtype": row[41], "buyprice": row[42],
-                "sellprice": row[43], "tradercat": row[44], "traderExcl": row[45]}
+                "type": row[2], "rarity": rarities9[row[40]], "deloot": row[38],
+                "usage": self.createUsage(row[10:26]), "tier": self.createTier(row[26:31]), "mod": row[41],
+                "usages": row[10:26], "tiers": row[26:31], "subtype": row[42], "buyprice": row[43],
+                "sellprice": row[44], "tradercat": row[45], "traderExcl": row[46]}
 
     def createUsage(self, row):
         usageNames = categories.usages

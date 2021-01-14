@@ -121,7 +121,7 @@ usagesAbr = ["Mil.",
              "Fish",
              "Medi"]
 
-tiers = ["Tier1", "Tier2", "Tier3", "Tier4"]
+tiers = ["Tier1", "Tier2", "Tier3", "Tier4", "Tier5"]
 
 tags = ["shelves", "floor"]
 
