@@ -87,41 +87,35 @@ categoriesDict = {"weapons": weaponSubTypesDict,
 weaponSubTypes = list(weaponSubTypesDict.keys())
 categories = list(categoriesDict.keys())
 
-usages = ["Military",
-          "Prison",
-          "School",
-          "Coast",
-          "Village",
-          "Industrial",
-          "Medic",
-          "Police",
-          "Hunting",
-          "Town",
-          "Farm",
-          "Firefighter",
-          "Office",
-          "Civilian",
-          "Fishing",
-          "Medical",
-          "Airdrop"]
+loot_economy = ["name",
+        "category",
+        "type",
+        "lifetime",
+        "quantmin",
+        "nominal",
+        "cost",
+        "quantmax",
+        "min",
+        "restock"]
 
-usagesAbr = ["Mil.",
-             "Pris.",
-             "School",
-             "Coast",
-             "Vil.",
-             "Ind.",
-             "Med.",
-             "Pol.",
-             "Hunt.",
-             "Town",
-             "Farm",
-             "Firef.",
-             "Office",
-             "Civ",
-             "Fish",
-             "Medi",
-             "Adrp"]
+usages = ["Military",
+        "Prison",
+        "School",
+        "Coast",
+        "Village",
+        "Industrial",
+        "Medic",
+        "Police",
+        "Hunting",
+        "Town",
+        "Farm",
+        "Firefighter",
+        "Office",
+        "Civilian",
+        "Fishing",
+        "Medical"]
+
+usagesAbr = [usage[:4]+"." for usage in usages]
 
 tiers = ["Tier1", "Tier2", "Tier3", "Tier4"]
 
@@ -133,6 +127,17 @@ flags = ["count_in_cargo",
          "count_in_player",
          "crafted",
          "deloot"]
+
+trader_cat = ["ingameName",
+        "rarity",
+        "mods",
+        "subtype",
+        "buyprice",
+        "sellprice",
+        "traderCat",
+        "traderExclude"]
+
+columns = usages + tiers + tags + flags + trader_cat
 
 weaponTraderCat = [word.lower() for word in gunSubTypesDict.keys()]
 weaponTraderCat.append("gun")

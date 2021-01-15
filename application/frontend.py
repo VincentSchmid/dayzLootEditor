@@ -681,11 +681,25 @@ class Window(object):
         self.updateModMenu()
 
     def dictFromRow(self, row):
+        loot_eco = categories.loot_economy
+        usages = categories.usages
+        tiers = categories.tiers
+        tags = categories.tags
+        flags = categories.flags
+
+        usage_indxs = (len(loot_eco), len(loot_eco) + len(usages) + 1) # (10, 27)
+        tier_indxs = (usage_indxs[-1], usage_indxs[-1] + len(tiers)) # (27, 31)
+
+        deloot_ind = tier_indxs[-1] + len(tags) + len(flags) -1
+
+        tradr_ind_0 = tier_indxs[-1] + len(tags) + len(flags)
+
+
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
-                "type": row[2], "rarity": rarities9[row[40]], "deloot": row[38],
-                "usage": self.createUsage(row[10:27]), "tier": self.createTier(row[27:31]), "mod": row[41],
-                "usages": row[10:27], "tiers": row[27:31], "subtype": row[42], "buyprice": row[43],
-                "sellprice": row[44], "tradercat": row[45], "traderExcl": row[46]}
+                "type": row[2], "rarity": rarities9[row[tradr_ind_0 + 1]], "deloot": row[deloot_ind],
+                "usage": self.createUsage(row[slice(*usage_indxs)]), "tier": self.createTier(row[slice(*tier_indxs)]), "mod": row[tradr_ind_0 + 2],
+                "usages": row[slice(*usage_indxs)], "tiers": row[slice(*tier_indxs)], "subtype": row[tradr_ind_0 + 3], "buyprice": row[tradr_ind_0 + 4],
+                "sellprice": row[tradr_ind_0 + 5], "tradercat": row[tradr_ind_0 + 6], "traderExcl": row[tradr_ind_0 + 7]}
 
     def createUsage(self, row):
         usageNames = categories.usages

@@ -2,6 +2,7 @@ import dao
 import items
 import windows
 import xmlParser
+import categories as cats
 
 
 def orderModList(mods):
@@ -22,6 +23,9 @@ def getXmlBlock(row, namalsk):
 
 def update(dir, includedMods, namalsk=False):
     #fix this so it does not need written anymore
+
+    mod_index = len(cats.loot_economy) + len(cats.usages) + len(cats.tiers) + len(cats.tags) + len(cats.flags) + 2
+
     written = []
     includedMods = orderModList(includedMods)
     f = dir
@@ -31,7 +35,7 @@ def update(dir, includedMods, namalsk=False):
     for mod in includedMods:
         f.write("  <!--{}--> \n".format(mod))
         for item in items:
-            if item[41] in mod and item[0] not in written:
+            if item[mod_index] in mod and item[0] not in written:
                 f.write(getXmlBlock(item, namalsk))
                 written.append(item[0])
     f.write("</types>\n")

@@ -122,13 +122,25 @@ def getDict(item):
     return dict
 
 
+def get_all_questionmarks():
+    """
+    returns a string with a question mark for each column.
+    something like: "?, ?, ?"
+    """
+    questionmarks = ""
+    for _ in categories.columns:
+        questionmarks += "?, "
+    
+    return questionmarks[:-2]
+
+
 def insertItems(params, items):
     conn = connection()
     cursor = conn.cursor()
 
     cursor.fast_executemany = True
     cursor.executemany(
-        "insert into items(" + params + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        f"insert into items({params}) values ({get_all_questionmarks()})",
         items)
     conn.commit()
 
@@ -139,7 +151,7 @@ def insertItem(parameters, item):
 
     try:
         cursor.execute(
-            "insert into items(" + parameters + ") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            f"insert into items({parameters}) values ({get_all_questionmarks()})",
             item)
         conn.commit()
         return 0
