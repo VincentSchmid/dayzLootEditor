@@ -113,7 +113,8 @@ usages = ["Military",
         "Office",
         "Civilian",
         "Fishing",
-        "Medical"]
+        "Medical",
+        "Airdrop"]
 
 usagesAbr = [usage[:4]+"." for usage in usages]
 
