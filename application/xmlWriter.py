@@ -31,7 +31,7 @@ def update(dir, includedMods, namalsk=False):
     for mod in includedMods:
         f.write("  <!--{}--> \n".format(mod))
         for item in items:
-            if item[41] in mod and item[0] not in written:
+            if item[40] in mod and item[0] not in written:
                 f.write(getXmlBlock(item, namalsk))
                 written.append(item[0])
     f.write("</types>\n")
