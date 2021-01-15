@@ -102,7 +102,8 @@ usages = ["Military",
           "Office",
           "Civilian",
           "Fishing",
-          "Medical"]
+          "Medical",
+          "Airdrop"]
 
 usagesAbr = ["Mil.",
              "Pris.",
@@ -119,7 +120,8 @@ usagesAbr = ["Mil.",
              "Office",
              "Civ",
              "Fish",
-             "Medi"]
+             "Medi",
+             "Adrp"]
 
 tiers = ["Tier1", "Tier2", "Tier3", "Tier4"]
 

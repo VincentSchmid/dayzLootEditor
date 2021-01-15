@@ -682,10 +682,10 @@ class Window(object):
 
     def dictFromRow(self, row):
         return {"name": row[0], "nominal": row[5], "min": row[8], "restock": row[9], "lifetime": row[3],
-                "type": row[2], "rarity": rarities9[row[39]], "deloot": row[37],
-                "usage": self.createUsage(row[10:26]), "tier": self.createTier(row[26:30]), "mod": row[40],
-                "usages": row[10:26], "tiers": row[26:30], "subtype": row[41], "buyprice": row[42],
-                "sellprice": row[43], "tradercat": row[44], "traderExcl": row[45]}
+                "type": row[2], "rarity": rarities9[row[40]], "deloot": row[38],
+                "usage": self.createUsage(row[10:27]), "tier": self.createTier(row[27:31]), "mod": row[41],
+                "usages": row[10:27], "tiers": row[27:31], "subtype": row[42], "buyprice": row[43],
+                "sellprice": row[44], "tradercat": row[45], "traderExcl": row[46]}
 
     def createUsage(self, row):
         usageNames = categories.usages
@@ -693,14 +693,11 @@ class Window(object):
             usageNames = categories.usagesAbr
         usage = ""
 
-        if sum(row) == len(usageNames) - 1:
-            usage = "everywhere except Coast"
-        else:
-            for i in range(len(categories.usages)):
-                if row[i] == 1:
-                    usage += usageNames[i] + " "
-            if usage != "":
-                usage = usage[:-1]
+        for i in range(len(categories.usages)):
+            if row[i] == 1:
+                usage += usageNames[i] + " "
+        if usage != "":
+            usage = usage[:-1]
 
         return usage
 

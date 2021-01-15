@@ -69,6 +69,7 @@ CREATE TABLE `items` (
   `Civilian` tinyint(1) unsigned zerofill NOT NULL,
   `Fishing` tinyint(1) unsigned zerofill NOT NULL,
   `Medical` tinyint(1) unsigned zerofill NOT NULL,
+  `Airdrop` tinyint(1) unsigned zerofill NOT NULL,
   `Tier1` tinyint(1) unsigned zerofill NOT NULL,
   `Tier2` tinyint(1) unsigned zerofill NOT NULL,
   `Tier3` tinyint(1) unsigned zerofill NOT NULL,
